@@ -15,12 +15,14 @@ Rails.application.routes.draw do
 
   resources :attachments
 
+  resources :messages
+
   resources :users do
     get 'set_email', on: :member
     patch 'set_email', on: :member
   end
 
-  root to: "questions#index"
+  root to: "messages#show"
 
   mount ActionCable.server => '/cable'
 end

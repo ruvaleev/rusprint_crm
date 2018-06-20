@@ -1,17 +1,20 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :find_user
 
-  def vkontakte
-    sign_in_new_user('vkontakte') if @user.persisted?
-  end
-
   def facebook
     sign_in_new_user('facebook') if @user.persisted?
   end
 
-  def twitter
-    sign_in_new_user('twitter') if @user.persisted?
-  end
+# Если понадобятся другие операторы, 
+# то их можно будет добавить вот так
+  
+  # def vkontakte
+  #   sign_in_new_user('vkontakte') if @user.persisted?
+  # end
+
+  # def twitter
+  #   sign_in_new_user('twitter') if @user.persisted?
+  # end
 
   private
 

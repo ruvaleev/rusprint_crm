@@ -35,4 +35,13 @@ class User < ApplicationRecord
     authorizations.create(provider: auth.provider, uid: auth.uid)
   end
 
+  def make_friend(friend)
+    Friendship.create(user: self, friend: friend)
+  end
+
+  def all_friends
+    friends = User.find(Friendship.where(user:self).pluck(:friend_id))|
+              User.find(Friendship.where(friend:self).pluck(:user_id))
+  end
+
 end

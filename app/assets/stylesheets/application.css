@@ -28,3 +28,8 @@
 .disactive {
   opacity: 0.5;
 }
+
+
+td {
+  width: 200px;
+}
