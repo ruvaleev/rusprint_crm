@@ -4,12 +4,18 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, #:confirmable,
          :omniauthable, omniauth_providers: [ :facebook ]
-  has_many :messages, as: :author, dependent: :destroy
-  has_many :messages, as: :recipient
-  has_many :tweets, as: :author, dependent: :destroy
+
+  has_many :sent_messages, :class_name => "Message", :foreign_key => "sender_id"
+  has_many :received_messages, :class_name => "Message", :foreign_key => "receiver_id"
+
+
+  has_many :tweets, dependent: :destroy
   has_many :authorizations, dependent: :destroy
-  has_many :friendships
-  has_many :users, :through => :friendships
+  
+  has_many :friendships, dependent: :destroy
+  has_many :friends, :through => :friendships
+  has_many :inverse_friendships, :class_name => "Friendship", :foreign_key => "friend_id"
+  has_many :inverse_friends, :through => :inverse_friendships, :source => :user
 
   def self.find_for_oauth(auth)
     authorization = Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first

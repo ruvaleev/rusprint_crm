@@ -3,45 +3,28 @@ require 'rails_helper'
 RSpec.describe User do
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
-  it { should have_many(:comments).dependent(:destroy) }
+  it { should have_many(:sent_messages) }
+  it { should have_many(:received_messages) }
+  it { should have_many(:tweets).dependent(:destroy) }
+  it { should have_many(:authorizations).dependent(:destroy) }
+  it { should have_many(:friendships).dependent(:destroy) }
+  it { should have_many(:friends) }
 
   let!(:user) { create(:user) }
-  let(:question) { create(:question, user: user) }
-  let(:answer) { create(:answer, question: question, user: user) }
-  let(:another_answer) { create(:answer, question: question) }
-  let(:another_question) { create(:question) }
-  let!(:vote_for_answer) { create(:vote_for_answer, object: another_answer, user: user, value: 1, object_type: 'Answer')}
-  let!(:vote_for_question) { create(:vote_for_question, object: another_question, user: user, value: 1, object_type: 'Question')}
-
-  it 'user authority on another_answer' do
-    expect( user.author_of?(another_answer) ).to be_falsey 
-  end
-  
-  it 'user authority on own answer' do
-    expect( user.author_of?(answer) ).to be_truthy 
-  end
-
-  it 'user voted or not for answer' do
-    expect( user.voted?(another_answer, 1) ).to be_truthy
-  end
-
-  it 'user voted or not for question' do
-    expect( user.voted?(another_question, 1) ).to be_truthy
-  end
 
   describe '.find_for_oauth' do
-    let(:auth) { OmniAuth::AuthHash.new(provider: 'vkontakte', uid: '123456') }
+    let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }
 
     context 'user already has authorization' do
       it 'returns the user' do
-        user.authorizations.create(provider: 'vkontakte', uid: '123456')
+        user.authorizations.create(provider: 'facebook', uid: '123456')
         expect(User.find_for_oauth(auth)).to eq user
       end
     end
 
     context 'user has not authorization' do
       context 'user is already exist' do
-        let(:auth) { OmniAuth::AuthHash.new(provider: 'vkontakte', uid: '123456', info: { email: user.email }) }
+        let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { email: user.email }) }
         
         it 'does not create new user' do
           expect { User.find_for_oauth(auth) }.to_not change(User, :count)
@@ -64,7 +47,7 @@ RSpec.describe User do
       end
 
       context 'user does not exist' do
-        let(:auth) { OmniAuth::AuthHash.new(provider: 'vkontakte', uid: '123456', info: { email: 'not_existed_user@mail.com' }) }
+        let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { email: 'not_existed_user@mail.com' }) }
         
         it 'creates new user' do
           expect { User.find_for_oauth(auth) }.to change(User, :count).by(1)

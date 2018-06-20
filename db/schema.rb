@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180620102945) do
+ActiveRecord::Schema.define(version: 20180620095048) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,29 +26,31 @@ ActiveRecord::Schema.define(version: 20180620102945) do
   end
 
   create_table "friendships", force: :cascade do |t|
-    t.bigint "first_friend_id"
-    t.bigint "second_friend_id"
-    t.index ["first_friend_id"], name: "index_friendships_on_first_friend_id"
-    t.index ["second_friend_id"], name: "index_friendships_on_second_friend_id"
+    t.bigint "user_id"
+    t.bigint "friend_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["friend_id"], name: "index_friendships_on_friend_id"
+    t.index ["user_id"], name: "index_friendships_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
     t.text "body"
-    t.bigint "author_id"
-    t.bigint "recipient_id"
+    t.bigint "sender_id"
+    t.bigint "receiver_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["author_id", "recipient_id"], name: "index_messages_on_author_id_and_recipient_id"
-    t.index ["author_id"], name: "index_messages_on_author_id"
-    t.index ["recipient_id"], name: "index_messages_on_recipient_id"
+    t.index ["receiver_id"], name: "index_messages_on_receiver_id"
+    t.index ["sender_id", "receiver_id"], name: "index_messages_on_sender_id_and_receiver_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
   create_table "tweets", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "author_id"
-    t.index ["author_id"], name: "index_tweets_on_author_id"
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_tweets_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -75,9 +77,9 @@ ActiveRecord::Schema.define(version: 20180620102945) do
   end
 
   add_foreign_key "authorizations", "users"
-  add_foreign_key "friendships", "users", column: "first_friend_id"
-  add_foreign_key "friendships", "users", column: "second_friend_id"
-  add_foreign_key "messages", "users", column: "author_id"
-  add_foreign_key "messages", "users", column: "recipient_id"
-  add_foreign_key "tweets", "users", column: "author_id"
+  add_foreign_key "friendships", "users"
+  add_foreign_key "friendships", "users", column: "friend_id"
+  add_foreign_key "messages", "users", column: "receiver_id"
+  add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "tweets", "users"
 end
