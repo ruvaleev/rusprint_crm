@@ -1,0 +1,4 @@
+$('#tr<%= @answer.id %>').hide();
+$('#tr<%= @answer.id %>').html('<%= j render @answer %>');
+$('#tr<%= @answer.id %>').fadeIn();
+$('#edit-answer-<%= @answer.id %>').hide();

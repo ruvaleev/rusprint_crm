@@ -1,0 +1,5 @@
+$('#answer_body').val('');
+$('#error_explanation').fadeOut();
+$('#best').after('<%= j render @answer %>');
+$('.last_answer:first').hide();
+$('.last_answer:first').fadeIn();

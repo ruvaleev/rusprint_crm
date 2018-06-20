@@ -1,0 +1,5 @@
+h2 Change your email
+= form_for(@user) do |f|
+  = f.email_field :email, autofocus: true, autocomplete: "email"
+  br
+  = f.submit "Update"

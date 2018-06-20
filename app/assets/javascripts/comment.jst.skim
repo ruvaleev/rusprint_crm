@@ -1,0 +1,5 @@
+table
+  tr
+    td.icon
+    td.comment User #{@comment.user_id} commented:
+    td #{@comment.body}

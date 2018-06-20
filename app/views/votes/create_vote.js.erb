@@ -1,0 +1,4 @@
+$('#tr<%= @object.id %> .rating').hide();
+$('#tr<%= @object.id %> .rating').html('<%= j render 'answers/rating', resource: @object %>');
+$('#tr<%= @object.id %> .rating').fadeIn();
+$('.errors').html('<%= @message %>');
