@@ -10,30 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180617115127) do
+ActiveRecord::Schema.define(version: 20180620102945) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "answers", force: :cascade do |t|
-    t.text "body"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "question_id"
-    t.bigint "user_id"
-    t.boolean "award", default: false
-    t.index ["question_id"], name: "index_answers_on_question_id"
-    t.index ["user_id"], name: "index_answers_on_user_id"
-  end
-
-  create_table "attachments", force: :cascade do |t|
-    t.string "file"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "attachable_id"
-    t.string "attachable_type"
-    t.index ["attachable_id", "attachable_type"], name: "index_attachments_on_attachable_id_and_attachable_type"
-  end
 
   create_table "authorizations", force: :cascade do |t|
     t.bigint "user_id"
@@ -45,26 +25,35 @@ ActiveRecord::Schema.define(version: 20180617115127) do
     t.index ["user_id"], name: "index_authorizations_on_user_id"
   end
 
-  create_table "comments", force: :cascade do |t|
-    t.integer "commentable_id"
-    t.string "commentable_type"
-    t.integer "user_id"
-    t.text "body"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type"
+  create_table "friendships", force: :cascade do |t|
+    t.bigint "first_friend_id"
+    t.bigint "second_friend_id"
+    t.index ["first_friend_id"], name: "index_friendships_on_first_friend_id"
+    t.index ["second_friend_id"], name: "index_friendships_on_second_friend_id"
   end
 
-  create_table "questions", force: :cascade do |t|
-    t.string "title"
+  create_table "messages", force: :cascade do |t|
+    t.text "body"
+    t.bigint "author_id"
+    t.bigint "recipient_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id", "recipient_id"], name: "index_messages_on_author_id_and_recipient_id"
+    t.index ["author_id"], name: "index_messages_on_author_id"
+    t.index ["recipient_id"], name: "index_messages_on_recipient_id"
+  end
+
+  create_table "tweets", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id"
-    t.index ["user_id"], name: "index_questions_on_user_id"
+    t.bigint "author_id"
+    t.index ["author_id"], name: "index_tweets_on_author_id"
   end
 
   create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.string "second_name"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -85,19 +74,10 @@ ActiveRecord::Schema.define(version: 20180617115127) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "votes", force: :cascade do |t|
-    t.integer "object_id"
-    t.string "object_type"
-    t.integer "user_id"
-    t.integer "value"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["object_id"], name: "index_votes_on_object_id"
-    t.index ["user_id"], name: "index_votes_on_user_id"
-  end
-
-  add_foreign_key "answers", "questions"
-  add_foreign_key "answers", "users"
   add_foreign_key "authorizations", "users"
-  add_foreign_key "questions", "users"
+  add_foreign_key "friendships", "users", column: "first_friend_id"
+  add_foreign_key "friendships", "users", column: "second_friend_id"
+  add_foreign_key "messages", "users", column: "author_id"
+  add_foreign_key "messages", "users", column: "recipient_id"
+  add_foreign_key "tweets", "users", column: "author_id"
 end
