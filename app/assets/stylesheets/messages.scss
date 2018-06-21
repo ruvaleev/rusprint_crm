@@ -1,0 +1,22 @@
+.friends tr {
+  border: gray; 
+  border-bottom-style: solid; 
+  border-width: 2px;
+}
+
+.users {
+  width: 200px;
+  vertical-align: top;
+}
+
+.chat tr {
+  border: gray;
+  border-bottom-style: dotted; 
+  border-width: 1px;
+}
+
+.message_time {
+  border: gray;
+  border-left-style: dotted; 
+  border-width: 1px;
+}

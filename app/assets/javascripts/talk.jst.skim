@@ -1,6 +1,0 @@
-table
-  tr
-    td.
-      = "#{@receiver.email} написал только что:"
-    td.message
-      = @message.body

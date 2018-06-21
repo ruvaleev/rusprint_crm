@@ -1,0 +1,24 @@
+h2
+  | Редактирование профиля
+
+= form_for @user do |f|
+  .field
+    = f.label 'Имя'
+    br
+    = f.text_field :name, autofocus: true, autocomplete: "name"
+  .field
+    = f.label 'Фамилия'
+    br
+    = f.text_field :second_name, autofocus: true, autocomplete: "second_name"
+  .field
+    = f.label :email
+    br
+    = f.email_field :email, autofocus: true, autocomplete: "email"
+  .actions
+    = f.submit "Обновить"
+h3
+  | Удалить аккаунт
+p
+  | Трижды подумайте, надо ли вам это? 
+  = button_to "Удалить мой аккаунт", user_registration_path, data: { confirm: "Are you sure?" }, method: :delete
+= link_to "Назад", :back

@@ -1,6 +1,8 @@
-table
+table.chat
   tr
-    td.
-      = "#{m.sender.email} написал #{Time.now - m.created_at < 3600 ? time_ago_in_words(m.created_at) : m.created_at.strftime("%H:%M:%S")}:"
-    td.message
+    td.name
+      = "#{ current_user.id == m.sender_id ? 'Вы' : m.sender.name || m.sender.email }:"
+    td.tweet-body class="#{ current_user.id == m.sender_id ? 'right' : 'left' }"
       = m.body
+    td.message_time
+      = "#{Time.now - m.created_at < 3600 ? time_ago_in_words(m.created_at) : m.created_at.strftime("%H:%M:%S")}"

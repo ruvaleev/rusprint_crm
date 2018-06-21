@@ -1,4 +1,0 @@
-= form_for [ answer, Comment.new ], remote: true, html: { id: "comment-answer-#{answer.id}", class: 'edit_answer' } do |f|
-  - f.label :body, Comment
-  = f.text_area :body
-  = f.submit 'Save'

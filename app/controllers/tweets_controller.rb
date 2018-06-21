@@ -1,5 +1,6 @@
 class TweetsController < ApplicationController
   before_action :authenticate_user!
+  before_action :find_tweet, except: :create
   after_action :publish_tweets
 
   def create
@@ -8,10 +9,17 @@ class TweetsController < ApplicationController
 
  
   def update
-    @tweet = Tweet.find(params[:id]).update(body: params[:body])
+    @tweet.update(body: params[:tweet][:body])
+  end
+
+  def edit
   end
 
   private
+
+  def find_tweet
+    @tweet = Tweet.find(params[:id])
+  end
 
   def publish_tweets
     return if @tweet.errors.any?

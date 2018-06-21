@@ -2,6 +2,6 @@ h1 Landing Solution Group
 h3 Ваши друзья
 table
   tr
-    td
+    td.users
       = render partial: 'users/user', locals: { users: @friends }
     td id='dialog' Кликните по пользователю, чтобы открыть диалог с ним

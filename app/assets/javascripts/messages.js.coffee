@@ -8,11 +8,11 @@ ready = ->
     received: (data) ->
       console.log data
       message = JSON.parse(data.message)
-      receiver = JSON.parse(data.receiver)
+      sender = JSON.parse(data.sender)
       console.log message
-      $('#talk-' + message.sender_id).append(JST['talk'](
+      $('#talk-' + message.sender_id).append(JST['message'](
           message: message
-          receiver: receiver
+          sender: sender
         )) 
     
   })

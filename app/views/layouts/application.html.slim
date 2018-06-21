@@ -27,7 +27,7 @@ html lang="en"
             ul.nav.navbar-nav
               - if user_signed_in?
                 li= link_to "Выйти", destroy_user_session_path, method: :delete
-                li= link_to "Изменить профиль", edit_user_registration_path
+                li= link_to "Изменить профиль", user_path(current_user)
               - unless user_signed_in?
                 li= link_to 'Sign_in', new_user_session_path
                 li= link_to 'Registration', new_user_registration_path
@@ -42,15 +42,16 @@ html lang="en"
 
     .container
       .row
-        .col-lg-7
+        .col-lg-8
           = bootstrap_flash
           = yield
-        .col-lg-5
-          .well.sidebar-nav
-            h3 Флудилка
-            ul.nav.nav-list
-              li.nav-header а-ля общий чат к сервису
-              = render 'tweets/index' if user_signed_in?
+        - if user_signed_in?
+          .col-lg-4
+            .well.sidebar-nav
+              h3 Флудилка
+              ul.nav.nav-list
+                li.nav-header а-ля общий чат к сервису
+                = render 'tweets/index'
 
       footer
         p &copy; Company 2018

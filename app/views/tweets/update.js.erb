@@ -1,0 +1,3 @@
+$('#tweet-body-<%= @tweet.id %>').fadeOut();
+$('#tweet-body-<%= @tweet.id %>').html('<%= @tweet.body %>')
+$('#tweet-body-<%= @tweet.id %>').fadeIn();

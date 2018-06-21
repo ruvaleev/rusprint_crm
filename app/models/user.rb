@@ -44,4 +44,8 @@ class User < ApplicationRecord
               User.find(Friendship.where(friend:self).pluck(:user_id))
   end
 
+  def author_of?(resource)
+    self.id == resource.user_id
+  end
+
 end

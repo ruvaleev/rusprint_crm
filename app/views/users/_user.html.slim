@@ -1,10 +1,8 @@
-table
+table.friends
   - users.each do |u|
     tr
       td
-        = u.second_name if u.second_name
+        = u.name || u.email
       td
-        = u.name if u.name
-      td
-        = link_to u.email, talk_message_path(id: u), class: 'user-dialog', data: { id: u.id }, method: :patch, remote: true
+        = link_to 'открыть чат', talk_message_path(id: u), class: 'user-dialog', data: { id: u.id }, method: :patch, remote: true
       

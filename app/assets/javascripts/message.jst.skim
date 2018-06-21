@@ -1,0 +1,7 @@
+table.chat
+  tr
+    td.name
+      = "#{@sender.name || @sender.email}:"
+    td.tweet-body class="left"
+      = @message.body
+    td.time только что

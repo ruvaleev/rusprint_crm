@@ -1,0 +1,4 @@
+$('#tweet-body-<%= @tweet.id %>').hide();
+$('#tweet-body-<%= @tweet.id %>').html('<%= j render 'tweets/new' %>')
+$('#tweet-body-<%= @tweet.id %> #tweet-body').val('<%= @tweet.body %>')
+$('#tweet-body-<%= @tweet.id %>').fadeIn();

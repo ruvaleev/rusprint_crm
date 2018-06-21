@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+
+  root to: "messages#show"
+
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
@@ -7,8 +10,7 @@ Rails.application.routes.draw do
   end
 
   resources :tweets
-
-  root to: "messages#show"
+  resources :users 
 
   mount ActionCable.server => '/cable'
 end

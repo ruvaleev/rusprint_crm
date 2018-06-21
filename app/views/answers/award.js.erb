@@ -1,5 +1,0 @@
-$('#tr<%= @answer.id %>').fadeOut();
-$('#best').fadeOut();
-$('#best').html('Лучший ответ: <br><%= j render @answer %>***********');
-$('#best').fadeIn();
-$('#tr<%= @former_best_answer.id if @former_best_answer.present? %>').fadeIn();

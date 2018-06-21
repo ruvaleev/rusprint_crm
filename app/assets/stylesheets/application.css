@@ -18,19 +18,8 @@
   width: 20px;
 }
 
-.edit, .delete, .comment, .best {
-  font-family: arial;
-  font-size: 12px;
-  vertical-align: bottom;
-  text-indent: 5px;
-}
-
-.disactive {
-  opacity: 0.5;
-}
-
 td {
-  padding: 10px;
+  padding: 3px;
 }
 .message {
   width: 200px;
@@ -38,4 +27,29 @@ td {
 
 .mini {
   font-size: 10px;
+}
+
+.tweet-body {
+  width: 250px;
+  
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.name {
+  width: 150px; 
+}
+
+.tweet_name {
+  width: 110px;
+}
+
+.time {
+  text-align: right;
 }

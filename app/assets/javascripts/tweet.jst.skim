@@ -1,7 +1,7 @@
 table
   tr.mini
-    td style="width: 150px"
+    td.tweet-name
       = "#{@user.name || @user.email}:"
-    td
+    td.tweet-body id="tweet-body-#{@tweet.id}"
       = @tweet.body
-    td только что
+    td.time только что

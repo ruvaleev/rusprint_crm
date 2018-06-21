@@ -14,6 +14,7 @@ class MessagesController < ApplicationController
     @tweets = Tweet.all
     @tweet = current_user.tweets.new
     gon.current_user = current_user || false
+    gon.receiver = current_user || false
   end
 
   def talk
@@ -37,7 +38,7 @@ private
     ActionCable.server.broadcast(
       "messages_for_#{params[:message][:receiver_id]}", {
       message: @message.to_json,
-      receiver: @message.receiver.to_json
+      sender: @message.sender.to_json
     }
     )
   end
