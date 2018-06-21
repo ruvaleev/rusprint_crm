@@ -1,6 +1,7 @@
 class MessagesController < ApplicationController
   before_action :authenticate_user!
-  after_action :publish_message, only: [ :create ]
+  before_action :get_ready, except: :create
+  after_action :publish_message, only: :create
 
   def create 
     gon.receiver = User.find(params[:message][:receiver_id])
@@ -9,23 +10,26 @@ class MessagesController < ApplicationController
 
   def show
     redirect_to new_user_session_path unless current_user
-    @friends = current_user.all_friends
-    @message = current_user.sent_messages.new
-    @tweets = Tweet.all
-    @tweet = current_user.tweets.new
-    gon.current_user = current_user || false
-    gon.receiver = current_user || false
   end
 
   def talk
     @friend = User.find(params[:id])
-    @message = current_user.sent_messages.new
     @messages = current_user.sent_messages.where(receiver_id: params[:id])|
                 current_user.received_messages.where(sender_id: params[:id])
   end
 
 
 private
+
+  def get_ready
+    @friends = current_user.all_friends || false
+    @message = current_user.sent_messages.new || false
+    @tweets = Tweet.all
+    @tweet = current_user.tweets.new
+    gon.current_user = current_user || false
+    gon.receiver = current_user || false
+
+  end
 
   def publish_message
     return if @message.errors.any?

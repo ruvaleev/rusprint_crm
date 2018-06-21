@@ -6,7 +6,6 @@ class TweetsController < ApplicationController
   def create
     @tweet = current_user.tweets.create(body: params[:tweet][:body])
   end
-
  
   def update
     @tweet.update(body: params[:tweet][:body])
