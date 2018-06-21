@@ -1,5 +1,5 @@
-.talk
-  - @messages.each do |m|
+.talk id="talk-#{friend.id}"
+  - @messages.sort.each do |m|
     = render 'message', m: m
     
 = form_for @message, remote: true do |f|

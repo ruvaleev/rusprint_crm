@@ -35,3 +35,7 @@ td {
 .message {
   width: 200px;
 }
+
+.mini {
+  font-size: 10px;
+}

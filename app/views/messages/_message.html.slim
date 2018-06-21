@@ -1,6 +1,6 @@
 table
   tr
     td.
-      = "#{m.sender.email} написал #{time_ago_in_words(m.created_at)} назад:"
+      = "#{m.sender.email} написал #{Time.now - m.created_at < 3600 ? time_ago_in_words(m.created_at) : m.created_at.strftime("%H:%M:%S")}:"
     td.message
       = m.body

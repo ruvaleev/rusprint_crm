@@ -1,0 +1,7 @@
+table
+  tr.mini
+    td style="width: 150px"
+      = "#{@user.name || @user.email}:"
+    td
+      = @tweet.body
+    td только что

@@ -1,0 +1,8 @@
+table
+  tr.mini
+    td style="width: 150px"
+      = "#{t.user.name || t.user.email}:"
+    td
+      = t.body
+    td
+      = "#{Time.now - t.created_at < 3600 ? time_ago_in_words(t.created_at) : t.created_at.strftime("%H:%M:%S")}"
