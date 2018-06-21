@@ -1,0 +1,6 @@
+table
+  tr
+    td.
+      = "#{m.sender.email} написал #{time_ago_in_words(m.created_at)} назад:"
+    td.message
+      = m.body

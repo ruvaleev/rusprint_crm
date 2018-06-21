@@ -1,0 +1,8 @@
+.talk
+  - @messages.each do |m|
+    = render 'message', m: m
+    
+= form_for @message, remote: true do |f|
+  = f.text_field :body
+  = f.hidden_field :receiver_id, value: @friend.id
+  = f.submit 'Отправить сообщение'

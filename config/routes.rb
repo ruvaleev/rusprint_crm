@@ -15,7 +15,9 @@ Rails.application.routes.draw do
 
   resources :attachments
 
-  resources :messages
+  resources :messages do
+    patch 'talk', on: :member
+  end
 
   resources :users do
     get 'set_email', on: :member

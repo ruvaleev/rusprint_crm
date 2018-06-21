@@ -5,7 +5,7 @@ class MessagesController < ApplicationController
 
 
   def create 
-    current_user.sent_messages.create(body: params[:message][:body], receiver_id: params[:message][:receiver_id])
+    @message = current_user.sent_messages.create(body: params[:message][:body], receiver_id: params[:message][:receiver_id])
   end
 
   def show
@@ -13,6 +13,15 @@ class MessagesController < ApplicationController
     @friends = current_user.all_friends
     @message = current_user.sent_messages.new
   end
+
+  def talk
+    @friend = User.find(params[:id])
+    @message = current_user.sent_messages.new
+    @messages = current_user.sent_messages.where(receiver_id: params[:id]).order(created_at: :asc)|
+                current_user.received_messages.where(sender_id: params[:id]).order(created_at: :asc)
+  end
+
+
 
   def award
     @answer.make_best if current_user.author_of?(@question)
