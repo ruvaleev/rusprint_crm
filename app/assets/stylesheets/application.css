@@ -18,6 +18,10 @@
   width: 20px;
 }
 
+.mini-icon {
+  width: 10px;
+}
+
 td {
   padding: 3px;
 }

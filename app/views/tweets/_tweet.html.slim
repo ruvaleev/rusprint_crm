@@ -6,5 +6,8 @@ table
       = t.body
     td
       = link_to image_tag('edit', class: 'icon'), edit_tweet_path(t.id), class: 'edit-link', data: { tweet_id: t.id }, remote: true if current_user.author_of?(t)
+
+    td.make_friend
+      = link_to image_tag('plus', class: 'icon'), make_friend_user_path(t.user.id), class: 'edit-link', data: { tweet_id: t.id }, method: :patch, remote: true unless current_user.friend_of?(t.user) || current_user.author_of?(t)
     td.time
       = "#{Time.now - t.created_at < 3600 ? time_ago_in_words(t.created_at) : t.created_at.strftime("%H:%M:%S")}"

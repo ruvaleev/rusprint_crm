@@ -1,8 +1,7 @@
 table.friends
-  - users.each do |u|
-    tr
-      td
-        = u.name || u.email
-      td
-        = link_to 'открыть чат', talk_message_path(id: u), class: 'user-dialog', data: { id: u.id }, method: :patch, remote: true
-      
+  tr
+    td.name
+      = u.name || u.email
+    td
+      = link_to 'открыть чат', talk_message_path(id: u), class: 'user-dialog', data: { id: u.id }, method: :patch, remote: true
+    

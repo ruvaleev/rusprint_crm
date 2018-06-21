@@ -48,4 +48,8 @@ class User < ApplicationRecord
     self.id == resource.user_id
   end
 
+  def friend_of?(user)
+    all_friends.include?(user)
+  end
+
 end

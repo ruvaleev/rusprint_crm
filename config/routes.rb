@@ -10,7 +10,10 @@ Rails.application.routes.draw do
   end
 
   resources :tweets
-  resources :users 
+  
+  resources :users  do
+    patch 'make_friend', on: :member
+  end
 
   mount ActionCable.server => '/cable'
 end

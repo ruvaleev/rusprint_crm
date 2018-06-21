@@ -3,5 +3,5 @@ h3 Ваши друзья
 table
   tr
     td.users
-      = render partial: 'users/user', locals: { users: @friends }
+      = render partial: 'users/friends', locals: { users: @friends }
     td id='dialog' Кликните по пользователю, чтобы открыть диалог с ним

@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
+  before_action :find_user, except: :update
 
   def show
-    @user = User.find(params[:id])
   end
 
   def update
@@ -10,4 +10,13 @@ class UsersController < ApplicationController
     redirect_to root_path
   end
 
+  def make_friend
+    current_user.make_friend(@user)
+  end
+
+  private
+
+  def find_user
+    @user = User.find(params[:id])
+  end
 end
