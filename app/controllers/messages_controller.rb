@@ -5,7 +5,7 @@ class MessagesController < ApplicationController
 
   def create 
     gon.receiver = User.find(params[:message][:receiver_id])
-    @message = current_user.sent_messages.create(body: params[:message][:body], receiver_id: params[:message][:receiver_id])
+    @message = current_user.sent_messages.create(message_params) if current_user.friend_of?(gon.receiver)
   end
 
   def show
@@ -45,6 +45,11 @@ private
       sender: @message.sender.to_json
     }
     )
+  end
+
+
+  def message_params
+    params.require(:message).permit(:body, :receiver_id)
   end
 
 end
