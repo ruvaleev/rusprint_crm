@@ -3,12 +3,17 @@ require 'rails_helper'
 RSpec.describe User do
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
+  # it { should validate_presence_of :name }
+  # it { should validate_presence_of :telephone }
+
   it { should have_many(:sent_messages) }
   it { should have_many(:received_messages) }
-  it { should have_many(:tweets).dependent(:destroy) }
+  it { should have_many(:orders) }
+  it { should have_many(:customers) }
+  it { should have_many(:logs) }
   it { should have_many(:authorizations).dependent(:destroy) }
-  it { should have_many(:friendships).dependent(:destroy) }
-  it { should have_many(:friends) }
+
+  it { should belong_to(:employer) }
 
   let!(:user) { create(:user) }
 

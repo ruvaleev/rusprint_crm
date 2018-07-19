@@ -6,10 +6,8 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.1]
       ## Database authenticatable
       t.string :name
       t.string :second_name
-      t.string :adress, index: true
-      t.string :company
-      t.string :telephone
       t.string :post_in_company
+      t.string :telephone
       t.string :email,              null: false, default: ""
       t.string :encrypted_password, null: false, default: ""
 

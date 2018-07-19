@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180715205213) do
+ActiveRecord::Schema.define(version: 20180716205908) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,12 +26,12 @@ ActiveRecord::Schema.define(version: 20180715205213) do
   end
 
   create_table "cartridge_service_guides", force: :cascade do |t|
-    t.string "model_name"
+    t.string "model"
     t.integer "toner_life_count"
     t.string "price_for_refill"
     t.string "color"
     t.bigint "printer_service_guide_id"
-    t.index ["model_name"], name: "index_cartridge_service_guides_on_model_name"
+    t.index ["model"], name: "index_cartridge_service_guides_on_model"
     t.index ["printer_service_guide_id"], name: "index_cartridge_service_guides_on_printer_service_guide_id"
   end
 
@@ -41,6 +41,16 @@ ActiveRecord::Schema.define(version: 20180715205213) do
     t.string "masters_note"
     t.bigint "cartridge_service_guide_id"
     t.index ["cartridge_service_guide_id"], name: "index_cartridges_on_cartridge_service_guide_id"
+  end
+
+  create_table "companies", force: :cascade do |t|
+    t.string "name"
+    t.string "adress"
+    t.string "telephone"
+    t.string "email"
+    t.bigint "manager_id"
+    t.index ["adress"], name: "index_companies_on_adress"
+    t.index ["manager_id"], name: "index_companies_on_manager_id"
   end
 
   create_table "logs", force: :cascade do |t|
@@ -80,12 +90,12 @@ ActiveRecord::Schema.define(version: 20180715205213) do
   end
 
   create_table "printer_service_guides", force: :cascade do |t|
-    t.string "model_name"
+    t.string "model"
     t.integer "fuser_life_count"
     t.string "sheet_size"
     t.boolean "color"
     t.string "type"
-    t.index ["model_name"], name: "index_printer_service_guides_on_model_name"
+    t.index ["model"], name: "index_printer_service_guides_on_model"
   end
 
   create_table "printers", force: :cascade do |t|
@@ -100,10 +110,8 @@ ActiveRecord::Schema.define(version: 20180715205213) do
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "second_name"
-    t.string "adress"
-    t.string "company"
-    t.string "telephone"
     t.string "post_in_company"
+    t.string "telephone"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -120,15 +128,18 @@ ActiveRecord::Schema.define(version: 20180715205213) do
     t.string "unconfirmed_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["adress"], name: "index_users_on_adress"
+    t.bigint "employer_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["employer_id"], name: "index_users_on_employer_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "authorizations", "users"
+  add_foreign_key "companies", "users", column: "manager_id"
   add_foreign_key "messages", "users", column: "receiver_id"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "orders", "users", column: "customer_id"
   add_foreign_key "orders", "users", column: "manager_id"
   add_foreign_key "orders", "users", column: "master_id"
+  add_foreign_key "users", "companies", column: "employer_id"
 end
