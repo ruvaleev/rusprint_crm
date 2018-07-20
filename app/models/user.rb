@@ -11,8 +11,10 @@ class User < ApplicationRecord
   has_many :received_messages, :class_name => "Message", :foreign_key => "receiver_id"
 
 
-  has_many :customers, :class_name => "Company", :foreign_key => "manager_id"
-  has_many :orders, as: :master
+  has_many :customers, :class_name => "Company", :foreign_key => "manager_id", dependent: :nullify
+  has_many :orders, :class_name => "Order", :foreign_key => "master_id", dependent: :nullify
+  has_many :orders, :class_name => "Order", :foreign_key => "manager_id", dependent: :nullify
+
   has_many :logs
 
   has_many :authorizations, dependent: :destroy

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180716205908) do
+ActiveRecord::Schema.define(version: 20180720214552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,12 +78,14 @@ ActiveRecord::Schema.define(version: 20180716205908) do
     t.datetime "date_of_complete"
     t.datetime "suitable_time"
     t.string "additional_data"
+    t.text "printers"
+    t.text "cartridges"
     t.integer "revenue"
     t.integer "expense"
     t.integer "profit"
-    t.bigint "customer_id"
     t.bigint "manager_id"
     t.bigint "master_id"
+    t.bigint "customer_id"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
     t.index ["manager_id"], name: "index_orders_on_manager_id"
     t.index ["master_id"], name: "index_orders_on_master_id"
@@ -138,7 +140,7 @@ ActiveRecord::Schema.define(version: 20180716205908) do
   add_foreign_key "companies", "users", column: "manager_id"
   add_foreign_key "messages", "users", column: "receiver_id"
   add_foreign_key "messages", "users", column: "sender_id"
-  add_foreign_key "orders", "users", column: "customer_id"
+  add_foreign_key "orders", "companies", column: "customer_id"
   add_foreign_key "orders", "users", column: "manager_id"
   add_foreign_key "orders", "users", column: "master_id"
   add_foreign_key "users", "companies", column: "employer_id"

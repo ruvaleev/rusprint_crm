@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     patch 'talk', on: :member
   end
 
-  resources :tweets
+  resources :orders
   
   resources :users  do
     patch 'make_friend', on: :member
