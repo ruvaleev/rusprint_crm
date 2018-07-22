@@ -1,0 +1,22 @@
+h1 Заказы
+table class="table table-bordered"
+  thead.thead-inverse 
+    tr
+      th ID
+      th Имя 
+      th Телефон
+      th Адрес
+      th Принтеры
+      th Картриджи
+      th Дата выполнения
+      th Удобное время
+      th Дополнительные данные
+      th Выручка
+      th Расходы
+      th Прибыль
+      th Менеджер
+      th Мастер
+      th Дата заказа
+    tr
+      - @orders.sort.each do |order| 
+        = render order, order: order 
