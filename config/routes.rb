@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   end
 
   resources :orders
+  resources :companies
   
   resources :users  do
     patch 'make_friend', on: :member

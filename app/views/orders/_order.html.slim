@@ -1,4 +1,4 @@
-tr.inverse
+tr id = "row_#{order.id}"
   th
     = order.id
   td
@@ -24,8 +24,8 @@ tr.inverse
   td
     = order.profit
   td
-    = order.manager.second_name
+    = order.manager.try(:second_name)
   td
-    = order.master.second_name
+    = order.master.try(:second_name)
   td
     = order.date_of_order

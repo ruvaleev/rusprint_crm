@@ -1,7 +1,0 @@
-table
-  tr.mini
-    td.tweet-name
-      = "#{@user.name || @user.email}:"
-    td.tweet-body id="tweet-body-#{@tweet.id}"
-      = @tweet.body
-    td.time только что

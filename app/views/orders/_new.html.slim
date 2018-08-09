@@ -1,0 +1,22 @@
+.form_group
+  = simple_form_for Order.new, remote: true do |f|
+    = f.input :printers, label: 'Принтеры'
+    = f.input :cartridges, label: 'Картриджи'
+
+    = f.input :revenue, label: 'Стоимость'
+    .
+      = label_tag :date_of_order, 'Дата заказа'
+      = f.date_select :date_of_order
+    .
+      = label_tag :date_of_complete, 'Дата выполнения'
+      = f.date_select :date_of_complete
+    
+    = f.input :suitable_time, as: :time, label: 'Удобное время'
+    = f.input :additional_data, label: 'Дополнительные данные'
+    = f.input :customer_id, collection: Company.all, label: 'Клиент'
+
+    = f.submit 'Создать заказ', class: 'btn btn-primary'
+
+
+
+

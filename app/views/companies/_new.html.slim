@@ -1,0 +1,16 @@
+.form_group
+  = form_for Company.new, remote: true do |f|
+    . 
+      = label_tag :name, 'Название компании'
+      = f.text_field :name
+    . 
+      = label_tag :adress, 'Адрес'
+      = f.text_field :adress
+    . 
+      = label_tag :telephone, 'Телефон'
+      = f.text_field :telephone
+    . 
+      = label_tag :email, 'Email'
+      = f.text_field :email
+
+    = f.submit 'Внести в каталог', class: 'btn btn-primary'
