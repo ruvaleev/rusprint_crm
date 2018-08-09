@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  root to: "messages#show"
+  root to: "orders#index"
 
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   end
 
   resources :orders
+  resources :companies
   
   resources :users  do
     patch 'make_friend', on: :member

@@ -3,13 +3,18 @@ html lang="en"
   head
     meta charset="utf-8"
     meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"
-    meta name="viewport" content="width=device-width, initial-scale=1.0"
-    title= content_for?(:title) ? yield(:title) : "LSG"
+    meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    title= content_for?(:title) ? yield(:title) : "Rusprint"
     = csrf_meta_tags
     = stylesheet_link_tag "application", :media => "all"
     = javascript_include_tag "application"
     = Gon::Base.render_data
     = action_cable_meta_tag
+    // Это нужно ли? Загрузил для Bootstrap
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>
     /! Le HTML5 shim, for IE6-8 support of HTML elements
     /[if lt IE 9]
       = javascript_include_tag "//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"
@@ -22,15 +27,15 @@ html lang="en"
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.navbar-brand href="/"LSG
+          a.navbar-brand href="/"RusPrint
           .navbar-collapse.collapse.navbar-responsive-collapse
             ul.nav.navbar-nav
               - if user_signed_in?
                 li= link_to "Выйти", destroy_user_session_path, method: :delete
                 li= link_to "Изменить профиль", user_path(current_user)
               - unless user_signed_in?
-                li= link_to 'Sign_in', new_user_session_path
-                li= link_to 'Registration', new_user_registration_path
+                li= link_to 'Войти', new_user_session_path
+                li= link_to 'Регистрация', new_user_registration_path
           br
             - if user_signed_in?
               span
@@ -40,18 +45,17 @@ html lang="en"
             p.alert
               = alert
 
-    .container
+    .container-fluid
       .row
-        .col-lg-8
+        .col-md-12
           = bootstrap_flash
           = yield
-        - if user_signed_in?
-          .col-lg-4
-            .well.sidebar-nav
-              h3 Флудилка
-              ul.nav.nav-list
-                li.nav-header а-ля общий чат к сервису
-                = render 'tweets/index'
+        / - if user_signed_in?
+        /   .col-lg-4
+        /     .well.sidebar-nav
+        /       h3 Флудилка
+        /       ul.nav.nav-list
+        /         li.nav-header а-ля общий чат к сервису
 
-      footer
-        p &copy; Company 2018
+  footer
+    p &copy; Company 2018

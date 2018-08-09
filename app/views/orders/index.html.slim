@@ -1,0 +1,32 @@
+h1 Заказы
+
+
+= button_to 'Добавить заказ', '', class: 'btn btn-primary', id: 'new_order', 'data-toggle': "collapse", 'data-target': "#new_order_form", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+.collapse id = "new_order_form"
+  = render 'new'
+= button_to 'Новый клиент', '', class: 'btn btn-primary', id: 'new_customer', 'data-toggle': "collapse", 'data-target': "#new_customer_form", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+.collapse id = "new_customer_form"
+  = render 'companies/new'
+
+.table-responsive
+  table class="table table-bordered table-orders"
+    thead.thead-inverse 
+      tr id = "row_head"
+        th ID
+        th Имя 
+        th Телефон
+        th Адрес
+        th Принтеры
+        th Картриджи
+        th Дата выполнения
+        th Удобное время
+        th Дополнительные данные
+        th Выручка
+        th Расходы
+        th Прибыль
+        th Менеджер
+        th Мастер
+        th Дата заказа
+      tr
+        - @orders.order(id: :desc).each do |order| 
+          = render order, order: order 
