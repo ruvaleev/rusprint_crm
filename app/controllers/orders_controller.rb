@@ -8,6 +8,11 @@ class OrdersController < ApplicationController
 
   def create
     @order = Order.create(order_params)
+    if @order.errors.any?
+      @message = @order.errors.messages
+    else
+      @message = "Заказ #{@order.id} успешно внесен"
+    end
   end
 
   def show

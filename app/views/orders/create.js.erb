@@ -1,1 +1,3 @@
-$('#row_head').after('<%= j render @order, order: @order %>');
+$('.alert').html('<%= @message %>');
+$('#new_order').click();
+$('#row_head').after('<%= j render @order, order: @order unless @order.errors.any? %>');
