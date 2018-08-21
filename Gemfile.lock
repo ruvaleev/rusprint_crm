@@ -225,6 +225,9 @@ GEM
     responders (2.4.0)
       actionpack (>= 4.2.0, < 5.3)
       railties (>= 4.2.0, < 5.3)
+    roo (2.7.1)
+      nokogiri (~> 1)
+      rubyzip (~> 1.1, < 2.0.0)
     rspec-core (3.7.1)
       rspec-support (~> 3.7.0)
     rspec-expectations (3.7.0)
@@ -260,6 +263,9 @@ GEM
       rubyzip (~> 1.2)
     shoulda-matchers (3.1.2)
       activesupport (>= 4.0.0)
+    simple_form (4.0.1)
+      actionpack (>= 5.0)
+      activemodel (>= 5.0)
     skim (0.10.0)
       coffee-script
       coffee-script-source (>= 1.2.0)
@@ -340,10 +346,12 @@ DEPENDENCIES
   rails-controller-testing
   redis (~> 4.0)
   responders (~> 2.0)
+  roo
   rspec-rails
   sass-rails (~> 5.0)
   selenium-webdriver
   shoulda-matchers
+  simple_form
   skim
   slim-rails
   spring

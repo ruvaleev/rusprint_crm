@@ -4,6 +4,5 @@ RSpec.describe PrinterServiceGuide, type: :model do
   it { should have_many :cartridge_service_guide }
 
   it { should validate_presence_of :model }
-  it { should validate_presence_of :color }
-  it { should validate_presence_of :type }
+  it { should validate_presence_of :type_of_system }
 end

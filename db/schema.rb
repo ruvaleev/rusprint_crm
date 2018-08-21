@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180720214552) do
+ActiveRecord::Schema.define(version: 20180820195300) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,12 +91,17 @@ ActiveRecord::Schema.define(version: 20180720214552) do
     t.index ["master_id"], name: "index_orders_on_master_id"
   end
 
+  create_table "prices", force: :cascade do |t|
+    t.string "file"
+  end
+
   create_table "printer_service_guides", force: :cascade do |t|
     t.string "model"
     t.integer "fuser_life_count"
     t.string "sheet_size"
-    t.boolean "color"
-    t.string "type"
+    t.boolean "color", default: false
+    t.string "type_of_system", default: "laser"
+    t.string "vendor"
     t.index ["model"], name: "index_printer_service_guides_on_model"
   end
 
