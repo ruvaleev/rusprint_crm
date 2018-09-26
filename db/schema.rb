@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180820195300) do
+ActiveRecord::Schema.define(version: 20180907121645) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,7 +40,9 @@ ActiveRecord::Schema.define(version: 20180820195300) do
     t.string "additional_data"
     t.string "masters_note"
     t.bigint "cartridge_service_guide_id"
+    t.bigint "company_id"
     t.index ["cartridge_service_guide_id"], name: "index_cartridges_on_cartridge_service_guide_id"
+    t.index ["company_id"], name: "index_cartridges_on_company_id"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -111,6 +113,8 @@ ActiveRecord::Schema.define(version: 20180820195300) do
     t.string "additional_data"
     t.string "masters_note"
     t.bigint "printer_service_guide_id"
+    t.bigint "company_id"
+    t.index ["company_id"], name: "index_printers_on_company_id"
     t.index ["printer_service_guide_id"], name: "index_printers_on_printer_service_guide_id"
   end
 
@@ -142,11 +146,13 @@ ActiveRecord::Schema.define(version: 20180820195300) do
   end
 
   add_foreign_key "authorizations", "users"
+  add_foreign_key "cartridges", "companies"
   add_foreign_key "companies", "users", column: "manager_id"
   add_foreign_key "messages", "users", column: "receiver_id"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "orders", "companies", column: "customer_id"
   add_foreign_key "orders", "users", column: "manager_id"
   add_foreign_key "orders", "users", column: "master_id"
+  add_foreign_key "printers", "companies"
   add_foreign_key "users", "companies", column: "employer_id"
 end

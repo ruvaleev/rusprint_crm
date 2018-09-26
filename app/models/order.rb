@@ -6,4 +6,8 @@ class Order < ApplicationRecord
   has_many :log, as: :registerable
 
   validates :date_of_order, presence: true
+
+  # def decorate
+  #   @decorate ||= Order.decorator.new self
+  # end
 end
