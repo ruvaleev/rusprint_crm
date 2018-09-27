@@ -1,18 +1,27 @@
 .form_group
   = simple_form_for Order.new, remote: true do |f|
-
-    = f.input :revenue, label: 'Стоимость'
-    .
-      = label_tag :date_of_order, 'Дата заказа'
-      = f.date_select :date_of_order
-    .
-      = label_tag :date_of_complete, 'Дата выполнения'
-      = f.date_select :date_of_complete
-    
-    = f.input :suitable_time, as: :time, label: 'Удобное время'
-    = f.input :additional_data, label: 'Дополнительные данные'
-    = f.input :customer_id, collection: PrinterServiceGuide.all, label: 'Принтер'
-    = f.input :customer_id, collection: Company.all, label: 'Клиент'
+    table
+      tr
+        td = label_tag :revenue, 'Стоимость'
+        td = f.input :revenue, label: false
+      tr
+        td = label_tag :date_of_order, 'Дата заказа'
+        td = f.date_select :date_of_order
+      tr
+        td = label_tag :date_of_complete, 'Дата выполнения'
+        td = f.date_select :date_of_complete
+      tr
+        td = label_tag :suitable_time, 'Удобное время'
+        td = f.time_select :suitable_time
+      tr
+        td = label_tag :additional_data, 'Дополнительные данные'
+        td = f.input :additional_data, label: false
+      tr
+        td = label_tag :customer_id, 'Клиент'
+        td = f.input :customer_id, collection: Company.all, label: false
+      tr
+        td = label_tag :printers, 'Принтер'
+        td = f.input :printers, collection: [], label: false, input_html: { disabled: true }
 
     = f.submit 'Создать заказ', class: 'btn btn-primary'
 

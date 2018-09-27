@@ -9,7 +9,10 @@ Rails.application.routes.draw do
     patch 'talk', on: :member
   end
 
-  resources :orders
+  resources :orders do
+    get 'get_drop_down_printers', on: :member
+  end
+
   resources :companies
   resources :prices
   
