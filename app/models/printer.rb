@@ -4,4 +4,8 @@ class Printer < ApplicationRecord
   has_many :log, as: :registerable
   
   validates :printer_service_guide_id, presence: true
+
+  def possible_cartridges
+    CartridgeServiceGuide.where(printer_service_guide: self.printer_service_guide)
+  end
 end

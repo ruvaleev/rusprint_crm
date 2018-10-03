@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   end
 
   resources :orders do
-    get 'get_drop_down_printers', on: :member
+    get 'get_printers', on: :member
   end
 
   resources :companies

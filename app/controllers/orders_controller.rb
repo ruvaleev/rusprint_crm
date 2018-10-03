@@ -19,10 +19,10 @@ class OrdersController < ApplicationController
     @order = Order.find(params[:id])
   end
 
-  def get_drop_down_printers
-    customer = Company.find(params[:id])
-    @options = []
-    customer.printers.each { |x| @options << [x.printer_service_guide.model, x.id] }
+  def get_printers
+    customer    = Company.find(params[:id])
+    @printers   = customer.printers
+    @cartridges = customer.cartridges
   end
   
   private

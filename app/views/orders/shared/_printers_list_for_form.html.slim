@@ -1,0 +1,22 @@
+tr
+  th Принтеры клиента
+tr
+  th ID
+  th Модель
+  th Серийный номер
+  th 
+  th 
+- @printers.each do |printer|
+  tr
+    td = printer.id
+    td = printer.printer_service_guide.model
+    td = printer.serial_number
+    td = button_tag('Добавить сам принтер', class: "plus_printer", type: 'button', data: { model: "#{printer.printer_service_guide.model}" } )
+    td style="text-align:right"
+      - printer.possible_cartridges.each do |cartridge|
+        table
+          tr
+            = cartridge.model
+            = number_field '', "qnt_cartridges_#{cartridge.id}", class: 'qnt_input', data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } 
+            = image_tag('plus', class: "icon plus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } )
+            = image_tag('minus', class: "icon minus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } )
