@@ -21,13 +21,12 @@
           td = label_tag :customer_id, 'Клиент'
           td = f.input :customer_id, collection: Company.all, label: false
         tr
-          td = label_tag :printers, 'Принтеры'
-            tr.customers_printers_list
-          td = label_tag :cartridges, 'Картриджи'
-            tr.customers_cartridges_list
-        tr
-          td = f.input :printers, label: false, input_html: { disabled: true }
-          td = f.input :cartridges, label: false, input_html: { disabled: true }
+          td.customers_printers_list
+          td
+            = image_tag('cancel', class: "icon cancel_printers")
+            = f.input :printers, label: 'Принтеры'
+            = image_tag('cancel', class: "icon cancel_cartridges")
+            = f.input :cartridges, label: 'Картриджи'
 
     = f.submit 'Создать заказ', class: 'btn btn-primary'
 

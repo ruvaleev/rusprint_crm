@@ -7,6 +7,7 @@ $ ->
     model = $(this).data('model')
     goal_elem = "#order_printers"
     fillField(model, 1, goal_elem)
+    $('.cancel_printers').fadeIn()
 
   $('.customers_printers_list').on 'click', '.plus_possible_cartridge', (e) ->
     id = $(this).data('id')
@@ -14,7 +15,8 @@ $ ->
     qnt = $("#qnt_cartridges_#{id}").val() || 1
     goal_elem = "#order_cartridges"
     fillField(model, qnt, goal_elem)
-    $(this).val('')
+    $("#qnt_cartridges_#{id}").val('')
+    $('.cancel_cartridges').fadeIn()
 
   $('.customers_printers_list').on 'keypress', '.qnt_input', (e) ->
     if (e.which == 13)
@@ -24,6 +26,7 @@ $ ->
       goal_elem = "#order_cartridges"
       fillField(model, qnt, goal_elem)
       $(this).val('')
+      $('.cancel_cartridges').fadeIn()
       return false
   
   $('.customers_printers_list').on 'click', '.minus_possible_cartridge', (e) ->
@@ -33,17 +36,28 @@ $ ->
     goal_elem = "#order_cartridges"
     searched_string = "#{model}"
     changeQuantity(goal_elem, searched_string, qnt, '-')
+    $("#qnt_cartridges_#{id}").val('')
+    if $(goal_elem).val() == ''
+      $('.cancel_cartridges').fadeOut()
+
+  $('.cancel_printers').on 'click', (e) ->
+    $('#order_printers').val('')
+    $(this).fadeOut()
+
+  $('.cancel_cartridges').on 'click', (e) ->
+    $('#order_cartridges').val('')
+    $(this).fadeOut()
 
   fillField = (model, qnt, goal_elem) ->
     searched_string = "#{model}"
     value_of_field = $(goal_elem).val()
 
     if value_of_field == ''
-      $(goal_elem).append("#{model} - #{qnt} шт")
+      $(goal_elem).val("#{model} - #{qnt} шт")
     else
       search_result = value_of_field.match(searched_string)
       if search_result == null
-        $(goal_elem).append(", #{model} - #{qnt} шт")
+        $(goal_elem).val("#{value_of_field}, #{model} - #{qnt} шт")
       else
         changeQuantity(goal_elem, searched_string, qnt, '+')
 
@@ -65,6 +79,6 @@ $ ->
       new_value_of_field = new_value_of_field.substr(2)
     if new_value_of_field.slice(-2) == ', '
       new_value_of_field = new_value_of_field.substr(0, new_value_of_field.length - 2)
-    $(goal_elem).html(new_value_of_field)
+    $(goal_elem).val(new_value_of_field)
 
 $(document).on('turbolinks:load', ready)
