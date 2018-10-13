@@ -1,0 +1,8 @@
+$('.new_printers_table').hide()
+$('.new_printers_table').html('')
+$('.new_printers_table').append("<%= j render 'add_new_printer', models: @models %>")
+customer = $('#order_customer_id option:selected').text()
+customer_id = $('#order_customer_id option:selected').val()
+$('.add_to_customer').html("Добавить принтер клиенту " + customer)
+$('.plus_new_printer').attr('data-customer_id', customer_id);
+$('.new_printers_table').fadeIn()

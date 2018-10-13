@@ -12,6 +12,10 @@ Rails.application.routes.draw do
   resources :orders do
     get 'get_printers', on: :member
   end
+  
+  resources :printers, shallow: true do
+    get 'get_models', on: :member
+  end
 
   resources :companies
   resources :prices

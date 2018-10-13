@@ -50,7 +50,7 @@ end
 # Создаем сервисный справочник принтеров
 hash_printer_service_guides = 50.times.map do
   {
-    vendor: [ 'Hp ', 'Kyocera ', 'Samsung ', 'Oki ', 'Panasonic ' ][rand(1...5)],
+    vendor: [ 'Hp', 'Kyocera', 'Samsung', 'Oki', 'Panasonic' ][rand(0..4)],
     model: FFaker::Product.model,
     type_of_system: 'laser',
     fuser_life_count: 100000,

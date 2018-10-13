@@ -1,6 +1,11 @@
 $ ->
-  $('#order_customer_id').on 'click', (e) ->
+  $('#order_customer_id').on 'change', (e) ->
     url = '/orders/' + $(this).val() + '/get_printers'
+    $.get url, (data) ->
+    changeCustomer()
+
+  $('#vendor').on 'change', (e) ->
+    url = '/orders/' + $(this).val() + '/get_models'
     $.get url, (data) ->
 
   $('.customers_printers_list').on 'click', '.plus_printer', (e) ->
@@ -48,6 +53,12 @@ $ ->
     $('#order_cartridges').val('')
     $(this).fadeOut()
 
+  $(".customers_printers_list").on("ajax:success", "#new_printer_form", (event) ->
+    [data, status, xhr] = event.detail
+    $("#new_printer_form").append xhr.responseText
+  ).on "ajax:error", (event) ->
+    $("#new_printer_form").append "<p>ERROR</p>"
+
   fillField = (model, qnt, goal_elem) ->
     searched_string = "#{model}"
     value_of_field = $(goal_elem).val()
@@ -81,4 +92,9 @@ $ ->
       new_value_of_field = new_value_of_field.substr(0, new_value_of_field.length - 2)
     $(goal_elem).val(new_value_of_field)
 
+  changeCustomer = () ->
+    customer = $('#order_customer_id option:selected').text()
+    cusomter_id = $('#order_customer_id option:selected').val()
+    $('.add_to_customer').html("Добавить принтер клиенту " + customer)
+    $('.plus_new_printer').attr('data-customer_id', customer_id);
 $(document).on('turbolinks:load', ready)

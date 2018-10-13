@@ -1,10 +1,9 @@
 class Price < ApplicationRecord
   mount_uploader :file, PriceUploader
-  
+
   def vendor(model)
-    model_catalog = ['HP', 'Kyocera', 'Samsung']
     labels = []
-    model_catalog.each do |vendor|
+    Printer::VENDORS.each do |vendor|
       labels << vendor if model.include?(vendor)
     end
     result = labels[0] unless labels.size > 1

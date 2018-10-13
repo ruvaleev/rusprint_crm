@@ -1,0 +1,8 @@
+.form_group
+  = form_for(PrinterModelSearch.new, url: get_models_printer_path(1), method: 'get', remote: true) do |f|
+    .table-responsive
+      table class="table table-bordered"
+        tr 
+          td = f.text_field :model_like
+
+    = f.submit 'Найти принтер', class: 'btn btn-primary'

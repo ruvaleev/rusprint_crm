@@ -23,6 +23,7 @@ class OrdersController < ApplicationController
     customer    = Company.find(params[:id])
     @printers   = customer.printers
     @cartridges = customer.cartridges
+    @vendors    = Printer::VENDORS.map.with_index.to_a
   end
   
   private
