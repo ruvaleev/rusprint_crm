@@ -59,6 +59,8 @@ $ ->
   ).on "ajax:error", (event) ->
     $("#new_printer_form").append "<p>ERROR</p>"
 
+
+
   fillField = (model, qnt, goal_elem) ->
     searched_string = "#{model}"
     value_of_field = $(goal_elem).val()

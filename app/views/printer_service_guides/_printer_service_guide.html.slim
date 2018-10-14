@@ -1,4 +1,4 @@
-tr
+- id = printer_service_guide.id
   td = printer_service_guide.id
   td = printer_service_guide.vendor
   td = printer_service_guide.model
@@ -6,4 +6,20 @@ tr
   td = printer_service_guide.type_of_system
   td = printer_service_guide.sheet_size
   td = printer_service_guide.fuser_life_count
-  td = image_tag('plus', class: "icon plus_new_printer", data: { id: "#{printer_service_guide.id}", model: "#{printer_service_guide.model}" } )
+  td 
+    = button_to "Добавить принтер клиенту", '', class: 'btn btn-secondary', 'data-toggle': "collapse", 'data-target': "#add_printer_#{id}", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+    .collapse id = "add_printer_#{id}"
+      = simple_form_for Printer.new, remote: true do |f|
+        .table-responsive
+          table class="table table-hover table-sm"
+            tr
+              td Дополнительные данные
+              td = f.input :additional_data, label: false
+            tr 
+              td Серийный номер
+              td = f.input :serial_number, label: false
+            tr
+              td Пробег печки
+              td = f.input :fuser_life_count, label: false
+            tr
+              td = f.submit 'Добавить', class: "btn btn-secondary btn-sm"

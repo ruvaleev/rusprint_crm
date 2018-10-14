@@ -24,3 +24,4 @@ config/database.yml
 # Ignore uploadined files
 public/uploads
 public/.DS_Store
+.DS_Store
