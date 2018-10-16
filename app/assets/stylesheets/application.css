@@ -24,10 +24,12 @@
 
 .hamburger-icon {
   width: 40px;
+  float: left;
 }
 
 .top-menu {
   margin-left: 40px;
+  display: inline-block;
 }
 
 td {

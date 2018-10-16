@@ -34,7 +34,7 @@ $(document).ready ->
 
   $("a[href^='#']").on 'click', (e) ->
     name = $(this).attr("href").replace('#', '')
-    $("html, body").animate({scrollTop: $("[name=#{name}]").offset().top+"px"})
+    $("html, body").animate({scrollTop: $("[name=#{name}]").offset().top-44+"px"})
 
 class Application
   constructor: (@$container) ->
