@@ -3,7 +3,7 @@ $ ->
     url = '/orders/' + $(this).val() + '/get_printers'
     $.get url, (data) ->
     changeCustomer()
-
+  
   $('#vendor').on 'change', (e) ->
     url = '/orders/' + $(this).val() + '/get_models'
     $.get url, (data) ->
@@ -98,5 +98,5 @@ $ ->
     customer = $('#order_customer_id option:selected').text()
     cusomter_id = $('#order_customer_id option:selected').val()
     $('.add_to_customer').html("Добавить принтер клиенту " + customer)
-    $('.plus_new_printer').attr('data-customer_id', customer_id);
+    $('.new_printers_table #printer_company').val(customer_id)
 $(document).on('turbolinks:load', ready)

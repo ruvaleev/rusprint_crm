@@ -3,7 +3,7 @@ class Printer < ApplicationRecord
   belongs_to :company
   has_many :log, as: :registerable
   
-  validates :printer_service_guide_id, presence: true
+  # validates :printer_service_guide_id, presence: true
   
   VENDORS = ['HP', 'Kyocera', 'Samsung']
 

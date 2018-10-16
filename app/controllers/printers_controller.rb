@@ -13,7 +13,7 @@ class PrintersController < ApplicationController
 
   def printer_params
     params.require(:printer).permit(  :serial_number, :fuser_life_count, :additional_data, 
-                                      :masters_note, :printer_service_guide_id, :company_id  )
+                                      :masters_note, :printer_service_guide, :company  )
   end
 
   def search_params
