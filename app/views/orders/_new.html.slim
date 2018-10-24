@@ -1,19 +1,32 @@
 .form_group
   = simple_form_for Order.new, remote: true do |f|
-    = f.input :printers, label: 'Принтеры'
-    = f.input :cartridges, label: 'Картриджи'
-
-    = f.input :revenue, label: 'Стоимость'
-    .
-      = label_tag :date_of_order, 'Дата заказа'
-      = f.date_select :date_of_order
-    .
-      = label_tag :date_of_complete, 'Дата выполнения'
-      = f.date_select :date_of_complete
-    
-    = f.input :suitable_time, as: :time, label: 'Удобное время'
-    = f.input :additional_data, label: 'Дополнительные данные'
-    = f.input :customer_id, collection: Company.all, label: 'Клиент'
+    .table-responsive
+      table class="table table-bordered"
+        tr
+          td = label_tag :revenue, 'Стоимость'
+          td = f.input :revenue, label: false
+        tr
+          td = label_tag :date_of_order, 'Дата заказа'
+          td = f.date_select :date_of_order
+        tr
+          td = label_tag :date_of_complete, 'Дата выполнения'
+          td = f.date_select :date_of_complete
+        tr
+          td = label_tag :suitable_time, 'Удобное время'
+          td = f.time_select :suitable_time
+        tr
+          td = label_tag :additional_data, 'Дополнительные данные'
+          td = f.input :additional_data, label: false
+        tr
+          td = label_tag :customer_id, 'Клиент'
+          td = f.input :customer_id, collection: Company.all, label: false
+        tr
+          td.customers_printers_list
+          td
+            = image_tag('cancel', class: "icon cancel_printers")
+            = f.input :printers, label: 'Принтеры'
+            = image_tag('cancel', class: "icon cancel_cartridges")
+            = f.input :cartridges, label: 'Картриджи'
 
     = f.submit 'Создать заказ', class: 'btn btn-primary'
 

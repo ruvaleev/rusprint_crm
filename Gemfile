@@ -36,7 +36,9 @@ gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'ffaker'
 gem 'simple_form'
-
+gem 'roo'
+gem 'draper'
+gem 'searchlight'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

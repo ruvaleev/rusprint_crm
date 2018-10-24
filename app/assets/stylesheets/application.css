@@ -22,6 +22,16 @@
   width: 10px;
 }
 
+.hamburger-icon {
+  width: 40px;
+  float: left;
+}
+
+.top-menu {
+  margin-left: 40px;
+  display: inline-block;
+}
+
 td {
   padding: 3px;
 }
@@ -56,4 +66,10 @@ td {
 
 .time {
   text-align: right;
+}
+
+.fixed {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
 }

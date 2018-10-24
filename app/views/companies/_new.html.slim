@@ -1,16 +1,18 @@
 .form_group
   = form_for Company.new, remote: true do |f|
-    . 
-      = label_tag :name, 'Название компании'
-      = f.text_field :name
-    . 
-      = label_tag :adress, 'Адрес'
-      = f.text_field :adress
-    . 
-      = label_tag :telephone, 'Телефон'
-      = f.text_field :telephone
-    . 
-      = label_tag :email, 'Email'
-      = f.text_field :email
+    .table-responsive
+      table class="table table-bordered"
+        tr 
+          td = label_tag :name, 'Название компании'
+          td = f.text_field :name
+        tr 
+          td = label_tag :adress, 'Адрес'
+          td = f.text_field :adress
+        tr 
+          td = label_tag :telephone, 'Телефон'
+          td = f.text_field :telephone
+        tr 
+          td = label_tag :email, 'Email'
+          td = f.text_field :email
 
     = f.submit 'Внести в каталог', class: 'btn btn-primary'

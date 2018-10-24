@@ -1,0 +1,12 @@
+tr
+  th colspan = 6 style = 'text-align: center'
+    span Принтеры клиента
+tr
+  th ID
+  th Модель
+  th Серийный номер
+  th Дополнительные данные
+  th 
+  th 
+- printers.each do |printer|
+  = render printer

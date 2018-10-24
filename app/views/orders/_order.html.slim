@@ -8,13 +8,17 @@ tr id = "row_#{order.id}"
   td
     = order.customer.adress
   td
-    = order.printers
+    - order.decorate.all_printers.each do |printer, additional_data, masters_note| 
+      = "#{printer} #{additional_data} #{masters_note};"
+      br
   td
     = order.cartridges
   td
-    = order.date_of_complete
+    = order.qnt
   td
-    = order.suitable_time
+    = order.date_of_complete.to_date
+  td
+    = order.suitable_time.strftime("%H:%M")
   td
     = order.additional_data
   td
@@ -28,4 +32,4 @@ tr id = "row_#{order.id}"
   td
     = order.master.try(:second_name)
   td
-    = order.date_of_order
+    = order.date_of_order.strftime("%d.%m.%Y %H:%M")

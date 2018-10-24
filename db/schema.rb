@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180720214552) do
+ActiveRecord::Schema.define(version: 20181018074337) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,7 +40,9 @@ ActiveRecord::Schema.define(version: 20180720214552) do
     t.string "additional_data"
     t.string "masters_note"
     t.bigint "cartridge_service_guide_id"
+    t.bigint "company_id"
     t.index ["cartridge_service_guide_id"], name: "index_cartridges_on_cartridge_service_guide_id"
+    t.index ["company_id"], name: "index_cartridges_on_company_id"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -73,6 +75,15 @@ ActiveRecord::Schema.define(version: 20180720214552) do
     t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
+  create_table "order_items", force: :cascade do |t|
+    t.string "item_type"
+    t.bigint "order_id"
+    t.bigint "item_id"
+    t.index ["item_id", "item_type"], name: "index_order_items_on_item_id_and_item_type"
+    t.index ["item_id"], name: "index_order_items_on_item_id"
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.datetime "date_of_order"
     t.datetime "date_of_complete"
@@ -80,6 +91,7 @@ ActiveRecord::Schema.define(version: 20180720214552) do
     t.string "additional_data"
     t.text "printers"
     t.text "cartridges"
+    t.integer "qnt"
     t.integer "revenue"
     t.integer "expense"
     t.integer "profit"
@@ -91,12 +103,17 @@ ActiveRecord::Schema.define(version: 20180720214552) do
     t.index ["master_id"], name: "index_orders_on_master_id"
   end
 
+  create_table "prices", force: :cascade do |t|
+    t.string "file"
+  end
+
   create_table "printer_service_guides", force: :cascade do |t|
     t.string "model"
     t.integer "fuser_life_count"
     t.string "sheet_size"
-    t.boolean "color"
-    t.string "type"
+    t.boolean "color", default: false
+    t.string "type_of_system", default: "laser"
+    t.string "vendor"
     t.index ["model"], name: "index_printer_service_guides_on_model"
   end
 
@@ -106,6 +123,8 @@ ActiveRecord::Schema.define(version: 20180720214552) do
     t.string "additional_data"
     t.string "masters_note"
     t.bigint "printer_service_guide_id"
+    t.bigint "company_id"
+    t.index ["company_id"], name: "index_printers_on_company_id"
     t.index ["printer_service_guide_id"], name: "index_printers_on_printer_service_guide_id"
   end
 
@@ -137,11 +156,13 @@ ActiveRecord::Schema.define(version: 20180720214552) do
   end
 
   add_foreign_key "authorizations", "users"
+  add_foreign_key "cartridges", "companies"
   add_foreign_key "companies", "users", column: "manager_id"
   add_foreign_key "messages", "users", column: "receiver_id"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "orders", "companies", column: "customer_id"
   add_foreign_key "orders", "users", column: "manager_id"
   add_foreign_key "orders", "users", column: "master_id"
+  add_foreign_key "printers", "companies"
   add_foreign_key "users", "companies", column: "employer_id"
 end
