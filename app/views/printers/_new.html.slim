@@ -4,5 +4,6 @@
       table class="table table-bordered"
         tr 
           td = f.text_field :model_like
+          td = hidden_field_tag :company, '', class: 'company_id_input'
 
     = f.submit 'Найти принтер', class: 'btn btn-primary'

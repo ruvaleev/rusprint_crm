@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180907121645) do
+ActiveRecord::Schema.define(version: 20181018074337) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,6 +75,15 @@ ActiveRecord::Schema.define(version: 20180907121645) do
     t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
+  create_table "order_items", force: :cascade do |t|
+    t.string "item_type"
+    t.bigint "order_id"
+    t.bigint "item_id"
+    t.index ["item_id", "item_type"], name: "index_order_items_on_item_id_and_item_type"
+    t.index ["item_id"], name: "index_order_items_on_item_id"
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.datetime "date_of_order"
     t.datetime "date_of_complete"
@@ -82,6 +91,7 @@ ActiveRecord::Schema.define(version: 20180907121645) do
     t.string "additional_data"
     t.text "printers"
     t.text "cartridges"
+    t.integer "qnt"
     t.integer "revenue"
     t.integer "expense"
     t.integer "profit"

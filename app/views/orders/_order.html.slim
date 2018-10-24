@@ -8,16 +8,13 @@ tr id = "row_#{order.id}"
   td
     = order.customer.adress
   td
-    - order.decorate.all_printers.each do |printer, qnt| 
-      = "#{printer} - #{qnt} шт."
+    - order.decorate.all_printers.each do |printer, additional_data, masters_note| 
+      = "#{printer} #{additional_data} #{masters_note};"
       br
   td
-    - order.decorate.all_cartridges.each do |cartridge, qnt| 
-      = "#{cartridge} - #{qnt} шт."
-      br 
-    end
+    = order.cartridges
   td
-    = order.decorate.total_cartridge_count
+    = order.qnt
   td
     = order.date_of_complete.to_date
   td

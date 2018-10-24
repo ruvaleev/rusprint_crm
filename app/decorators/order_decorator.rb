@@ -10,9 +10,9 @@ class OrderDecorator < Draper::Decorator
   end
 
   def all_printers
-    result = Hash.new(0)
-    object.customer.printers.joins(:printer_service_guide).pluck(:model).each do |printer|
-      result[printer] += 1
+    result = []
+    object.customer.printers.joins(:printer_service_guide).pluck(:model, :additional_data, :masters_note).each do |printer, additional_data, masters_note|
+      result << [printer, additional_data, masters_note]
     end
     result
   end

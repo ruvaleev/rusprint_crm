@@ -2,6 +2,7 @@ tr
   td = printer.id
   td = printer.printer_service_guide.model
   td = printer.serial_number
+  td = printer.additional_data
   td = button_tag('Добавить сам принтер', class: "btn btn-secondary plus_printer", type: 'button', data: { model: "#{printer.printer_service_guide.model}" } )
   td style="text-align:right"
     - printer.possible_cartridges.each do |cartridge|

@@ -93,40 +93,49 @@ puts "cartridge_service_guide содержит #{CartridgeServiceGuide.all.count
 puts "result содержит #{result} элементы"
 
 # Создаем картриджи для каждой компании
-companies.each do |company|
-  company.printers.each do |printer|
-    puts "принтер сейчас #{printer.inspect}"
-    rand(1...7).times.map do
-      all_csg = printer.printer_service_guide.cartridge_service_guide
-      puts all_csg.map(&:errors)
-      puts "all_csg сейчас #{all_csg.inspect}"
-      csg = all_csg[rand(0...all_csg.count)]
-      puts "csg сейчас #{csg.inspect}"
-      company.cartridges.create(  cartridge_service_guide: csg,
-                                  price_for_customer: csg.price_for_refill.to_i + [-100, 0, 100][rand(0..2)],
-                                  additional_data: [FFaker::HipsterIpsum.phrase][rand(0..3)],
-                                  masters_note: [FFaker::HipsterIpsum.phrase][rand(0..3)] )
-    end
-  end
-end 
+# companies.each do |company|
+#   company.printers.each do |printer|
+#     puts "принтер сейчас #{printer.inspect}"
+#     rand(1...7).times.map do
+#       all_csg = printer.printer_service_guide.cartridge_service_guide
+#       puts all_csg.map(&:errors)
+#       puts "all_csg сейчас #{all_csg.inspect}"
+#       csg = all_csg[rand(0...all_csg.count)]
+#       puts "csg сейчас #{csg.inspect}"
+#       company.cartridges.create(  cartridge_service_guide: csg,
+#                                   price_for_customer: csg.price_for_refill.to_i + [-100, 0, 100][rand(0..2)],
+#                                   additional_data: [FFaker::HipsterIpsum.phrase][rand(0..3)],
+#                                   masters_note: [FFaker::HipsterIpsum.phrase][rand(0..3)] )
+#     end
+#   end
+# end 
 
 # Создаем заказы
 hash_orders = 10.times.map do
   customer = companies[rand(0...companies.count)]
   cartridges = Hash.new(0)
   revenue = 0
-  customer.cartridges.each do |cartridge|
+  sum_qnt = 0
+  customer.printers.each do |printer|
     qnt = rand(1..12)
-    cartridges[cartridge.cartridge_service_guide.model] = qnt
-    revenue += cartridge.price_for_customer.to_i * qnt
+    cartridges[printer.possible_cartridges.first] = qnt
+    revenue += [495, 595, 695, 745, 995][rand(5)] * qnt
+    sum_qnt += qnt
   end
+  cartridges_field = ''
+  cartridges.each do |model, qnt|
+    return if model.nil?
+    cartridges_field << "#{model.model} - #{qnt} шт, "
+  end
+  cartridges_field = cartridges_field.chomp(', ')
 
   Order.create!( date_of_order: date_of_order = FFaker::Time.between(1.months.ago, 2.weeks.ago),
                 date_of_complete: date_of_complete = date_of_order + rand(2),
                 suitable_time: date_of_complete + rand(-24..24),
                 additional_data: FFaker::HipsterIpsum.phrase,
                 printers: customer.printers,
-                cartridges: customer.cartridges,
+                cartridges: cartridges_field,
+                qnt: sum_qnt,
                 revenue: revenue, 
                 expense: expense = revenue * ((rand(0.2..0.4))*100).to_i.to_f/100, 
                 profit: profit = revenue - expense, 

@@ -7,6 +7,7 @@ class CreateOrders < ActiveRecord::Migration[5.1]
       t.string :additional_data
       t.text :printers
       t.text :cartridges
+      t.integer :qnt
       t.integer :revenue
       t.integer :expense
       t.integer :profit
