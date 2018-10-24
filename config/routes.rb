@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     patch 'talk', on: :member
   end
 
+<<<<<<< HEAD
   resources :orders do
     get 'get_printers', on: :member
   end
@@ -19,6 +20,10 @@ Rails.application.routes.draw do
 
   resources :companies
   resources :prices
+=======
+  resources :orders
+  resources :companies
+>>>>>>> 9fa95f33637e92b13f9250f5a706008cbd4ef429
   
   resources :users  do
     patch 'make_friend', on: :member
