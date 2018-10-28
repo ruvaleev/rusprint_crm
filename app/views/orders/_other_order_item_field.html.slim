@@ -1,0 +1,8 @@
+= simple_form_for OtherOrderItem.new, remote: true do |f|
+  .table-responsive
+    table class="table table-bordered"
+      tr
+        = f.input :body, label: 'Доп. пункты'
+        = f.input :price, label: 'Цена'
+        = button_tag 'Добавить к заказу', class: 'btn btn-secondary', id: 'add_other_order_item'
+.other_order_items_list

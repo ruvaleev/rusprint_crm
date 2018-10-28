@@ -11,6 +11,9 @@
 }
 
 .cancel_printers, .cancel_cartridges {
-  display: none;
   float: right;
+}
+
+.customers_printers_list {
+  width: 80%;
 }

@@ -3,9 +3,6 @@
     .table-responsive
       table class="table table-bordered"
         tr
-          td = label_tag :revenue, 'Стоимость'
-          td = f.input :revenue, label: false
-        tr
           td = label_tag :date_of_order, 'Дата заказа'
           td = f.date_select :date_of_order
         tr
@@ -15,18 +12,19 @@
           td = label_tag :suitable_time, 'Удобное время'
           td = f.time_select :suitable_time
         tr
-          td = label_tag :additional_data, 'Дополнительные данные'
-          td = f.input :additional_data, label: false
-        tr
           td = label_tag :customer_id, 'Клиент'
-          td = f.input :customer_id, collection: Company.all, label: false
+          td = f.input :customer_id, collection: Company.all, label: false, prompt: 'Выберите клиента', selected: ''
         tr
-          td.customers_printers_list
           td
+            = f.input :additional_data, label: 'Дополнительные данные'
             = image_tag('cancel', class: "icon cancel_printers")
             = f.input :printers, label: 'Принтеры'
             = image_tag('cancel', class: "icon cancel_cartridges")
             = f.input :cartridges, label: 'Картриджи'
+            .other_order_item
+              = render 'other_order_item_field'
+            = f.input :revenue, label: 'Стоимость'
+          td.customers_printers_list
 
     = f.submit 'Создать заказ', class: 'btn btn-primary'
 

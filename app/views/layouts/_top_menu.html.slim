@@ -1,0 +1,23 @@
+= link_to (image_tag("hamburger", class: 'hamburger-icon')), '', class: 'fixed-menu', 'data-toggle': "collapse", 'data-target': "#hamburger", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+. class="collapse top-menu" id = 'hamburger'
+  .table-responsive name = 'top'
+    table class="fixed-menu" 
+      tr
+        td 
+          = link_to 'Новый прайс', '#top', class: 'btn btn-primary', id: 'new_price', 'data-toggle': "collapse", 'data-target': "#new_price_form", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+          = link_to 'Добавить заказ', '#top', class: 'btn btn-primary', id: 'new_order', 'data-toggle': "collapse", 'data-target': "#new_order_form", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+          = link_to 'Новый клиент', '#top', class: 'btn btn-primary', id: 'new_customer', 'data-toggle': "collapse", 'data-target': "#new_customer_form", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+          = link_to 'Добавить принтер', '', class: 'btn btn-primary', id: 'new_printer', 'data-toggle': "collapse", 'data-target': "#new_printer_form", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+
+  .collapse id = "new_price_form"
+    = render 'prices/form'
+
+  .collapse id = "new_order_form"
+    = render 'new'
+
+  .collapse id = "new_customer_form"
+    = render 'companies/new'
+
+  .collapse id = "new_printer_form"
+    = render 'printers/new'
+    .new_printers_table

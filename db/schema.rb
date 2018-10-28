@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181018074337) do
+ActiveRecord::Schema.define(version: 20181028133817) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20181018074337) do
   create_table "cartridge_service_guides", force: :cascade do |t|
     t.string "model"
     t.integer "toner_life_count"
-    t.string "price_for_refill"
+    t.string "price"
     t.string "color"
     t.bigint "printer_service_guide_id"
     t.index ["model"], name: "index_cartridge_service_guides_on_model"
@@ -76,11 +76,14 @@ ActiveRecord::Schema.define(version: 20181018074337) do
   end
 
   create_table "order_items", force: :cascade do |t|
+    t.integer "owner_id"
+    t.string "owner_type"
+    t.integer "quantity"
+    t.integer "item_id"
     t.string "item_type"
+    t.integer "price_cents", default: 0, null: false
+    t.string "price_currency", default: "RUB", null: false
     t.bigint "order_id"
-    t.bigint "item_id"
-    t.index ["item_id", "item_type"], name: "index_order_items_on_item_id_and_item_type"
-    t.index ["item_id"], name: "index_order_items_on_item_id"
     t.index ["order_id"], name: "index_order_items_on_order_id"
   end
 
@@ -101,6 +104,11 @@ ActiveRecord::Schema.define(version: 20181018074337) do
     t.index ["customer_id"], name: "index_orders_on_customer_id"
     t.index ["manager_id"], name: "index_orders_on_manager_id"
     t.index ["master_id"], name: "index_orders_on_master_id"
+  end
+
+  create_table "other_order_items", force: :cascade do |t|
+    t.string "body"
+    t.string "price"
   end
 
   create_table "prices", force: :cascade do |t|
@@ -126,6 +134,11 @@ ActiveRecord::Schema.define(version: 20181018074337) do
     t.bigint "company_id"
     t.index ["company_id"], name: "index_printers_on_company_id"
     t.index ["printer_service_guide_id"], name: "index_printers_on_printer_service_guide_id"
+  end
+
+  create_table "shopping_carts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

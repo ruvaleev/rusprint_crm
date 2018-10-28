@@ -2,6 +2,7 @@
 # yarn lockfile v1
 
 
-bootstrap@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.1.1.tgz#3aec85000fa619085da8d2e4983dfd67cf2114cb"
+jquery.csrf@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/jquery.csrf/-/jquery.csrf-0.1.0.tgz#e3d6137e340b350f00c3ff1b97cd51b16ae70532"
+  integrity sha1-49YTfjQLNQ8Aw/8bl81RsWrnBTI=

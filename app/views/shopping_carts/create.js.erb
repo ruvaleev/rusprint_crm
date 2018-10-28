@@ -1,0 +1,19 @@
+<% 
+  string = ''
+  other_items = []
+  @shopping_cart.shopping_cart_items.each do |order_item|
+    string << "#{order_item.item.try(:model) || order_item.item.try(:body)} (#{order_item.item.price} руб.) - #{order_item.try(:quantity) || 1} шт, "
+    if order_item.item.class == OtherOrderItem
+      other_items << [order_item.item.id, order_item.item.body, order_item.item.price]
+    end
+  end
+  string = string[0...-2]
+%>
+
+$('#order_cartridges').val('<%= string %>')
+
+$('#order_revenue').val('<%= @shopping_cart.subtotal %>')
+$('#other_order_item_body').val('')
+$('#other_order_item_price').val('')
+$('.other_order_items_list').html('')
+$('.other_order_items_list').html('<%= j render 'orders/other_order_item', other_items: other_items %>')

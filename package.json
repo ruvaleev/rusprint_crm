@@ -1,5 +1,7 @@
 {
   "name": "qna",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "jquery.csrf": "^0.1.0"
+  }
 }

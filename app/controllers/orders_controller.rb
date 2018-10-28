@@ -8,9 +8,17 @@ class OrdersController < ApplicationController
 
   def create
     @order = Order.create(order_params)
+    
     if @order.errors.any?
       @message = @order.errors.messages
     else
+
+      if session[:shopping_cart_id]
+        shopping_cart = ShoppingCart.find(session[:shopping_cart_id])
+        shopping_cart.shopping_cart_items.update_all(order_id: @order.id)
+        session.delete(:shopping_cart_id)
+      end
+
       @message = "Заказ #{@order.id} успешно внесен"
     end
   end
