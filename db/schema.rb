@@ -35,16 +35,6 @@ ActiveRecord::Schema.define(version: 20181028133817) do
     t.index ["printer_service_guide_id"], name: "index_cartridge_service_guides_on_printer_service_guide_id"
   end
 
-  create_table "cartridges", force: :cascade do |t|
-    t.string "price_for_customer"
-    t.string "additional_data"
-    t.string "masters_note"
-    t.bigint "cartridge_service_guide_id"
-    t.bigint "company_id"
-    t.index ["cartridge_service_guide_id"], name: "index_cartridges_on_cartridge_service_guide_id"
-    t.index ["company_id"], name: "index_cartridges_on_company_id"
-  end
-
   create_table "companies", force: :cascade do |t|
     t.string "name"
     t.string "adress"
@@ -169,7 +159,6 @@ ActiveRecord::Schema.define(version: 20181028133817) do
   end
 
   add_foreign_key "authorizations", "users"
-  add_foreign_key "cartridges", "companies"
   add_foreign_key "companies", "users", column: "manager_id"
   add_foreign_key "messages", "users", column: "receiver_id"
   add_foreign_key "messages", "users", column: "sender_id"
