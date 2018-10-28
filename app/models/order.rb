@@ -8,7 +8,4 @@ class Order < ApplicationRecord
 
   validates :date_of_order, presence: true
 
-  # def decorate
-  #   @decorate ||= Order.decorator.new self
-  # end
 end

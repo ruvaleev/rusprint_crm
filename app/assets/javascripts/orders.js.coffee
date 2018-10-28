@@ -16,48 +16,63 @@ $ ->
 
   $('.customers_printers_list').on 'click', '.plus_possible_cartridge', (e) ->
     id = $(this).data('id')
-    model = $(this).data('model')
     qnt = $("#qnt_cartridges_#{id}").val() || 1
-    goal_elem = "#order_cartridges"
-    fillField(model, qnt, goal_elem)
+    plusCartridge(id, qnt)
     $("#qnt_cartridges_#{id}").val('')
-    $('.cancel_cartridges').fadeIn()
 
   $('.customers_printers_list').on 'keypress', '.qnt_input', (e) ->
     if (e.which == 13)
       id = $(this).data('id')
-      model = $(this).data('model')
       qnt = $("#qnt_cartridges_#{id}").val() || 1
-      goal_elem = "#order_cartridges"
-      fillField(model, qnt, goal_elem)
+      plusCartridge(id, qnt)
       $(this).val('')
-      $('.cancel_cartridges').fadeIn()
       return false
   
   $('.customers_printers_list').on 'click', '.minus_possible_cartridge', (e) ->
     id = $(this).data('id')
-    model = $(this).data('model')
     qnt = $("#qnt_cartridges_#{id}").val() || 1
-    goal_elem = "#order_cartridges"
-    searched_string = "#{model}"
-    changeQuantity(goal_elem, searched_string, qnt, '-')
-    $("#qnt_cartridges_#{id}").val('')
-    if $(goal_elem).val() == ''
-      $('.cancel_cartridges').fadeOut()
+    minusCartridge(id, qnt, 'CartridgeServiceGuide')
 
   $('.cancel_printers').on 'click', (e) ->
     $('#order_printers').val('')
-    $(this).fadeOut()
 
   $('.cancel_cartridges').on 'click', (e) ->
+    $.ajax
+      url: '/shopping_carts/0/clear',
+      type: 'POST',
+      beforeSend: (xhr) -> 
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      success: (response) -> 
+        console.log 'очистили корзину'
     $('#order_cartridges').val('')
-    $(this).fadeOut()
+    $('#order_revenue').val('')
 
   $(".customers_printers_list").on("ajax:success", "#new_printer_form", (event) ->
     [data, status, xhr] = event.detail
     $("#new_printer_form").append xhr.responseText
   ).on "ajax:error", (event) ->
     $("#new_printer_form").append "<p>ERROR</p>"
+
+  $('#add_other_order_item').on 'click', (e) ->
+    e.preventDefault()
+    body = $('#other_order_item_body').val()
+    price = $('#other_order_item_price').val()
+    $.ajax
+      url: '/shopping_carts',
+      type: 'POST',
+      beforeSend: (xhr) -> 
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      data: { 
+        body: body, 
+        quantity: 1,
+        price: price 
+      }
+      success: (response) -> 
+        console.log 'добавили'
+
+  $('.other_order_item').on 'click', '.cancel_other_items', (e) ->
+    id = $(this).data('id')
+    minusCartridge(id, 1, 'OtherOrderItem')
 
 
 
@@ -99,4 +114,33 @@ $ ->
     customer_id = $('#order_customer_id option:selected').val()
     $('.add_to_customer').html("Добавить принтер клиенту " + customer)
     $('.company_id_input').val(customer_id)
+
+  plusCartridge = (id, qnt) ->
+    $.ajax
+      url: '/shopping_carts',
+      type: 'POST',
+      beforeSend: (xhr) -> 
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      data: { 
+        product_id:  id, 
+        quantity: qnt,
+        item_type: 'CartridgeServiceGuide' 
+      }
+      success: (response) -> 
+        console.log 'добавили'
+
+  minusCartridge = (id, qnt, item_type) ->
+    $.ajax
+      url: '/shopping_carts/0',
+      type: 'DELETE',
+      beforeSend: (xhr) -> 
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      data: { 
+        item_type: item_type,
+        product_id:  id,
+        quantity: qnt 
+      }
+      success: (response) -> 
+        console.log 'удалили картриджи'
+
 $(document).on('turbolinks:load', ready)

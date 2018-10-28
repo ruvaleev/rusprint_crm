@@ -1,11 +1,10 @@
 class CreateOrderItem < ActiveRecord::Migration[5.1]
   def change
     create_table :order_items do |t|
-      t.string :item_type 
-      t.references :order
-      t.references :item
+      t.shopping_cart_item_fields # Creates the cart items fields
+      t.string :price_currency, default: 'RUB', null: false
+      t.references :order, index: true
     end
 
-    add_index :order_items, [:item_id, :item_type]
   end
 end

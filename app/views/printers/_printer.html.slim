@@ -5,10 +5,12 @@ tr
   td = printer.additional_data
   td = button_tag('Добавить сам принтер', class: "btn btn-secondary plus_printer", type: 'button', data: { model: "#{printer.printer_service_guide.model}" } )
   td style="text-align:right"
-    - printer.possible_cartridges.each do |cartridge|
-      table
+    table
+      - printer.possible_cartridges.each do |cartridge|
         tr
-          = cartridge.model
-          = number_field '', "qnt_cartridges_#{cartridge.id}", class: 'qnt_input', data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } 
-          = image_tag('plus', class: "icon plus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } )
-          = image_tag('minus', class: "icon minus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } )
+          td = cartridge.model
+          td = "#{cartridge.price} руб."
+          td = number_field '', "qnt_cartridges_#{cartridge.id}", class: 'qnt_input', data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } 
+          td 
+            = image_tag('plus', class: "icon plus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } )
+            = image_tag('minus', class: "icon minus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } )

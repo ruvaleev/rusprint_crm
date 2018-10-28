@@ -76,7 +76,7 @@ printer_service_guides.each do |psg|
   rand(1..5).times.map do
     psg.cartridge_service_guide.create( model: FFaker::Product.model,
                                         toner_life_count: [1000, 1600, 2000, 5000, 10000][rand(0..5)],
-                                        price_for_refill: [395, 595, 795, 995, 1395][rand(0..5)],
+                                        price: [395, 595, 795, 995, 1395][rand(0..5)],
                                         color: ['color', 'black'][rand(0..1)] )
   end
 end
@@ -103,7 +103,7 @@ puts "result содержит #{result} элементы"
 #       csg = all_csg[rand(0...all_csg.count)]
 #       puts "csg сейчас #{csg.inspect}"
 #       company.cartridges.create(  cartridge_service_guide: csg,
-#                                   price_for_customer: csg.price_for_refill.to_i + [-100, 0, 100][rand(0..2)],
+#                                   price_for_customer: csg.price.to_i + [-100, 0, 100][rand(0..2)],
 #                                   additional_data: [FFaker::HipsterIpsum.phrase][rand(0..3)],
 #                                   masters_note: [FFaker::HipsterIpsum.phrase][rand(0..3)] )
 #     end

@@ -30,7 +30,7 @@ class Price < ApplicationRecord
         color == 'true' ? cartridge_color = 'color' : cartridge_color = 'black' 
         csg = psg.cartridge_service_guide.where(model: catalog["Модель картриджа"]).first_or_initialize 
         csg.toner_life_count = catalog["Ресурс"] 
-        csg.price_for_refill = catalog['1-2 шт']|| 'уточняйте у менеджера'
+        csg.price = catalog['1-2 шт']|| 'уточняйте у менеджера'
         csg.color = cartridge_color
         csg.save
         errors << csg.errors.messages if csg.errors.any?
