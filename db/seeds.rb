@@ -7,7 +7,6 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 Order.destroy_all
 Printer.destroy_all
-Cartridge.destroy_all
 PrinterServiceGuide.destroy_all
 CartridgeServiceGuide.destroy_all
 Company.destroy_all
