@@ -17,9 +17,9 @@
         tr
           td
             = f.input :additional_data, label: 'Дополнительные данные'
-            = image_tag('cancel', class: "icon cancel_printers")
+            = image_tag('cancel.png', class: "icon cancel_printers")
             = f.input :printers, label: 'Принтеры'
-            = image_tag('cancel', class: "icon cancel_cartridges")
+            = image_tag('cancel.png', class: "icon cancel_cartridges")
             = f.input :cartridges, label: 'Картриджи'
             .other_order_item
               = render 'other_order_item_field'
