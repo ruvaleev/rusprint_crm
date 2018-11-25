@@ -1,4 +1,5 @@
 $ ->
+
   $('#order_customer_id').on 'change', (e) ->
     url = '/orders/' + $(this).val() + '/get_printers'
     $.get url, (data) ->

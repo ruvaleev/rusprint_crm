@@ -4,10 +4,10 @@
       table class="table table-bordered"
         tr
           td = label_tag :date_of_order, 'Дата заказа'
-          td = f.date_select :date_of_order
+          td = f.input :date_of_order, as: :string, input_html: { data: { provide: 'datepicker', 'date-format': 'dd/mm/yyyy' } }
         tr
           td = label_tag :date_of_complete, 'Дата выполнения'
-          td = f.date_select :date_of_complete
+          td = f.input :date_of_complete, as: :string, input_html: { data: { provide: 'datepicker', 'date-format': 'dd/mm/yyyy' } }
         tr
           td = label_tag :suitable_time, 'Удобное время'
           td = f.time_select :suitable_time

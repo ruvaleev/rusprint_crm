@@ -17,6 +17,8 @@
 #= require turbolinks
 #= require cocoon
 #= require skim
+#= require bootstrap-datepicker
+#= require bootstrap-datepicker/core
 #= require_tree .
 
 #var App = App || {};
