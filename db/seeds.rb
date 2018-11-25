@@ -123,22 +123,38 @@ hash_orders = 10.times.map do
   end
   cartridges_field = ''
   cartridges.each do |model, qnt|
-    return if model.nil?
-    cartridges_field << "#{model.model} - #{qnt} шт, "
+    unless model.nil?
+      cartridges_field << "#{model.model} - #{qnt} шт, "
+    end
   end
   cartridges_field = cartridges_field.chomp(', ')
 
-  Order.create!( date_of_order: date_of_order = FFaker::Time.between(1.months.ago, 2.weeks.ago),
-                date_of_complete: date_of_complete = date_of_order + rand(2),
-                suitable_time: date_of_complete + rand(-24..24),
-                additional_data: FFaker::HipsterIpsum.phrase,
-                printers: customer.printers,
-                cartridges: cartridges_field,
-                qnt: sum_qnt,
-                revenue: revenue, 
-                expense: expense = revenue * ((rand(0.2..0.4))*100).to_i.to_f/100, 
-                profit: profit = revenue - expense, 
-                customer_id: customer.id, 
-                manager_id: rand(users[0].id..users[1].id), 
-                master_id: rand(users[2].id..users[3].id) )
+  printers_field = ''
+  customer.printers.each do |printer, qnt|
+    unless printer.nil?
+      printers_field << "#{printer.printer_service_guide.model} - #{qnt} шт, "
+    end
+  end
+  printers_field = printers_field.chomp(', ')
+
+  order = Order.new( date_of_order: date_of_order = FFaker::Time.between(1.months.ago, 2.weeks.ago),
+                  date_of_complete: date_of_complete = date_of_order + rand(2),
+                  suitable_time: date_of_complete + rand(-24..24),
+                  additional_data: FFaker::HipsterIpsum.phrase,
+                  printers: customer.printers,
+                  cartridges: cartridges_field,
+                  qnt: sum_qnt,
+                  revenue: revenue, 
+                  expense: expense = revenue * ((rand(0.2..0.4))*100).to_i.to_f/100, 
+                  profit: profit = revenue - expense, 
+                  customer_id: customer.id, 
+                  manager_id: rand(users[0].id..users[1].id), 
+                  master_id: rand(users[2].id..users[3].id) )
+
+  if order.save
+    puts "Order #{order.id} добавлен"
+  else
+    puts "Order имеет ошибки: #{order.errors.messages}"
+  end
+
 end

@@ -8,8 +8,7 @@ tr id = "row_#{order.id}"
   td
     = order.customer.adress
   td
-    - order.decorate.all_printers.each do |printer, additional_data, masters_note| 
-      = "#{printer} #{additional_data} #{masters_note};"
+    = order.printers
       br
   td
     = order.cartridges
