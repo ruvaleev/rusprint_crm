@@ -130,9 +130,9 @@ hash_orders = 10.times.map do
   cartridges_field = cartridges_field.chomp(', ')
 
   printers_field = ''
-  customer.printers.each do |printer, qnt|
+  customer.printers.each do |printer|
     unless printer.nil?
-      printers_field << "#{printer.printer_service_guide.model} - #{qnt} шт, "
+      printers_field << "#{printer.printer_service_guide.model} - 1 шт, "
     end
   end
   printers_field = printers_field.chomp(', ')
@@ -141,7 +141,7 @@ hash_orders = 10.times.map do
                   date_of_complete: date_of_complete = date_of_order + rand(2),
                   suitable_time: date_of_complete + rand(-24..24),
                   additional_data: FFaker::HipsterIpsum.phrase,
-                  printers: customer.printers,
+                  printers: printers_field,
                   cartridges: cartridges_field,
                   qnt: sum_qnt,
                   revenue: revenue, 
