@@ -136,10 +136,12 @@ hash_orders = 10.times.map do
     end
   end
   printers_field = printers_field.chomp(', ')
+  
 
   order = Order.new( date_of_order: date_of_order = FFaker::Time.between(1.months.ago, 2.weeks.ago),
                   date_of_complete: date_of_complete = date_of_order + rand(2),
-                  suitable_time: date_of_complete + rand(-24..24),
+                  suitable_time_start: suitable_time_start = date_of_complete + rand(-24..24),
+                  suitable_time_end: suitable_time_start + 2,
                   additional_data: FFaker::HipsterIpsum.phrase,
                   printers: printers_field,
                   cartridges: cartridges_field,

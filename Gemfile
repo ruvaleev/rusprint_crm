@@ -41,6 +41,7 @@ gem 'draper'
 gem 'searchlight'
 gem 'acts_as_shopping_cart', '~> 0.4.0'
 gem 'money-rails', '~>1.12'
+gem 'bootstrap-datepicker-rails'
 
 
 # Use ActiveModel has_secure_password

@@ -9,8 +9,11 @@
           td = label_tag :date_of_complete, 'Дата выполнения'
           td = f.input :date_of_complete, as: :string, input_html: { data: { provide: 'datepicker', 'date-format': 'dd/mm/yyyy' } }
         tr
-          td = label_tag :suitable_time, 'Удобное время'
-          td = f.time_select :suitable_time
+          td = label_tag :suitable_time_start, 'Удобное время с:'
+          td = f.time_select :suitable_time_start
+        tr
+          td = label_tag :suitable_time_end, 'Удобное время до:'
+          td = f.time_select :suitable_time_end
         tr
           td = label_tag :customer_id, 'Клиент'
           td = f.input :customer_id, collection: Company.all, label: false, prompt: 'Выберите клиента', selected: ''
