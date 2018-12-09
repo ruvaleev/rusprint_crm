@@ -16,7 +16,11 @@
           td = f.time_select :suitable_time_end, selected: Time.current.strftime('%H:00').to_time
         tr
           td = label_tag :customer_id, 'Клиент'
-          td = f.input :customer_id, collection: Company.all, label: false, prompt: 'Выберите клиента', selected: ''
+          td 
+            = link_to 'Новый клиент', '#top', class: 'btn btn-primary', id: 'new_customer', 'data-toggle': "collapse", 'data-target': "#new_customer_form", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+            .collapse id = "new_customer_form"
+              = render 'companies/new'
+            = f.input :customer_id, collection: Company.all, label: false, prompt: 'Выберите клиента', selected: '', input_html: { class: 'order_customer_select btn btn-primary' }
         tr
           td
             = f.input :additional_data, label: 'Дополнительные данные'
@@ -30,7 +34,3 @@
           td.customers_printers_list
 
     = f.submit 'Создать заказ', class: 'btn btn-primary'
-
-
-
-

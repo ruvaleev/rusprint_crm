@@ -1,5 +1,9 @@
 $ ->
 
+  $('.order_customer_select').select2({
+    width: '300px'
+  })
+
   $('#order_customer_id').on 'change', (e) ->
     url = '/orders/' + $(this).val() + '/get_printers'
     $.get url, (data) ->

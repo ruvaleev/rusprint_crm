@@ -19,6 +19,8 @@
 #= require skim
 #= require bootstrap-datepicker
 #= require bootstrap-datepicker/core
+#= require select2
+#= require select2-full
 #= require_tree .
 
 #var App = App || {};
