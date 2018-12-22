@@ -7,7 +7,12 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @order = Order.create(order_params)
+    params_for_order = order_params
+    if params[:new_client_flag] == 'true'
+      @company = Company.create(company_params)
+      params_for_order[:customer_id] = @company.id
+    end
+    @order = Order.create(params_for_order)
     
     if @order.errors.any?
       @message = @order.errors.messages
@@ -36,9 +41,10 @@ class OrdersController < ApplicationController
   private
 
   def order_params
-    params.require(:order).permit(:printers, :cartridges, :revenue, :date_of_complete, :date_of_order, 
-                                  :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, 
-                                  printers_attributes: [:printer_service_guide_id], 
-                                  cartridges_attributes: [:cartridge_service_guide_id])
+    params.require(:order).permit(:printers, :cartridges, :revenue, :date_of_complete, :date_of_order, :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, printers_attributes: [:printer_service_guide_id], cartridges_attributes: [:cartridge_service_guide_id])
+  end
+
+  def company_params
+    params.require(:company).permit(:name, :adress, :telephone, :email)
   end
 end
