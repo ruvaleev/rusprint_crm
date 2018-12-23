@@ -4,16 +4,30 @@
       table class="table table-bordered"
         tr
           td = label_tag :date_of_order, 'Дата заказа'
-          td = f.date_select :date_of_order
+          td = f.input :date_of_order, as: :string, label: false, input_html: { data: { provide: 'datepicker', 'date-format': 'dd.mm.yyyy' }, value: Date.current.strftime('%d.%m.%Y') }
         tr
           td = label_tag :date_of_complete, 'Дата выполнения'
-          td = f.date_select :date_of_complete
+          td = f.input :date_of_complete, as: :string, label: false, input_html: { data: { provide: 'datepicker', 'date-format': 'dd.mm.yyyy' }, value: Date.current.strftime('%d.%m.%Y') }
         tr
-          td = label_tag :suitable_time, 'Удобное время'
-          td = f.time_select :suitable_time
+          td = label_tag :suitable_time_start, 'Удобное время с:'
+          td = f.time_select :suitable_time_start, selected: Time.current.strftime('%H:00').to_time
+        tr
+          td = label_tag :suitable_time_end, 'Удобное время до:'
+          td = f.time_select :suitable_time_end, selected: Time.current.strftime('%H:00').to_time
         tr
           td = label_tag :customer_id, 'Клиент'
-          td = f.input :customer_id, collection: Company.all, label: false, prompt: 'Выберите клиента', selected: ''
+          td 
+            ul class="nav nav-tabs" role="tablist"
+              li class="nav-item"
+                a class="nav-link active btn btn-primary" data-toggle="tab" href="#first_tab" role="tab" id="choose_client"  value_for_new_client_flag="false" Выбрать клиента
+              li class="nav-item"
+                a class="nav-link btn btn-primary" data-toggle="tab" href="#second_tab" role="tab" id="new_client_tab"  value_for_new_client_flag="true" Новый клиент
+
+            div class="tab-content"
+              div class="tab-pane active" id="first_tab" role="tabpanel"
+                = f.input :customer_id, collection: Company.all, label: false, prompt: 'Выберите клиента', selected: '', input_html: { class: 'order_customer_select btn btn-primary' }
+              div class="tab-pane" id="second_tab" role="tabpanel"
+                = render partial: 'companies/new', locals: { without_order: false }
         tr
           td
             = f.input :additional_data, label: 'Дополнительные данные'
@@ -24,10 +38,8 @@
             .other_order_item
               = render 'other_order_item_field'
             = f.input :revenue, label: 'Стоимость'
+            = hidden_field_tag 'new_client_flag', 'false'
           td.customers_printers_list
 
     = f.submit 'Создать заказ', class: 'btn btn-primary'
-
-
-
 

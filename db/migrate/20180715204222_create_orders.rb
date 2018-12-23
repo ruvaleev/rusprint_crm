@@ -3,7 +3,8 @@ class CreateOrders < ActiveRecord::Migration[5.1]
     create_table :orders do |t|
       t.datetime :date_of_order
       t.datetime :date_of_complete
-      t.datetime :suitable_time
+      t.datetime :suitable_time_start
+      t.datetime :suitable_time_end
       t.string :additional_data
       t.text :printers
       t.text :cartridges

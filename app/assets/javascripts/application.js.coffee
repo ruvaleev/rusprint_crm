@@ -17,6 +17,10 @@
 #= require turbolinks
 #= require cocoon
 #= require skim
+#= require bootstrap-datepicker
+#= require bootstrap-datepicker/core
+#= require select2
+#= require select2-full
 #= require_tree .
 
 #var App = App || {};
@@ -31,10 +35,6 @@ $(document).ready ->
       $nav.addClass('fixed')
     else
       $nav.removeClass('fixed')
-
-  $("a[href^='#']").on 'click', (e) ->
-    name = $(this).attr("href").replace('#', '')
-    $("html, body").animate({scrollTop: $("[name=#{name}]").offset().top-44+"px"})
 
 class Application
   constructor: (@$container) ->

@@ -1,4 +1,13 @@
 $ ->
+  
+  $('#new_client_tab, #choose_client').on 'click', (e) ->
+    value = $(this).attr('value_for_new_client_flag')
+    $('#new_client_flag').val(value)
+
+  $('.order_customer_select').select2({
+    width: '300px'
+  })
+
   $('#order_customer_id').on 'change', (e) ->
     url = '/orders/' + $(this).val() + '/get_printers'
     $.get url, (data) ->

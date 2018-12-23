@@ -8,8 +8,7 @@ tr id = "row_#{order.id}"
   td
     = order.customer.adress
   td
-    - order.decorate.all_printers.each do |printer, additional_data, masters_note| 
-      = "#{printer} #{additional_data} #{masters_note};"
+    = order.printers
       br
   td
     = order.cartridges
@@ -18,7 +17,7 @@ tr id = "row_#{order.id}"
   td
     = order.date_of_complete.to_date
   td
-    = order.suitable_time.strftime("%H:%M")
+    = "С #{order.suitable_time_start.strftime("%H:%M")} до #{order.suitable_time_end.strftime("%H:%M")}" if order.suitable_time_start && order.suitable_time_end
   td
     = order.additional_data
   td

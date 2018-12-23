@@ -1,18 +1,12 @@
 .form_group
-  = form_for Company.new, remote: true do |f|
+  = simple_form_for Company.new, remote: true do |f|
     .table-responsive
       table class="table table-bordered"
         tr 
-          td = label_tag :name, 'Название компании'
-          td = f.text_field :name
-        tr 
-          td = label_tag :adress, 'Адрес'
-          td = f.text_field :adress
-        tr 
-          td = label_tag :telephone, 'Телефон'
-          td = f.text_field :telephone
-        tr 
-          td = label_tag :email, 'Email'
-          td = f.text_field :email
+          td 
+            = f.input :name, label: 'Название компании'
+            = f.input :adress, label: 'Адрес'
+            = f.input :telephone, label: 'Телефон'
+            = f.input :email, label: 'Email'
 
-    = f.submit 'Внести в каталог', class: 'btn btn-primary'
+    = f.submit 'Внести в каталог', class: 'btn btn-primary' if without_order
