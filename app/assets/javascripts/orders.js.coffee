@@ -56,11 +56,47 @@ $ ->
     $('#order_cartridges').val('')
     $('#order_revenue').val('')
 
-  $(".customers_printers_list").on("ajax:success", "#new_printer_form", (event) ->
-    [data, status, xhr] = event.detail
-    $("#new_printer_form").append xhr.responseText
-  ).on "ajax:error", (event) ->
-    $("#new_printer_form").append "<p>ERROR</p>"
+# Выполняем поиск внутри формы заказа
+  $("#new_printer_model_search").on 'submit', (e) ->
+    e.preventDefault()
+    model_like = $("#new_printer_model_search #printer_model_search_model_like").val()
+    $.ajax
+      url: '/printers/1/get_models',
+      type: 'GET',
+      beforeSend: (xhr) -> 
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      data: {
+        printer_model_search: { model_like: model_like }
+      }
+      success: (response) -> 
+        console.log 'запрос прошел успешно'
+
+# Добавляем найденный принтер клиенту
+  $(".new_printers_table").on 'submit', '#new_printer', (e) ->
+    e.preventDefault()
+    printer_service_guide_id = $(this).parent('.collapse').attr('id')
+    additional_data = $(this).find('#printer_additional_data').val()
+    serial_number = $(this).find('#printer_serial_number').val()
+    fuser_life_count = $(this).find('#printer_fuser_life_count').val()
+    company_id = $(this).find('#company_id').val()
+    $.ajax
+      url: '/printers',
+      type: 'POST',
+      beforeSend: (xhr) -> 
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      data: {
+        printer: {
+          additional_data: additional_data,
+          serial_number: serial_number,
+          fuser_life_count: fuser_life_count
+        }
+        company_id: company_id,
+        printer_service_guide_id: printer_service_guide_id
+      }
+      success: (response) -> 
+        console.log 'добавили'
+
+
 
   $('#add_other_order_item').on 'click', (e) ->
     e.preventDefault()

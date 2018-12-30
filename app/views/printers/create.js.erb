@@ -1,1 +1,2 @@
 $('.customers_printers_list').append('<%= j render 'printers/printers_list_for_form', printers: [@printer] %>')
+$('html, body').animate({ scrollTop: $('.customers_printers_list span').last().offset().top }, 500)
