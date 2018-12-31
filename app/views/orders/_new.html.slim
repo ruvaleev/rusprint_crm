@@ -39,7 +39,13 @@
               = render 'other_order_item_field'
             = f.input :revenue, label: 'Стоимость'
             = hidden_field_tag 'new_client_flag', 'false'
-          td.customers_printers_list
+          td
+            = link_to 'Добавить принтер', '', class: 'btn btn-primary', id: 'new_printer', 'data-toggle': "collapse", 'data-target': "#new_printer_form", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+            .collapse id = "new_printer_form"
+              .form_for_search_printer
+                = render 'printers/new'
+              .new_printers_table
+              .customers_printers_list
 
     = f.submit 'Создать заказ', class: 'btn btn-primary'
 

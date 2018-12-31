@@ -8,8 +8,8 @@
   td = printer_service_guide.sheet_size
   td = printer_service_guide.fuser_life_count
   td 
-    = button_to "Добавить принтер клиенту", '', class: 'btn btn-secondary', 'data-toggle': "collapse", 'data-target': "#add_printer_#{id}", 'aria-expanded': "false", 'aria-controls': "collapse_form"
-    .collapse id = "add_printer_#{id}"
+    = button_to "Добавить принтер клиенту", '', class: 'btn btn-secondary', 'data-toggle': "collapse", 'data-target': "##{id}", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+    .collapse id = "#{id}"
       = simple_form_for Printer.new, remote: true do |f|
         .table-responsive
           table class="table table-hover table-sm"
