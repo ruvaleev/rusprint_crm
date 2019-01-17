@@ -2,28 +2,33 @@ tr id = "row_#{order.id}"
   th
     = order.id
   td
-    = order.customer.name
+    = best_in_place_if true, order.customer, :name
   td
-    = order.customer.telephone
+    = best_in_place_if true, order.customer, :telephone
   td
-    = order.customer.adress
+    = best_in_place_if true, order.customer, :adress
   td
-    = order.printers
-      br
+    = best_in_place_if true, order, :printers
   td
-    = order.cartridges
+    = best_in_place_if true, order, :cartridges
   td
-    = order.qnt
+    = best_in_place_if true, order, :qnt, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
   td
-    = order.date_of_complete.to_date
+    = best_in_place_if true, order.decorate, :date_of_complete, display_as: :completing_date, value: order.decorate.completing_date
   td
-    = "С #{order.suitable_time_start.strftime("%H:%M")} до #{order.suitable_time_end.strftime("%H:%M")}" if order.suitable_time_start && order.suitable_time_end
+    table
+      tr
+        td.suitable_time
+          = best_in_place_if true, order.decorate, :suitable_time_start, as: :select, collection: order.decorate.time_hash('С ')
+      tr
+        td.suitable_time
+          = best_in_place_if true, order.decorate, :suitable_time_end, as: :select, collection: order.decorate.time_hash('До ')
   td
-    = order.additional_data
+    = best_in_place_if true, order, :additional_data
   td
-    = order.revenue
+    = best_in_place_if true, order, :revenue
   td
-    = order.expense
+    = best_in_place_if true, order, :expense
   td
     = order.profit
   td

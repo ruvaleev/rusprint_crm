@@ -137,11 +137,15 @@ hash_orders = 10.times.map do
   end
   printers_field = printers_field.chomp(', ')
   
+  suitable_time = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30"]
+  i = rand(23)
+  suitable_time_start = suitable_time[i]
+  suitable_time_end = suitable_time[i + 4]
 
   order = Order.new( date_of_order: date_of_order = FFaker::Time.between(1.months.ago, 2.weeks.ago),
                   date_of_complete: date_of_complete = date_of_order + rand(2),
-                  suitable_time_start: suitable_time_start = date_of_complete + rand(-24..24),
-                  suitable_time_end: suitable_time_start + 2,
+                  suitable_time_start: suitable_time_start,
+                  suitable_time_end: suitable_time_end,
                   additional_data: FFaker::HipsterIpsum.phrase,
                   printers: printers_field,
                   cartridges: cartridges_field,

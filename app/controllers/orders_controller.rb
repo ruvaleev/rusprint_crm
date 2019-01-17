@@ -28,6 +28,11 @@ class OrdersController < ApplicationController
     end
   end
 
+  def update
+    @order = Order.find(params[:id])
+    @order.update(order_params)
+  end
+
   def show
     @order = Order.find(params[:id])
   end
@@ -41,7 +46,7 @@ class OrdersController < ApplicationController
   private
 
   def order_params
-    params.require(:order).permit(:printers, :cartridges, :revenue, :date_of_complete, :date_of_order, :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, printers_attributes: [:printer_service_guide_id], cartridges_attributes: [:cartridge_service_guide_id])
+    params.require(:order).permit(:printers, :cartridges, :revenue, :date_of_complete, :date_of_order, :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, :qnt, printers_attributes: [:printer_service_guide_id], cartridges_attributes: [:cartridge_service_guide_id])
   end
 
   def company_params

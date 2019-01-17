@@ -1,3 +1,4 @@
+- time_hash = Order.new.decorate.time_hash
 .form_group
   = simple_form_for Order.new, remote: true do |f|
     .table-responsive
@@ -10,10 +11,10 @@
           td = f.input :date_of_complete, as: :string, label: false, input_html: { data: { provide: 'datepicker', 'date-format': 'dd.mm.yyyy' }, value: Date.current.strftime('%d.%m.%Y') }
         tr
           td = label_tag :suitable_time_start, 'Удобное время с:'
-          td = f.time_select :suitable_time_start, selected: Time.current.strftime('%H:00').to_time
+          td = f.select :suitable_time_start, time_hash, selected: time_hash['10:00']
         tr
           td = label_tag :suitable_time_end, 'Удобное время до:'
-          td = f.time_select :suitable_time_end, selected: Time.current.strftime('%H:00').to_time
+          td = f.select :suitable_time_end, time_hash, selected: time_hash['18:00']
         tr
           td = label_tag :customer_id, 'Клиент'
           td 

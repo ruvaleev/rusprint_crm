@@ -187,5 +187,3 @@ $ ->
       }
       success: (response) -> 
         console.log 'удалили картриджи'
-
-$(document).on('turbolinks:load', ready)
