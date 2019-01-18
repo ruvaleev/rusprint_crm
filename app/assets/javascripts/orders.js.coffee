@@ -23,10 +23,11 @@ $ ->
     fillField(model, 1, goal_elem)
     $('.cancel_printers').fadeIn()
 
+# Нажатие на плюс, прибавляем картриджи к заказу
   $('.customers_printers_list').on 'click', '.plus_possible_cartridge', (e) ->
     id = $(this).data('id')
     qnt = $("#qnt_cartridges_#{id}").val() || 1
-    plusCartridge(id, qnt)
+    plusCartridge(id, qnt) # Прибавляем картриджи к заказу
     $("#qnt_cartridges_#{id}").val('')
 
   $('.customers_printers_list').on 'keypress', '.qnt_input', (e) ->
@@ -36,11 +37,13 @@ $ ->
       plusCartridge(id, qnt)
       $(this).val('')
       return false
-  
+
+# Нажатие на минус, вычитываем картриджи из заказа
   $('.customers_printers_list').on 'click', '.minus_possible_cartridge', (e) ->
     id = $(this).data('id')
     qnt = $("#qnt_cartridges_#{id}").val() || 1
     minusCartridge(id, qnt, 'CartridgeServiceGuide')
+    $("#qnt_cartridges_#{id}").val('')
 
   $('.cancel_printers').on 'click', (e) ->
     $('#order_printers').val('')
@@ -55,6 +58,7 @@ $ ->
         console.log 'очистили корзину'
     $('#order_cartridges').val('')
     $('#order_revenue').val('')
+    $('#order_qnt').val('0')
 
 # Выполняем поиск внутри формы заказа
   $("#new_printer_model_search").on 'submit', (e) ->
@@ -172,7 +176,9 @@ $ ->
         item_type: 'CartridgeServiceGuide' 
       }
       success: (response) -> 
-        console.log 'добавили'
+        qnt_field_val = $('#order_qnt').val() # Определяем значение поля qnt
+        $('#order_qnt').val(Number(qnt_field_val) + Number(qnt)) # Изменяем значение поля qnt
+        console.log "добавили картриджи - #{qnt} шт"
 
   minusCartridge = (id, qnt, item_type) ->
     $.ajax
@@ -186,4 +192,10 @@ $ ->
         quantity: qnt 
       }
       success: (response) -> 
-        console.log 'удалили картриджи'
+        qnt_field_val = $('#order_qnt').val() # Определяем значение поля qnt
+        new_value = Number(qnt_field_val) - Number(qnt)
+        if new_value < 0
+          $('#order_qnt').val('0')
+        else
+          $('#order_qnt').val(new_value) # Изменяем значение поля qnt
+        console.log "удалили картриджи - #{qnt} шт"
