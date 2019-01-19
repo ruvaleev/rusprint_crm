@@ -39,7 +39,6 @@
             .other_order_item
               = render 'other_order_item_field'
             = f.input :revenue, label: 'Стоимость'
-            = f.input :qnt, as: :hidden, input_html: { value: 0 }
             = hidden_field_tag 'new_client_flag', 'false'
           td
             = link_to 'Добавить принтер', '', class: 'btn btn-primary', id: 'new_printer', 'data-toggle': "collapse", 'data-target': "#new_printer_form", 'aria-expanded': "false", 'aria-controls': "collapse_form"

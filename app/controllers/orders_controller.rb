@@ -1,5 +1,7 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
+  before_action :find_shopping_cart, only: [ :create ]
+  after_action :clear_shopping_cart, only: [ :create ]
 
   def index
     @orders = Order.all
@@ -12,18 +14,12 @@ class OrdersController < ApplicationController
       @company = Company.create(company_params)
       params_for_order[:customer_id] = @company.id
     end
-    @order = Order.create(params_for_order)
+    @order = Order.create(params_for_order.merge( { qnt: @shopping_cart.total_unique_items } ))
     
     if @order.errors.any?
       @message = @order.errors.messages
     else
-
-      if session[:shopping_cart_id]
-        shopping_cart = ShoppingCart.find(session[:shopping_cart_id])
-        shopping_cart.shopping_cart_items.update_all(order_id: @order.id)
-        session.delete(:shopping_cart_id)
-      end
-
+      @shopping_cart.shopping_cart_items.update_all(order_id: @order.id)
       @message = "Заказ #{@order.id} успешно внесен"
     end
   end
@@ -45,8 +41,16 @@ class OrdersController < ApplicationController
   
   private
 
+  def find_shopping_cart
+    @shopping_cart = ShoppingCart.find(session[:shopping_cart_id]) if session[:shopping_cart_id]
+  end
+
+  def clear_shopping_cart
+    session.delete(:shopping_cart_id)
+  end
+
   def order_params
-    params.require(:order).permit(:printers, :cartridges, :revenue, :date_of_complete, :date_of_order, :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, :qnt, printers_attributes: [:printer_service_guide_id], cartridges_attributes: [:cartridge_service_guide_id])
+    params.require(:order).permit(:printers, :cartridges, :revenue, :date_of_complete, :date_of_order, :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, printers_attributes: [:printer_service_guide_id], cartridges_attributes: [:cartridge_service_guide_id])
   end
 
   def company_params

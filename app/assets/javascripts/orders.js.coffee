@@ -58,7 +58,6 @@ $ ->
         console.log 'очистили корзину'
     $('#order_cartridges').val('')
     $('#order_revenue').val('')
-    $('#order_qnt').val('0')
 
 # Выполняем поиск внутри формы заказа
   $("#new_printer_model_search").on 'submit', (e) ->
@@ -176,8 +175,6 @@ $ ->
         item_type: 'CartridgeServiceGuide' 
       }
       success: (response) -> 
-        qnt_field_val = $('#order_qnt').val() # Определяем значение поля qnt
-        $('#order_qnt').val(Number(qnt_field_val) + Number(qnt)) # Изменяем значение поля qnt
         console.log "добавили картриджи - #{qnt} шт"
 
   minusCartridge = (id, qnt, item_type) ->
@@ -191,11 +188,5 @@ $ ->
         product_id:  id,
         quantity: qnt 
       }
-      success: (response) -> 
-        qnt_field_val = $('#order_qnt').val() # Определяем значение поля qnt
-        new_value = Number(qnt_field_val) - Number(qnt)
-        if new_value < 0
-          $('#order_qnt').val('0')
-        else
-          $('#order_qnt').val(new_value) # Изменяем значение поля qnt
+      success: (response) ->
         console.log "удалили картриджи - #{qnt} шт"

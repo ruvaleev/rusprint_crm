@@ -19,6 +19,8 @@ db/schema.rb
 
 .byebug_history
 
+.DS_Store
+
 config/database.yml
 
 # Ignore uploadined files
