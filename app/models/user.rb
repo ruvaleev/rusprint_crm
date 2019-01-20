@@ -6,6 +6,7 @@ class User < ApplicationRecord
          :omniauthable, omniauth_providers: [ :facebook ]
 
   belongs_to :employer, class_name: "Company", foreign_key: "employer_id", optional: true
+  belongs_to :role
 
   has_many :sent_messages, class_name: "Message", foreign_key: "sender_id"
   has_many :received_messages, class_name: "Message", foreign_key: "receiver_id"
@@ -18,6 +19,8 @@ class User < ApplicationRecord
   has_many :logs
 
   has_many :authorizations, dependent: :destroy
+
+  before_create :set_default_role
 
   # validates :name, presence: true
   # validates :telephone, presence: true
@@ -64,6 +67,12 @@ class User < ApplicationRecord
 
   def friend_of?(user)
     all_friends.include?(user)
+  end
+
+  private
+
+  def set_default_role
+    self.role ||= Role.find_by_name('customer')
   end
 
 end

@@ -12,7 +12,10 @@ CartridgeServiceGuide.destroy_all
 Company.destroy_all
 User.destroy_all
 
-
+# Создаем роли
+['customer', 'banned', 'manager', 'master', 'admin'].each do |role|
+  Role.find_or_create_by({name: role})
+end
 
 # Создаем пользователей
 hash_users = 11.times.map do

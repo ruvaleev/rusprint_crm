@@ -3,6 +3,8 @@ class OrdersController < ApplicationController
   before_action :find_shopping_cart, only: [ :create ]
   after_action :clear_shopping_cart, only: [ :create ]
 
+  load_and_authorize_resource
+
   def index
     @orders = Order.all
     @customers = Company.all
