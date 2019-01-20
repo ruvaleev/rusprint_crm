@@ -190,3 +190,10 @@ $ ->
       }
       success: (response) ->
         console.log "удалили картриджи - #{qnt} шт"
+
+
+
+
+
+
+
