@@ -12,11 +12,12 @@ html lang="en"
     = action_cable_meta_tag
     // Это нужно ли? Загрузил для Bootstrap
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    
+
     /! Le HTML5 shim, for IE6-8 support of HTML elements
     /[if lt IE 9]
       = javascript_include_tag "//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"
@@ -24,26 +25,23 @@ html lang="en"
 
   body
     .navbar.navbar-default.navbar-static-top
-      .container
-        
-        a.navbar-brand href="/"RusPrint
-        .navbar-collapse.collapse.navbar-responsive-collapse
-          ul.nav.navbar-nav
-            - if user_signed_in?
-              li= link_to "Выйти", destroy_user_session_path, method: :delete
-              li= link_to "Изменить профиль", user_path(current_user)
-            - unless user_signed_in?
-              li= link_to 'Войти', new_user_session_path
-              li= link_to 'Регистрация', new_user_registration_path
-        br
-          div.greetings
-            - if user_signed_in?
-              span
-                | Здравствуйте, 
-                = current_user.name || current_user.email
-              br
-            p class="fixed-menu alert"
-              = alert
+      a.navbar-brand href="/"RusPrint
+      .navbar-collapse.collapse.navbar-responsive-collapse
+        ul.nav.navbar-nav
+          - if user_signed_in?
+            li= link_to "Выйти", destroy_user_session_path, method: :delete
+            li= link_to "Изменить профиль", user_path(current_user)
+          - unless user_signed_in?
+            li= link_to 'Войти', new_user_session_path
+            li= link_to 'Регистрация', new_user_registration_path
+      br
+        div.greetings
+          - if user_signed_in?
+            span
+              | Здравствуйте, 
+              = current_user.name || current_user.email
+          .fixed-menu.alert
+            = alert
 
     .container-fluid
       .row

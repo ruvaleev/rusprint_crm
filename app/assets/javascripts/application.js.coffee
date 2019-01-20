@@ -21,12 +21,18 @@
 #= require bootstrap-datepicker/core
 #= require select2
 #= require select2-full
+#= require best_in_place
+#= require jquery-ui
+#= require best_in_place.jquery-ui
 #= require_tree .
 
-#var App = App || {};
+#App = App || {};
 #App.cable = ActionCable.createConsumer();
 
 $(document).ready ->
+  
+  $('.best_in_place').best_in_place()
+
   $nav = $('.fixed-menu')
   $window = $(window)
   $h = $nav.offset().top

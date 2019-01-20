@@ -8,4 +8,10 @@ class Order < ApplicationRecord
 
   validates :date_of_order, presence: true
 
+  before_save :calculate_profit
+
+  def calculate_profit
+    self.profit = revenue - (expense || 0)
+  end
+
 end

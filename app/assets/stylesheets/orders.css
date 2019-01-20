@@ -17,3 +17,8 @@
 .customers_printers_list {
   width: 80%;
 }
+
+tr td.suitable_time {
+  border: none;
+  padding: unset;
+}

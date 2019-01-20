@@ -80,8 +80,8 @@ ActiveRecord::Schema.define(version: 20181028133817) do
   create_table "orders", force: :cascade do |t|
     t.datetime "date_of_order"
     t.datetime "date_of_complete"
-    t.datetime "suitable_time_start"
-    t.datetime "suitable_time_end"
+    t.string "suitable_time_start"
+    t.string "suitable_time_end"
     t.string "additional_data"
     t.text "printers"
     t.text "cartridges"

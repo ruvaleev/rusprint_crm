@@ -44,8 +44,8 @@ gem 'money-rails', '~>1.12'
 gem 'bootstrap-datepicker-rails'
 gem "select2-rails"
 
-
-
+gem 'best_in_place'
+gem 'jquery-ui-rails'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

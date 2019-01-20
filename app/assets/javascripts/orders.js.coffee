@@ -23,10 +23,11 @@ $ ->
     fillField(model, 1, goal_elem)
     $('.cancel_printers').fadeIn()
 
+# Нажатие на плюс, прибавляем картриджи к заказу
   $('.customers_printers_list').on 'click', '.plus_possible_cartridge', (e) ->
     id = $(this).data('id')
     qnt = $("#qnt_cartridges_#{id}").val() || 1
-    plusCartridge(id, qnt)
+    plusCartridge(id, qnt) # Прибавляем картриджи к заказу
     $("#qnt_cartridges_#{id}").val('')
 
   $('.customers_printers_list').on 'keypress', '.qnt_input', (e) ->
@@ -36,11 +37,13 @@ $ ->
       plusCartridge(id, qnt)
       $(this).val('')
       return false
-  
+
+# Нажатие на минус, вычитываем картриджи из заказа
   $('.customers_printers_list').on 'click', '.minus_possible_cartridge', (e) ->
     id = $(this).data('id')
     qnt = $("#qnt_cartridges_#{id}").val() || 1
     minusCartridge(id, qnt, 'CartridgeServiceGuide')
+    $("#qnt_cartridges_#{id}").val('')
 
   $('.cancel_printers').on 'click', (e) ->
     $('#order_printers').val('')
@@ -172,7 +175,7 @@ $ ->
         item_type: 'CartridgeServiceGuide' 
       }
       success: (response) -> 
-        console.log 'добавили'
+        console.log "добавили картриджи - #{qnt} шт"
 
   minusCartridge = (id, qnt, item_type) ->
     $.ajax
@@ -185,7 +188,12 @@ $ ->
         product_id:  id,
         quantity: qnt 
       }
-      success: (response) -> 
-        console.log 'удалили картриджи'
+      success: (response) ->
+        console.log "удалили картриджи - #{qnt} шт"
 
-$(document).on('turbolinks:load', ready)
+
+
+
+
+
+
