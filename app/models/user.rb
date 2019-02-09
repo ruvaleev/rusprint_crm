@@ -69,6 +69,18 @@ class User < ApplicationRecord
     all_friends.include?(user)
   end
 
+  def admin?
+    self.role.name == 'admin'
+  end
+
+  def master?
+    self.role.name == 'master'
+  end
+
+  def manager?
+    self.role.name == 'manager'
+  end
+
   private
 
   def set_default_role

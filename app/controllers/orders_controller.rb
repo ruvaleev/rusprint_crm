@@ -6,7 +6,7 @@ class OrdersController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @orders = Order.all
+    @orders = orders_collection
     @customers = Company.all
   end
 
@@ -52,10 +52,20 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:printers, :cartridges, :revenue, :expense, :date_of_complete, :date_of_order, :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, printers_attributes: [:printer_service_guide_id], cartridges_attributes: [:cartridge_service_guide_id])
+    params = params.require(:order).permit(:printers, :cartridges, :revenue, :expense, :date_of_complete, :date_of_order, :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, printers_attributes: [:printer_service_guide_id], cartridges_attributes: [:cartridge_service_guide_id])
+    #Оставляем только те параметры, которые позволено редактировать для данного пользователя
+    params.delete_if { |key, value| Order.prohibited_params(current_user).include?(key) } 
   end
 
   def company_params
     params.require(:company).permit(:name, :adress, :telephone, :email)
+  end
+
+  def orders_collection
+    if current_user.master?
+      @orders = Order.where(master: current_user)
+    else
+      @orders = Order.all
+    end
   end
 end
