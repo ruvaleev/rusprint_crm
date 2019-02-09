@@ -81,6 +81,10 @@ class User < ApplicationRecord
     self.role.name == 'manager'
   end
 
+  def can_update?(class_name, attribute)
+    class_name.prohibited_params(self).exclude?(attribute)
+  end
+
   private
 
   def set_default_role
