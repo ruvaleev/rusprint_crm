@@ -85,6 +85,16 @@ class User < ApplicationRecord
     class_name.prohibited_params(self).exclude?(attribute)
   end
 
+  # Выносим current_user на уровень модели
+
+  def self.current
+    Thread.current[:user]
+  end
+  
+  def self.current=(user)
+    Thread.current[:user] = user
+  end
+
   private
 
   def set_default_role
