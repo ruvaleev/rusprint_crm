@@ -1,6 +1,8 @@
 require "application_responder"
 
 class ApplicationController < ActionController::Base
+  before_action :set_current_user
+
   check_authorization
   
   self.responder = ApplicationResponder
@@ -17,5 +19,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def set_current_user
+    User.current = current_user
+  end
 
 end
