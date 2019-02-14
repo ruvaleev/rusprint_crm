@@ -14,4 +14,15 @@ class Order < ApplicationRecord
     self.profit = revenue - (expense || 0)
   end
 
+  def self.prohibited_params(current_user)
+    case 
+    when current_user.admin?
+      permitted_params = column_names
+    when current_user.master?
+      # Параметры, которые разрешено редактировать юзеру
+      permitted_params = [ "date_of_complete", "additional_data", "printers", "cartridges", "qnt", "revenue", "expense", "master_id", "customer_id"]
+    end
+    column_names - permitted_params.to_a
+  end
+
 end

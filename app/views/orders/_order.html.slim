@@ -8,27 +8,27 @@ tr id = "row_#{order.id}"
   td
     = best_in_place_if true, order.customer, :adress
   td
-    = best_in_place_if true, order, :printers
+    = best_in_place_if current_user.can_update?(Order, 'printers'), order, :printers
   td
-    = best_in_place_if true, order, :cartridges
+    = best_in_place_if current_user.can_update?(Order, 'cartridges'), order, :cartridges
   td
-    = best_in_place_if true, order, :qnt, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
+    = best_in_place_if current_user.can_update?(Order, 'qnt'), order, :qnt, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
   td
-    = best_in_place_if true, order.decorate, :date_of_complete, display_as: :completing_date, value: order.decorate.completing_date
+    = best_in_place_if current_user.can_update?(Order, 'date_of_complete'), order.decorate, :date_of_complete, display_as: :completing_date, value: order.decorate.completing_date
   td
     table
       tr
         td.suitable_time
-          = best_in_place_if true, order.decorate, :suitable_time_start, as: :select, collection: order.decorate.time_hash('С ')
+          = best_in_place_if current_user.can_update?(Order, 'suitable_time_start'), order.decorate, :suitable_time_start, as: :select, collection: order.decorate.time_hash('С ')
       tr
         td.suitable_time
-          = best_in_place_if true, order.decorate, :suitable_time_end, as: :select, collection: order.decorate.time_hash('До ')
+          = best_in_place_if current_user.can_update?(Order, 'suitable_time_end'), order.decorate, :suitable_time_end, as: :select, collection: order.decorate.time_hash('До ')
   td
-    = best_in_place_if true, order, :additional_data
+    = best_in_place_if current_user.can_update?(Order, 'additional_data'), order, :additional_data
   td
-    = best_in_place_if true, order, :revenue
+    = best_in_place_if current_user.can_update?(Order, 'revenue'), order, :revenue
   td
-    = best_in_place_if true, order, :expense
+    = best_in_place_if current_user.can_update?(Order, 'expense'), order, :expense
   td
     = order.profit
   td
