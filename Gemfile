@@ -47,6 +47,8 @@ gem "select2-rails"
 gem 'best_in_place'
 gem 'jquery-ui-rails'
 gem "cancancan"
+gem 'aasm'
+gem 'kaminari'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

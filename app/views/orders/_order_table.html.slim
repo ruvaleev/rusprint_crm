@@ -1,0 +1,25 @@
+.table-responsive
+  table class="table table-bordered table-orders"
+    thead.thead-inverse 
+      tr id = "row_head"
+        th ID
+        th Имя 
+        th Телефон
+        th Адрес
+        th Принтеры
+        th Картриджи
+        th Кол-во ед.
+        th Дата выполнения
+        th Удобное время
+        th Дополнительные данные
+        th Выручка
+        th Статус
+        th Расходы
+        th Прибыль
+        th Менеджер
+        th Мастер
+        th Дата заказа
+      tr
+        - orders.order(id: :desc).each do |order| 
+          = render order, order: order
+        = paginate orders

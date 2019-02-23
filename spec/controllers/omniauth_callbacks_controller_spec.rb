@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe OmniauthCallbacksController, type: :controller do
-
-  let(:user) { create(:user) }
+  let!(:customer_role) { create(:role, name: 'customer') }
+  let(:admin_role) { create(:role, name: 'admin') }
+  let(:user) { create(:user, role: admin_role) }
   let(:facebook_authorization) { create(:authorization, user: user, provider: 'facebook', uid: '123545') }
 
   OmniAuth.config.test_mode = true

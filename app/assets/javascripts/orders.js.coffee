@@ -1,5 +1,7 @@
 $ ->
   
+  $(".table").DataTable()
+
   $('#new_client_tab, #choose_client').on 'click', (e) ->
     value = $(this).attr('value_for_new_client_flag')
     $('#new_client_flag').val(value)

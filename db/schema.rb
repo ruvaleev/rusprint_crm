@@ -10,10 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190120154159) do
+ActiveRecord::Schema.define(version: 20190216094934) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "archive_companies", force: :cascade do |t|
+    t.string "name"
+    t.string "adress"
+    t.string "telephone"
+    t.string "email"
+    t.string "version"
+    t.bigint "user_id"
+    t.bigint "company_id"
+    t.index ["adress"], name: "index_archive_companies_on_adress"
+    t.index ["company_id"], name: "index_archive_companies_on_company_id"
+    t.index ["user_id"], name: "index_archive_companies_on_user_id"
+  end
 
   create_table "authorizations", force: :cascade do |t|
     t.bigint "user_id"
@@ -41,6 +54,7 @@ ActiveRecord::Schema.define(version: 20190120154159) do
     t.string "telephone"
     t.string "email"
     t.bigint "manager_id"
+    t.integer "version"
     t.index ["adress"], name: "index_companies_on_adress"
     t.index ["manager_id"], name: "index_companies_on_manager_id"
   end
@@ -92,6 +106,8 @@ ActiveRecord::Schema.define(version: 20190120154159) do
     t.bigint "manager_id"
     t.bigint "master_id"
     t.bigint "customer_id"
+    t.string "status"
+    t.boolean "paid"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
     t.index ["manager_id"], name: "index_orders_on_manager_id"
     t.index ["master_id"], name: "index_orders_on_master_id"
@@ -167,6 +183,8 @@ ActiveRecord::Schema.define(version: 20190120154159) do
     t.index ["role_id"], name: "index_users_on_role_id"
   end
 
+  add_foreign_key "archive_companies", "companies"
+  add_foreign_key "archive_companies", "users"
   add_foreign_key "authorizations", "users"
   add_foreign_key "companies", "users", column: "manager_id"
   add_foreign_key "messages", "users", column: "receiver_id"
