@@ -7,7 +7,7 @@ class Ability
     if user.master?
       can :manage, Order, master_id: user.id
       can :manage, User, id: user.id
-      can :manage, Company
+      can :update, Company
     end
 
     if user.manager?
