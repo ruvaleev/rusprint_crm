@@ -30,6 +30,7 @@ ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
+  config.include(Shoulda::Callback::Matchers::ActiveModel)
   # config.include Devise::Test::ControllerHelpers
   config.include Devise::TestHelpers, type: :controller
   config.extend ControllerMacros, type: :controller

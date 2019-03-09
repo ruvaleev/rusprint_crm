@@ -49,5 +49,10 @@ RSpec.describe Ability do
       let(:company) { create(:company) }
       it { is_expected.to be_able_to(:update, company) }
     end
+
+    context 'cannot delete companies' do
+      let(:company) { create(:company) }
+      it { is_expected.to_not be_able_to(:destroy, company) }
+    end
   end
 end
