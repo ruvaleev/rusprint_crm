@@ -52,6 +52,7 @@ RSpec.describe User do
       end
 
       context 'user does not exist' do
+        let!(:role) { create(:role) }
         let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { email: 'not_existed_user@mail.com' }) }
         
         it 'creates new user' do
