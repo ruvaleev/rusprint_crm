@@ -25,4 +25,30 @@ RSpec.describe CompaniesController, type: :controller do
       end
     end
   end
+
+  describe 'PUT #update' do
+    let(:company) { create(:company) }
+    context 'Authorized user' do
+      sign_in_user
+      it 'update with valid attributes' do
+        put :update, params: { id: company, company: { name: 'new name' } }
+        company.reload
+        expect(company.name).to eq 'new name'
+      end
+
+      it "can't update with invalid attributes" do
+        put :update, params: { id: company, company: { name: '' } }
+        company.reload
+        expect(company.name).to_not eq ''
+      end
+    end
+
+    context 'Unauthorized user' do
+      it "can't update Company" do
+        put :update, params: { id: company, company: { name: 'new name' } }
+        company.reload
+        expect(company.name).to_not eq 'new name'
+      end
+    end
+  end
 end
