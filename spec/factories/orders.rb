@@ -1,10 +1,9 @@
 FactoryBot.define do
-  
   factory :order do
     date_of_order { 2.days.ago }
-    date_of_complete { 1.days.ago }
-    suitable_time_start "10:10"
-    suitable_time_end "12:10"
+    date_of_complete { 1.day.ago }
+    suitable_time_start '10:10'
+    suitable_time_end '12:10'
     additional_data 'some additional information'
     printers 'some models of printers'
     cartridges 'some cartridges'
@@ -19,9 +18,9 @@ FactoryBot.define do
   end
 
   factory :invalid_order, class: 'Order' do
-    date_of_complete { 1.days.ago }
-    suitable_time_start "06:10"
-    suitable_time_end "08:10"
+    date_of_complete { 1.day.ago }
+    suitable_time_start '06:10'
+    suitable_time_end '08:10'
     additional_data 'some additional information'
     printers 'some models of printers'
     cartridges 'some cartridges'
@@ -34,5 +33,4 @@ FactoryBot.define do
     profit 1600
     paid false
   end
-
 end

@@ -1,5 +1,4 @@
 FactoryBot.define do
-  
   factory :cartridge_service_guide do
     sequence(:model) { |n| "Model number #{n}" }
     color { 'black' }
