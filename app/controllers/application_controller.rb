@@ -1,14 +1,12 @@
 require 'application_responder'
 
 class ApplicationController < ActionController::Base
+  protect_from_forgery with: :exception
+  check_authorization unless: :devise_controller?
   before_action :set_current_user
-
-  check_authorization
 
   self.responder = ApplicationResponder
   respond_to :html
-
-  protect_from_forgery with: :exception
 
   rescue_from CanCan::AccessDenied do |exception|
     respond_to do |format|
@@ -21,5 +19,11 @@ class ApplicationController < ActionController::Base
   # Надо в консоли прописать User.current
   def set_current_user
     User.current = current_user
+  end
+
+  private
+
+  def do_not_check_authorization?
+    respond_to?(:devise_controller?)
   end
 end
