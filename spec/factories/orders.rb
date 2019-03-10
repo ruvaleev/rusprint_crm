@@ -15,7 +15,6 @@ FactoryBot.define do
     revenue 2000
     expense 400
     profit 1600
-    status "closed"
     paid true
   end
 
@@ -33,7 +32,6 @@ FactoryBot.define do
     revenue 2000
     expense 400
     profit 1600
-    status "closed"
     paid false
   end
 

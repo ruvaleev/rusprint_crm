@@ -14,6 +14,9 @@ RSpec.describe User do
   it { should have_many(:authorizations).dependent(:destroy) }
 
   it { should belong_to(:employer) }
+  it { should belong_to(:role) }
+
+  it { is_expected.to callback(:set_default_role).before(:create) }
 
   let!(:user) { create(:user) }
 
