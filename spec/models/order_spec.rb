@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Order, type: :model do
@@ -25,7 +27,7 @@ RSpec.describe Order, type: :model do
       it { expect(order).to transition_from(:signed).to(:completed).on_event(:complete) }
     end
 
-    context "order can be transferred to 'closed' status from 'completed'" do 
+    context "order can be transferred to 'closed' status from 'completed'" do
       it { expect(order).to transition_from(:completed).to(:closed).on_event(:close) }
     end
 
@@ -49,7 +51,7 @@ RSpec.describe Order, type: :model do
       it { expect(order).to transition_from(:closed).to(:canceled).on_event(:cancel) }
     end
 
-    context "when order is not paid" do
+    context 'when order is not paid' do
       it 'it cannot be closed' do
         unpaid_order.status = 'completed'
         expect(unpaid_order).to_not allow_transition_to(:closed)
