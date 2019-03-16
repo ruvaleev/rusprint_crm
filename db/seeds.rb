@@ -24,7 +24,8 @@ hash_users = 11.times.map do
     second_name: FFaker::NameRU.last_name,
     email: FFaker::Internet.safe_email,
     telephone: FFaker::PhoneNumberIT.mobile_phone_number,
-    password: FFaker::Internet.password
+    password: FFaker::Internet.password,
+    role: Role.find_by_name('customer')
   }
 end
 
