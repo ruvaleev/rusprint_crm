@@ -36,12 +36,6 @@ class OrdersController < ApplicationController
     @order = Order.find(params[:id])
   end
 
-  def get_printers
-    customer    = Company.find(params[:company][:id])
-    @printers   = customer.printers
-    @vendors    = Printer::VENDORS.map.with_index.to_a
-  end
-  
   private
 
   def find_shopping_cart

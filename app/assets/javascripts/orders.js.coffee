@@ -1,6 +1,4 @@
 $ ->
-  
-  $(".table").DataTable()
 
   $('#new_client_tab, #choose_client').on 'click', (e) ->
     value = $(this).attr('value_for_new_client_flag')
@@ -11,13 +9,9 @@ $ ->
   })
 
   $('#order_customer_id').on 'change', (e) ->
-    url = '/orders/' + $(this).val() + '/get_printers'
+    url = '/companies/' + $(this).val() + '/get_printers'
     $.get url, (data) ->
     changeCustomer()
-
-  $('#vendor').on 'change', (e) ->
-    url = '/orders/' + $(this).val() + '/get_models'
-    $.get url, (data) ->
 
   $('.customers_printers_list').on 'click', '.plus_printer', (e) ->
     model = $(this).data('model')
@@ -66,7 +60,7 @@ $ ->
     e.preventDefault()
     model_like = $("#new_printer_model_search #printer_model_search_model_like").val()
     $.ajax
-      url: '/printers/1/get_models',
+      url: '/get_models',
       type: 'GET',
       beforeSend: (xhr) -> 
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))

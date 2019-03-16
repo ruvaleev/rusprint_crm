@@ -9,15 +9,16 @@ Rails.application.routes.draw do
     patch 'talk', on: :member
   end
 
-  resources :orders do
+  resources :orders
+  
+  resources :printers
+  get 'get_models', to: 'printers#get_models'
+
+
+  resources :companies do
     get 'get_printers', on: :member
   end
-  
-  resources :printers, shallow: true do
-    get 'get_models', on: :member
-  end
 
-  resources :companies
   resources :prices
   resources :other_order_items
 

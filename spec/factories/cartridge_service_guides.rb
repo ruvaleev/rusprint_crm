@@ -4,5 +4,6 @@ FactoryBot.define do
     color { 'black' }
     price { 1000 }
     toner_life_count { 1600 }
+    printer_service_guide
   end
 end

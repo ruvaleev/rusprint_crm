@@ -121,18 +121,4 @@ RSpec.describe OrdersController, type: :controller do
       expect(response).to render_template :show
     end
   end
-
-  describe 'GET #get_printers' do
-    sign_in_user
-    let(:customer) { create(:company) }
-    let(:order) { create(:order, customer: customer) }
-    before { get :get_printers, params: { id: order, company: { id: customer } }, xhr: true }
-
-    it "returns customer's @printers" do
-      expect(assigns(:printers)).to eq customer.printers
-    end
-    it 'returns printers @vendors' do
-      expect(assigns(:vendors)).to eq Printer::VENDORS.map.with_index.to_a
-    end
-  end
 end
