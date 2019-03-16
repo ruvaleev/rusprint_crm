@@ -1,5 +1,6 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :find_user
+  skip_authorization_check
 
   def facebook
     sign_in_new_user('facebook') if @user.persisted?

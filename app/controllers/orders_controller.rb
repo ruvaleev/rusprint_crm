@@ -6,8 +6,9 @@ class OrdersController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @orders = orders_collection
-    @customers = Company.all
+    @orders           = orders_collection
+    @complete_orders  = complete_orders_collection
+    @customers        = Company.all
   end
 
   def create
@@ -35,12 +36,6 @@ class OrdersController < ApplicationController
     @order = Order.find(params[:id])
   end
 
-  def get_printers
-    customer    = Company.find(params[:id])
-    @printers   = customer.printers
-    @vendors    = Printer::VENDORS.map.with_index.to_a
-  end
-  
   private
 
   def find_shopping_cart
@@ -52,7 +47,7 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    parameters = params.require(:order).permit(:printers, :cartridges, :revenue, :expense, :date_of_complete, :date_of_order, :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, printers_attributes: [:printer_service_guide_id], cartridges_attributes: [:cartridge_service_guide_id])
+    parameters = params.require(:order).permit(:printers, :cartridges, :revenue, :expense, :date_of_complete, :date_of_order, :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, :status, :paid, printers_attributes: [:printer_service_guide_id], cartridges_attributes: [:cartridge_service_guide_id])
     #Оставляем только те параметры, которые позволено редактировать для данного пользователя
     parameters.delete_if { |key, value| Order.prohibited_params(current_user).include?(key) } 
   end
@@ -62,10 +57,14 @@ class OrdersController < ApplicationController
   end
 
   def orders_collection
+    current_user.master? ? Order.where(master: current_user).order(date_of_complete: :desc, status: :desc).page(params[:page]) : Order.all.order(date_of_complete: :desc, status: :desc).page(params[:page])
+  end
+
+  def complete_orders_collection
     if current_user.master?
-      @orders = Order.where(master: current_user)
+      Order.completed.where(master: current_user).order(date_of_complete: :desc, status: :desc).page(params[:page])
     else
-      @orders = Order.all
+      Order.completed.order(date_of_complete: :desc, status: :desc).page(params[:page])
     end
   end
 end

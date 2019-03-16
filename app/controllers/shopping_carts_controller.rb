@@ -1,5 +1,6 @@
 class ShoppingCartsController < ApplicationController
   before_action :extract_shopping_cart
+  skip_authorization_check
 
   def create
     if params[:body]

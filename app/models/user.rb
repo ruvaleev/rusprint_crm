@@ -40,7 +40,7 @@ class User < ApplicationRecord
       email = auth.info[:email] 
       # name = auth.info[:name]
       telephone = auth.info[:telephone]
-      user = User.where(email: email).first || User.create!(email: email, password: password, password_confirmation: password)
+      user = User.where(email: email).first || User.create!(email: email, password: password, password_confirmation: password, role: Role.find_by_name('customer'))
     else
       user = User.create!(email: "temporary_email_#{User.last.id.to_s unless User.all.empty?}@mail.ru", password: password, password_confirmation: password)
     end

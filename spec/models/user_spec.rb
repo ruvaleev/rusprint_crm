@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe User do
@@ -14,6 +16,9 @@ RSpec.describe User do
   it { should have_many(:authorizations).dependent(:destroy) }
 
   it { should belong_to(:employer) }
+  it { should belong_to(:role) }
+
+  it { is_expected.to callback(:set_default_role).before(:create) }
 
   let!(:user) { create(:user) }
 
@@ -30,7 +35,7 @@ RSpec.describe User do
     context 'user has not authorization' do
       context 'user is already exist' do
         let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { email: user.email }) }
-        
+
         it 'does not create new user' do
           expect { User.find_for_oauth(auth) }.to_not change(User, :count)
         end
@@ -52,8 +57,11 @@ RSpec.describe User do
       end
 
       context 'user does not exist' do
-        let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { email: 'not_existed_user@mail.com' }) }
-        
+        let!(:role) { create(:role) }
+        let(:auth) do
+          OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { email: 'not_existed_user@mail.com' })
+        end
+
         it 'creates new user' do
           expect { User.find_for_oauth(auth) }.to change(User, :count).by(1)
         end
@@ -66,8 +74,8 @@ RSpec.describe User do
           user = User.find_for_oauth(auth)
           expect(user.email).to eq auth.info[:email]
         end
-        
-        it 'creates authorization for new user'do
+
+        it 'creates authorization for new user' do
           user = User.find_for_oauth(auth)
           expect(user.authorizations).to_not be_empty
         end
@@ -81,5 +89,4 @@ RSpec.describe User do
       end
     end
   end
-
 end

@@ -1,5 +1,9 @@
 FactoryBot.define do
-  factory :role do
-    name "MyString"
+  factory :role, class: 'Role' do
+    name { 'customer' }
+  end
+
+  factory :admin_role, class: 'Role' do
+    name { 'admin' }
   end
 end

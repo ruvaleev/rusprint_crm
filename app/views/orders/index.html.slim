@@ -1,25 +1,4 @@
 h1 Заказы
 = render 'top_menu'
-.table-responsive
-  table class="table table-bordered table-orders"
-    thead.thead-inverse 
-      tr id = "row_head"
-        th ID
-        th Имя 
-        th Телефон
-        th Адрес
-        th Принтеры
-        th Картриджи
-        th Кол-во ед.
-        th Дата выполнения
-        th Удобное время
-        th Дополнительные данные
-        th Выручка
-        th Расходы
-        th Прибыль
-        th Менеджер
-        th Мастер
-        th Дата заказа
-      tr
-        - @orders.order(id: :desc).each do |order| 
-          = render order, order: order 
+= render partial: 'order_table', locals: { orders: @orders } unless @orders.empty?
+= render partial: 'order_table', locals: { orders: @complete_orders } unless @complete_orders.empty?

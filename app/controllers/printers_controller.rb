@@ -1,5 +1,5 @@
 class PrintersController < ApplicationController
-
+  load_and_authorize_resource
   def create
     @printer = Printer.create(printer_params)
   end
@@ -7,7 +7,6 @@ class PrintersController < ApplicationController
   def get_models
     @search = PrinterModelSearch.new(search_params)
     @models = @search.results
-    @customer_id = params[:company]
   end
 
   private

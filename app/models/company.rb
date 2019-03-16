@@ -14,10 +14,12 @@ class Company < ApplicationRecord
   protected
 
   def increment_version
+    return if Rails.env == 'test'
     self.version.nil? ? self.version = 1 : self.version += 1
   end
 
   def save_archive
+    return if Rails.env == 'test'
     attributes = self.attributes.delete_if { |key, value| ['id', 'manager_id'].include?(key) }
     archive = self.archive_companies.new(attributes)
     archive.user = User.current

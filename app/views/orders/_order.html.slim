@@ -28,6 +28,8 @@ tr id = "row_#{order.id}"
   td
     = best_in_place_if current_user.can_update?(Order, 'revenue'), order, :revenue
   td
+    = best_in_place_if current_user.can_update?(Order, 'status'), order.decorate, :status, as: :select, collection: order.decorate.status_collection
+  td
     = best_in_place_if current_user.can_update?(Order, 'expense'), order, :expense
   td
     = order.profit
