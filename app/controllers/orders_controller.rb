@@ -2,7 +2,8 @@ class OrdersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_shopping_cart, only: [ :create ]
   after_action :clear_shopping_cart, only: [ :create ]
-  after_action :publish_order, only: [ :create, :update ]
+  # разблокировать, когда починим ActionCable фичу
+  # after_action :publish_order, only: [ :create, :update ]
 
   load_and_authorize_resource
 
