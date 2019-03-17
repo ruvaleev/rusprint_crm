@@ -2,6 +2,7 @@ class OrdersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_shopping_cart, only: [ :create ]
   after_action :clear_shopping_cart, only: [ :create ]
+  after_action :publish_order, only: [ :create, :update ]
 
   load_and_authorize_resource
 
@@ -9,6 +10,7 @@ class OrdersController < ApplicationController
     @orders           = orders_collection
     @complete_orders  = complete_orders_collection
     @customers        = Company.all
+    gon.current_user = current_user
   end
 
   def create
@@ -22,6 +24,7 @@ class OrdersController < ApplicationController
     if @order.errors.any?
       @message = @order.errors.messages
     else
+      gon.order = @order
       @shopping_cart.shopping_cart_items.update_all(order_id: @order.id)
       @message = "Заказ #{@order.id} успешно внесен"
     end
@@ -30,6 +33,7 @@ class OrdersController < ApplicationController
   def update
     @order = Order.find(params[:id])
     @order.update(order_params)
+    gon.order = @order
   end
 
   def show
@@ -47,7 +51,7 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    parameters = params.require(:order).permit(:printers, :cartridges, :revenue, :expense, :date_of_complete, :date_of_order, :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, :status, :paid, printers_attributes: [:printer_service_guide_id], cartridges_attributes: [:cartridge_service_guide_id])
+    parameters = params.require(:order).permit(:printers, :cartridges, :revenue, :expense, :date_of_complete, :date_of_order, :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, :status, :paid, :master_id, printers_attributes: [:printer_service_guide_id], cartridges_attributes: [:cartridge_service_guide_id])
     #Оставляем только те параметры, которые позволено редактировать для данного пользователя
     parameters.delete_if { |key, value| Order.prohibited_params(current_user).include?(key) } 
   end
@@ -66,5 +70,18 @@ class OrdersController < ApplicationController
     else
       Order.completed.order(date_of_complete: :desc, status: :desc).page(params[:page])
     end
+  end
+
+  def publish_order
+    return if @order.errors.any?
+    renderer = ApplicationController.renderer.new
+    renderer.instance_variable_set(:@env, { "HTTP_HOST"=>"localhost:3000",  
+                                            "HTTPS"=>"off",   
+                                            "REQUEST_METHOD"=>"GET",   
+                                            "SCRIPT_NAME"=>"",   
+                                            "warden" => warden })
+    ActionCable.server.broadcast(
+      "orders_for_#{@order.master_id}", @order.to_json
+    )
   end
 end

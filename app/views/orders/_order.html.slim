@@ -36,6 +36,6 @@ tr id = "row_#{order.id}"
   td
     = order.manager.try(:second_name)
   td
-    = order.master.try(:second_name)
+    = best_in_place_if current_user.can_update?(Order, 'master_id'), order.decorate, :master_id, as: :select, collection: User.masters.map { |u| [u.id, u.second_name] }
   td
     = order.date_of_order.strftime("%d.%m.%Y %H:%M")

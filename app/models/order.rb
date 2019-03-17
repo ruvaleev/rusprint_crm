@@ -42,6 +42,8 @@ class Order < ApplicationRecord
     case 
     when current_user.admin?
       permitted_params = column_names
+    when current_user.manager?
+      permitted_params = column_names
     when current_user.master?
       # Параметры, которые разрешено редактировать юзеру
       permitted_params = [ "date_of_complete", "additional_data", "printers", "cartridges", "qnt", "revenue", "status", "expense", "master_id", "customer_id"]
