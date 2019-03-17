@@ -22,6 +22,9 @@ class User < ApplicationRecord
 
   before_create :set_default_role
 
+  scope :masters, -> { where(role: Role.find_by_name('master')) }
+  scope :managers, -> { where(role: Role.find_by_name('manager')) }
+
   # validates :name, presence: true
   # validates :telephone, presence: true
   

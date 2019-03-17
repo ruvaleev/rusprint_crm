@@ -33,6 +33,10 @@ class OrderDecorator < Draper::Decorator
     suitable_time_end ? "До #{suitable_time_end.strftime("%H:%M")}" : ''
   end
 
+  def display_master_id
+    "#{name} #{second_name}"
+  end
+
   def time_hash(begin_phrase = nil)
     time = Hash.new(0)
 
