@@ -22,29 +22,25 @@ h2
   .field
     = f.label 'Новый Пароль'
     i
-      | (leave blank if you don't want to change it)
+      | (Если не желаете менять пароль, оставьте это поле ПУСТЫМ)
     br
     = f.password_field :password, autocomplete: "off"
     - if @minimum_password_length
       br
       em
         = @minimum_password_length
-        |  characters minimum
+        |  знаков минимум
   .field
-    = f.label 'Подтвердите пароль'
+    = f.label 'Подтвердите новый пароль'
     br
     = f.password_field :password_confirmation, autocomplete: "off"
   .field
-    = f.label 'Старый пароль'
+    = f.label 'Текущий пароль'
     i
-      | (we need your current password to confirm your changes)
+      | (Введите текущий пароль, чтобы подтвердить изменения)
     br
     = f.password_field :current_password, autocomplete: "off"
   .actions
     = f.submit "Обновить"
-h3
-  | Удалить аккаунт
-p
-  | Трижды подумайте, надо ли вам это? 
-  = button_to "Удалить мой аккаунт", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete
+
 = link_to "Назад", :back

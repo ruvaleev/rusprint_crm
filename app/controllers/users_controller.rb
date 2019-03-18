@@ -5,10 +5,13 @@ class UsersController < ApplicationController
   def show; end
 
   def update
-    current_user.update(name: params[:user][:name],
-                        second_name: params[:user][:second_name],
-                        email: params[:user][:email])
-    redirect_to root_path
+    if current_user.update(user_params)
+      flash[:success] = 'Профиль обновлен'
+      redirect_to root_path
+    else
+      flash[:error] = "Errors: #{current_user.errors.messages}"
+      redirect_back fallback_location: root_path
+    end
   end
 
   def make_friend
@@ -19,5 +22,9 @@ class UsersController < ApplicationController
 
   def find_user
     @user = User.find(params[:id])
+  end
+
+  def user_params
+    params.require(:user).permit(:name, :second_name, :email, :password, :password_confirmation)
   end
 end

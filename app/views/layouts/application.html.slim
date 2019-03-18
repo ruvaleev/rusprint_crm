@@ -30,7 +30,7 @@ html lang="en"
         ul.nav.navbar-nav
           - if user_signed_in?
             li= link_to "Выйти", destroy_user_session_path, method: :delete
-            li= link_to "Изменить профиль", user_path(current_user)
+            li= link_to "Изменить профиль", edit_user_registration_path
           - unless user_signed_in?
             li= link_to 'Войти', new_user_session_path
             li= link_to 'Регистрация', new_user_registration_path

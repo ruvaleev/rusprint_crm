@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   check_authorization unless: :devise_controller?
   before_action :set_current_user
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   self.responder = ApplicationResponder
   respond_to :html
@@ -19,6 +20,11 @@ class ApplicationController < ActionController::Base
   # Надо в консоли прописать User.current
   def set_current_user
     User.current = current_user
+  end
+
+  def configure_permitted_parameters
+    update_attrs = %i[name second_name email password password_confirmation current_password]
+    devise_parameter_sanitizer.permit :account_update, keys: update_attrs
   end
 
   private
