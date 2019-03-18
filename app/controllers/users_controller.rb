@@ -1,12 +1,13 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_user, except: :update
-
-  def show
-  end
+  load_and_authorize_resource
+  def show; end
 
   def update
-    current_user.update(name: params[:user][:name], second_name: params[:user][:second_name], email: params[:user][:email])
+    current_user.update(name: params[:user][:name],
+                        second_name: params[:user][:second_name],
+                        email: params[:user][:email])
     redirect_to root_path
   end
 

@@ -1,10 +1,9 @@
 class PricesController < ApplicationController
-  
+  load_and_authorize_resource
   def create
     price = Price.create(price_params)
     price.parse
-    price.errors.any? ? @message = "При загрузке произошли следующие ошибки: #{price.errors.messages}" 
-                      : @message = "Прайс #{price.file.filename} успешно загружен"
+    @message = price.errors.any? ? "При загрузке произошли следующие ошибки: #{price.errors.messages}" : "Прайс #{price.file.filename} успешно загружен"
   end
 
   private
@@ -12,6 +11,4 @@ class PricesController < ApplicationController
   def price_params
     params.require(:price).permit(:file)
   end
-
-
 end
