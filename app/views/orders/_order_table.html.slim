@@ -19,6 +19,7 @@
         th Менеджер
         th Мастер
         th Дата заказа
+        th Компания (провайдер)
       tr
         - orders.order(id: :desc).each do |order| 
           = render order, order: order
