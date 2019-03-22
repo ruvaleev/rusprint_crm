@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_shopping_cart, only: [ :create ]
-  after_action :clear_shopping_cart, only: [ :create ]
+  before_action :find_shopping_cart, only: [:create]
+  after_action :clear_shopping_cart, only: [:create]
   # разблокировать, когда починим ActionCable фичу
   # after_action :publish_order, only: [ :create, :update ]
 
@@ -20,13 +20,13 @@ class OrdersController < ApplicationController
       @company = Company.create(company_params)
       params_for_order[:customer_id] = @company.id
     end
-    @order = Order.create(params_for_order.merge( { qnt: @shopping_cart.total_unique_items } ))
-    
+    @order = Order.create(params_for_order.merge(qnt: @shopping_cart.total_unique_items))
+
     if @order.errors.any?
       @message = @order.errors.messages
     else
       gon.order = @order
-      @shopping_cart.shopping_cart_items.update_all(order_id: @order.id)
+      @shopping_cart.shopping_cart_items.update(order_id: @order.id)
       @message = "Заказ #{@order.id} успешно внесен"
     end
   end
@@ -52,9 +52,13 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    parameters = params.require(:order).permit(:printers, :cartridges, :revenue, :expense, :date_of_complete, :date_of_order, :suitable_time_start, :suitable_time_end, :additional_data, :customer_id, :status, :paid, :master_id, printers_attributes: [:printer_service_guide_id], cartridges_attributes: [:cartridge_service_guide_id])
-    #Оставляем только те параметры, которые позволено редактировать для данного пользователя
-    parameters.delete_if { |key, value| Order.prohibited_params(current_user).include?(key) } 
+    parameters = params.require(:order).permit(:printers, :cartridges, :revenue, :expense, :date_of_complete,
+                                               :date_of_order, :suitable_time_start, :suitable_time_end,
+                                               :additional_data, :customer_id, :status, :paid, :master_id,
+                                               printers_attributes: [:printer_service_guide_id],
+                                               cartridges_attributes: [:cartridge_service_guide_id])
+    # Оставляем только те параметры, которые позволено редактировать для данного пользователя
+    parameters.delete_if { |key, _value| Order.prohibited_params(current_user).include?(key) }
   end
 
   def company_params
@@ -62,25 +66,34 @@ class OrdersController < ApplicationController
   end
 
   def orders_collection
-    current_user.master? ? Order.where(master: current_user).order(date_of_complete: :desc, status: :desc).page(params[:page]) : Order.all.order(date_of_complete: :desc, status: :desc).page(params[:page])
+    if current_user.master?
+      Order.where(master: current_user).order(date_of_complete: :desc, status: :desc).page(params[:page])
+    elsif current_user.manager? || current_user.admin?
+      Order.all.order(date_of_complete: :desc, status: :desc).page(params[:page])
+    else
+      []
+    end
   end
 
   def complete_orders_collection
     if current_user.master?
       Order.completed.where(master: current_user).order(date_of_complete: :desc, status: :desc).page(params[:page])
-    else
+    elsif current_user.manager? || current_user.admin?
       Order.completed.order(date_of_complete: :desc, status: :desc).page(params[:page])
+    else
+      []
     end
   end
 
   def publish_order
     return if @order.errors.any?
+
     renderer = ApplicationController.renderer.new
-    renderer.instance_variable_set(:@env, { "HTTP_HOST"=>"localhost:3000",  
-                                            "HTTPS"=>"off",   
-                                            "REQUEST_METHOD"=>"GET",   
-                                            "SCRIPT_NAME"=>"",   
-                                            "warden" => warden })
+    renderer.instance_variable_set(:@env, 'HTTP_HOST' => 'localhost:3000',
+                                          'HTTPS' => 'off',
+                                          'REQUEST_METHOD' => 'GET',
+                                          'SCRIPT_NAME' => '',
+                                          'warden' => warden)
     ActionCable.server.broadcast(
       "orders_for_#{@order.master_id}", @order.to_json
     )

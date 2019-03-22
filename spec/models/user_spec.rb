@@ -18,7 +18,7 @@ RSpec.describe User do
   it { should belong_to(:employer) }
   it { should belong_to(:role) }
 
-  it { is_expected.to callback(:set_default_role).before(:create) }
+  it { is_expected.to callback(:set_default_role).before(:validation) }
 
   let!(:user) { create(:user) }
 
