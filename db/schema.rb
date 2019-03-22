@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190216094934) do
+ActiveRecord::Schema.define(version: 20190322203939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(version: 20190216094934) do
     t.bigint "customer_id"
     t.string "status"
     t.boolean "paid"
+    t.string "provider", default: "RusPrint"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
     t.index ["manager_id"], name: "index_orders_on_manager_id"
     t.index ["master_id"], name: "index_orders_on_master_id"

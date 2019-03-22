@@ -4,6 +4,9 @@
     .table-responsive
       table class="table table-bordered"
         tr
+          td = label_tag :provider, 'Компания-провайдер'
+          td = f.select :provider, Order::PROVIDERS
+        tr
           td = label_tag :date_of_order, 'Дата заказа'
           td = f.input :date_of_order, as: :string, label: false, input_html: { data: { provide: 'datepicker', 'date-format': 'dd.mm.yyyy' }, value: Date.current.strftime('%d.%m.%Y') }
         tr
