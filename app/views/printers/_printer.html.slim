@@ -1,9 +1,6 @@
 tr
   td = printer.id
   td = printer.printer_service_guide.model
-  td = printer.serial_number
-  td = printer.additional_data
-  td = button_tag('Добавить сам принтер', class: "btn btn-secondary plus_printer", type: 'button', data: { model: "#{printer.printer_service_guide.model}" } )
   td style="text-align:right"
     table
       - printer.possible_cartridges.each do |cartridge|
@@ -14,3 +11,7 @@ tr
           td 
             = image_tag('plus.jpg', class: "icon plus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } )
             = image_tag('minus.jpg', class: "icon minus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } )
+  
+  td = printer.additional_data
+  td = button_tag('Добавить сам принтер', class: "btn btn-secondary plus_printer", type: 'button', data: { model: "#{printer.printer_service_guide.model}" } )
+  td = printer.serial_number

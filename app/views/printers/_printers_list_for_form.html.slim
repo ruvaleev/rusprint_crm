@@ -1,12 +1,14 @@
-tr
-  th colspan = 6 style = 'text-align: center'
-    span Принтеры клиента
-tr
-  th ID
-  th Модель
-  th Серийный номер
-  th Дополнительные данные
-  th 
-  th 
-- printers.each do |printer|
-  = render printer
+.table-responsive
+  table.table.bordered
+    tr
+      th colspan = 6 style = 'text-align: center'
+        span Принтеры клиента
+    tr
+      th ID
+      th Модель
+      th Картриджи
+      th Дополнительные данные
+      th 
+      th Серийный номер
+    - printers.each do |printer|
+      = render printer
