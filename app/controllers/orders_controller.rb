@@ -29,6 +29,7 @@ class OrdersController < ApplicationController
       @shopping_cart.shopping_cart_items.update(order_id: @order.id)
       @message = "Заказ #{@order.id} успешно внесен"
     end
+    redirect_to :root
   end
 
   def update
@@ -67,9 +68,9 @@ class OrdersController < ApplicationController
 
   def orders_collection
     if current_user.master?
-      Order.where(master: current_user).order(date_of_complete: :desc, status: :desc).page(params[:page])
+      Order.where(master: current_user).order(date_of_complete: :desc, status: :desc).page(params[:page]).per(10)
     elsif current_user.manager? || current_user.admin?
-      Order.all.order(date_of_complete: :desc, status: :desc).page(params[:page])
+      Order.all.order(date_of_complete: :desc, status: :desc).page(params[:page]).per(10)
     else
       []
     end
@@ -77,9 +78,10 @@ class OrdersController < ApplicationController
 
   def complete_orders_collection
     if current_user.master?
-      Order.completed.where(master: current_user).order(date_of_complete: :desc, status: :desc).page(params[:page])
+      Order.completed.where(master: current_user).order(date_of_complete: :desc, status: :desc)
+           .order(date_of_complete: :desc, status: :desc).page(params[:page]).per(10)
     elsif current_user.manager? || current_user.admin?
-      Order.completed.order(date_of_complete: :desc, status: :desc).page(params[:page])
+      Order.completed.order(date_of_complete: :desc, status: :desc).page(params[:page]).per(10)
     else
       []
     end
