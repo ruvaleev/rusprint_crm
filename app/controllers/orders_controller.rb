@@ -85,17 +85,17 @@ class OrdersController < ApplicationController
     end
   end
 
-  def publish_order
-    return if @order.errors.any?
+  # def publish_order
+  #   return if @order.errors.any?
 
-    renderer = ApplicationController.renderer.new
-    renderer.instance_variable_set(:@env, 'HTTP_HOST' => 'localhost:3000',
-                                          'HTTPS' => 'off',
-                                          'REQUEST_METHOD' => 'GET',
-                                          'SCRIPT_NAME' => '',
-                                          'warden' => warden)
-    ActionCable.server.broadcast(
-      "orders_for_#{@order.master_id}", @order.to_json
-    )
-  end
+  #   renderer = ApplicationController.renderer.new
+  #   renderer.instance_variable_set(:@env, 'HTTP_HOST' => 'localhost:3000',
+  #                                         'HTTPS' => 'off',
+  #                                         'REQUEST_METHOD' => 'GET',
+  #                                         'SCRIPT_NAME' => '',
+  #                                         'warden' => warden)
+  #   ActionCable.server.broadcast(
+  #     "orders_for_#{@order.master_id}", @order.to_json
+  #   )
+  # end
 end

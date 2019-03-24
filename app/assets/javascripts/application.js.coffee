@@ -26,8 +26,8 @@
 #= require best_in_place.jquery-ui
 #= require_tree .
 
-App = App || {};
-App.cable = ActionCable.createConsumer();
+#App = App || {};
+#App.cable = ActionCable.createConsumer();
 
 $(document).ready ->
   

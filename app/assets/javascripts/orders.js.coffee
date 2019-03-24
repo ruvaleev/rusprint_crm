@@ -187,22 +187,22 @@ $ ->
       success: (response) ->
         console.log "удалили картриджи - #{qnt} шт"
 
-  App.cable.subscriptions.create('OrdersChannel', {
-    connected: ->
-      @perform 'follow', master_id: gon.order.master_id
-    ,
-
-    received: (data) ->
-      order = JSON.parse(data)
+  #App.cable.subscriptions.create('OrdersChannel', {
+  #  connected: ->
+  #    @perform 'follow', master_id: gon.order.master_id
+  #  ,
+#
+  #  received: (data) ->
+  #    order = JSON.parse(data)
       
-      unless @userIsCurrentUser(order.master_id)
-        $('#row_head').after(JST['order'](
-          order: order
-        )) 
-
-    userIsCurrentUser: (user_id) ->
+  #    unless @userIsCurrentUser(order.master_id)
+  #      $('#row_head').after(JST['order'](
+  #        order: order
+  #      )) 
+#
+  #  userIsCurrentUser: (user_id) ->
       user_id is gon.current_user.id    
-  })
+ # })
 
 
 
