@@ -6,4 +6,8 @@ FactoryBot.define do
   factory :admin_role, class: 'Role' do
     name { 'admin' }
   end
+
+  factory :manager_role, class: 'Role' do
+    name { 'manager' }
+  end
 end
