@@ -201,7 +201,7 @@ $ ->
   #      )) 
 #
   #  userIsCurrentUser: (user_id) ->
-      user_id is gon.current_user.id    
+  #    user_id is gon.current_user.id    
  # })
 
 
