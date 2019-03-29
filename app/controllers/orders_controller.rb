@@ -15,12 +15,7 @@ class OrdersController < ApplicationController
   end
 
   def create
-    params_for_order = order_params
-    if params[:new_client_flag] == 'true'
-      @company = Company.create(company_params)
-      params_for_order[:customer_id] = @company.id
-    end
-    @order = Order.create(params_for_order.merge(qnt: @shopping_cart.total_unique_items))
+    @order = Order.create(order_params.merge(qnt: @shopping_cart.total_unique_items))
 
     if @order.errors.any?
       @message = @order.errors.messages
@@ -44,8 +39,22 @@ class OrdersController < ApplicationController
 
   private
 
+  def check_and_create_company
+    unless params[:new_client_flag] == 'true'
+      flash[:error] = I18n.t 'orders.errors.order_have_no_customer'
+      redirect_to :root and return
+    end
+    company = Company.create(company_params)
+    company.id
+  end
+
   def find_shopping_cart
-    @shopping_cart = ShoppingCart.find(session[:shopping_cart_id]) if session[:shopping_cart_id]
+    unless session[:shopping_cart_id]
+      flash[:error] = I18n.t 'orders.errors.order_have_no_shopping_carts'
+      redirect_to :root and return
+    end
+
+    @shopping_cart = ShoppingCart.find(session[:shopping_cart_id])
   end
 
   def clear_shopping_cart
@@ -58,6 +67,11 @@ class OrdersController < ApplicationController
                                                :additional_data, :customer_id, :status, :paid, :master_id,
                                                :provider, printers_attributes: [:printer_service_guide_id],
                                                           cartridges_attributes: [:cartridge_service_guide_id])
+
+    if (action_name == 'create') && (parameters[:customer_id].blank? || params[:new_client_flag] == 'true')
+      parameters[:customer_id] = check_and_create_company
+    end
+
     # Оставляем только те параметры, которые позволено редактировать для данного пользователя
     parameters.delete_if { |key, _value| Order.prohibited_params(current_user).include?(key) }
   end

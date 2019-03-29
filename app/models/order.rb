@@ -37,7 +37,7 @@ class Order < ApplicationRecord
   PROVIDERS = %w[RusPrint MetroPrint].freeze
 
   def calculate_profit
-    self.profit = revenue - (expense || 0)
+    self.profit = (revenue || 0) - (expense || 0)
   end
 
   def self.prohibited_params(current_user)

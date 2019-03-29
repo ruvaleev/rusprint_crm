@@ -38,6 +38,10 @@ en:
       previous: "&lsaquo; Пред."
       next: "След. &rsaquo;"
       truncate: "&hellip;"
+  orders:
+    errors:
+      order_have_no_shopping_carts: 'Заказ не может быть пустым. Добавьте картриджи из каталога или "Доп. пункты"'
+      order_have_no_customer: 'Заказ должен быть закреплен за клиентом. Выберите компанию из каталога или создайте нового клиента'
   helpers:
     page_entries_info:
       one_page:

@@ -175,14 +175,14 @@ $ ->
 
   minusCartridge = (id, qnt, item_type) ->
     $.ajax
-      url: '/shopping_carts/0',
+      url: '/shopping_carts',
       type: 'DELETE',
       beforeSend: (xhr) -> 
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       data: { 
-        item_type: item_type,
         product_id:  id,
-        quantity: qnt 
+        quantity: qnt,
+        item_type: item_type
       }
       success: (response) ->
         console.log "удалили картриджи - #{qnt} шт"
