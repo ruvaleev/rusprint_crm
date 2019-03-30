@@ -29,8 +29,19 @@ class OrdersController < ApplicationController
 
   def update
     @order = Order.find(params[:id])
-    @order.update(order_params)
-    gon.order = @order
+    message = ''
+    if @order.update(order_params)
+      gon.order = @order
+      order_params.each { |key| message << "Успешно обновили #{key.humanize} \n" }
+      status = 200
+    else
+      @order.errors.messages.each { |key, value| message << "#{key.to_s.humanize} - #{value} \n" }
+      status = 400
+    end
+    respond_to do |format|
+      format.json { render json: { message: message }, status: status }
+      format.html
+    end
   end
 
   def show

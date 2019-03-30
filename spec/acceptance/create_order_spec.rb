@@ -1,9 +1,9 @@
 require_relative 'acceptance_helper'
 
 feature 'Create order', '
-  In order to input new order to orders table
+  In order to create an order in orders table
   As an authentificated user
-  I wanted to
+  I wanted to input orders data
 ' do
 
   given(:manager_role) { create(:manager_role) }

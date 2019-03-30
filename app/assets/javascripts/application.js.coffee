@@ -24,6 +24,8 @@
 #= require best_in_place
 #= require jquery-ui
 #= require best_in_place.jquery-ui
+#= require jquery.purr
+#= require bip.purr
 #= require_tree .
 
 #App = App || {};

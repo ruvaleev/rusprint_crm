@@ -76,3 +76,32 @@ td {
   z-index: 9999;
   top: 0;
 }
+
+.purr {
+  position: fixed;
+  top: 60px;
+  right: 100px;
+  width: 500px;
+  padding: 20px;
+  &.bip-flash-error {
+    background-color: red;
+  }
+  &.bip-flash-success {
+    background-color: green;
+  }
+  border: solid 1px #dadada;
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  -webkit-box-shadow: 4px 4px 15px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 4px 4px 15px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 4px 4px 15px 0px rgba(0, 0, 0, 0.75);
+  &:first-letter {
+    text-transform: uppercase
+  }
+;
+  font-size: 20px;
+  color: white;
+  font-weight: bolder;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
