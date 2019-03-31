@@ -34,10 +34,10 @@ tr id = "row_#{order.id}"
   td
     = order.profit
   td
-    = order.manager.try(:second_name)
+    = best_in_place_if current_user.can_update?(Order, 'manager_id'), order.decorate, :manager_id, as: :select, collection: User.managers.map { |u| [u.id, u.second_name] }
   td
     = best_in_place_if current_user.can_update?(Order, 'master_id'), order.decorate, :master_id, as: :select, collection: User.masters.map { |u| [u.id, u.second_name] }
   td
-    = order.date_of_order.strftime("%d.%m.%Y %H:%M")
+    = best_in_place_if current_user.can_update?(Order, 'date_of_order'), order.decorate, :date_of_order, display_as: :date_of_customers_order, value: order.decorate.date_of_customers_order
   td
     = best_in_place_if current_user.can_update?(Order, 'provider'), order, :provider, as: :select, collection: Order::PROVIDERS.map { |i| [i, i] }

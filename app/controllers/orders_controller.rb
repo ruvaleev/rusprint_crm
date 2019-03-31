@@ -76,8 +76,9 @@ class OrdersController < ApplicationController
     parameters = params.require(:order).permit(:printers, :cartridges, :revenue, :expense, :date_of_complete,
                                                :date_of_order, :suitable_time_start, :suitable_time_end,
                                                :additional_data, :customer_id, :status, :paid, :master_id,
-                                               :provider, printers_attributes: [:printer_service_guide_id],
-                                                          cartridges_attributes: [:cartridge_service_guide_id])
+                                               :manager_id, :provider,
+                                               printers_attributes: [:printer_service_guide_id],
+                                               cartridges_attributes: [:cartridge_service_guide_id])
 
     if (action_name == 'create') && (parameters[:customer_id].blank? || params[:new_client_flag] == 'true')
       parameters[:customer_id] = check_and_create_company

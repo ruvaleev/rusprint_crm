@@ -48,7 +48,7 @@ class Order < ApplicationRecord
     elsif current_user.master?
       # Параметры, которые разрешено редактировать юзеру
       permitted_params = %w[date_of_complete additional_data printers cartridges qnt
-                            revenue status expense master_id customer_id]
+                            revenue status expense customer_id]
     end
     column_names - permitted_params.to_a
   end
