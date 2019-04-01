@@ -1,0 +1,13 @@
+- if current_user.can_update?(Order, 'customer_id')
+  = link_to 'Сменить клиента', '', class: 'change_customer_btn btn btn-secondary btn-sm', id: "change_customer_#{order.id}", 'data-toggle': "collapse", 'data-target': "#customer_select_#{order.id}", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+  .collapse id = "customer_select_#{order.id}"
+    = select_tag 'update_customer', options_from_collection_for_select(Company.all, "id", "name", order.customer_id), data: { id: order.id }
+  br
+=  image_tag "edit", class: 'mini-icon', id: "edit_customer_name_in_order_#{order.id}" if can? :update, order.customer
+= best_in_place_if true, order.customer, :name, activator: "#edit_customer_name_in_order_#{order.id}", ok_button: 'save'
+br
+=  image_tag "edit", class: 'mini-icon', id: "edit_customer_telephone_in_order_#{order.id}" if can? :update, order.customer
+= best_in_place_if true, order.customer, :telephone, activator: "#edit_customer_telephone_in_order_#{order.id}", ok_button: 'save'
+br
+=  image_tag "edit", class: 'mini-icon', id: "edit_customer_adress_in_order_#{order.id}" if can? :update, order.customer
+= best_in_place_if true, order.customer, :adress, activator: "#edit_customer_adress_in_order_#{order.id}", ok_button: 'save'

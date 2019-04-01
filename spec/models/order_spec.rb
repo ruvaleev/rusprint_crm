@@ -57,5 +57,12 @@ RSpec.describe Order, type: :model do
         expect(unpaid_order).to_not allow_transition_to(:closed)
       end
     end
+
+    context 'when trying to delete order' do
+      it 'is not destroyed really' do
+        order.destroy
+        expect(Order.deleted.last.id).to eq order.id
+      end
+    end
   end
 end

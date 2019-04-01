@@ -22,3 +22,8 @@ tr td.suitable_time {
   border: none;
   padding: unset;
 }
+
+.change_customer_btn {
+  padding: 0.1rem !important;
+  font-size: .7rem !important;
+}

@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
+  before_action :find_order, except: %i[index create]
   before_action :find_shopping_cart, only: [:create]
   after_action :clear_shopping_cart, only: [:create]
   # разблокировать, когда починим ActionCable фичу
@@ -15,12 +16,7 @@ class OrdersController < ApplicationController
   end
 
   def create
-    params_for_order = order_params
-    if params[:new_client_flag] == 'true'
-      @company = Company.create(company_params)
-      params_for_order[:customer_id] = @company.id
-    end
-    @order = Order.create(params_for_order.merge(qnt: @shopping_cart.total_unique_items))
+    @order = Order.create(order_params.merge(qnt: @shopping_cart.total_unique_items))
 
     if @order.errors.any?
       @message = @order.errors.messages
@@ -33,19 +29,49 @@ class OrdersController < ApplicationController
   end
 
   def update
-    @order = Order.find(params[:id])
-    @order.update(order_params)
-    gon.order = @order
+    message = ''
+    if @order.update(order_params)
+      gon.order = @order
+      order_params.each { |key| message << "Успешно обновили #{key.humanize} \n" }
+      status = 200
+    else
+      @order.errors.messages.each { |key, value| message << "#{key.to_s.humanize} - #{value} \n" }
+      status = 400
+    end
+    respond_to do |format|
+      format.json { render json: { message: message }, status: status }
+      format.html
+    end
   end
 
-  def show
-    @order = Order.find(params[:id])
+  def show; end
+
+  def update_customer
+    @order.update(customer_id: params[:order][:customer_id])
   end
 
   private
 
+  def find_order
+    @order = Order.find(params[:id])
+  end
+
+  def check_and_create_company
+    unless params[:new_client_flag] == 'true'
+      flash[:error] = I18n.t 'orders.errors.order_have_no_customer'
+      redirect_to :root and return
+    end
+    company = Company.create(company_params)
+    company.id
+  end
+
   def find_shopping_cart
-    @shopping_cart = ShoppingCart.find(session[:shopping_cart_id]) if session[:shopping_cart_id]
+    unless session[:shopping_cart_id]
+      flash[:error] = I18n.t 'orders.errors.order_have_no_shopping_carts'
+      redirect_to :root and return
+    end
+
+    @shopping_cart = ShoppingCart.find(session[:shopping_cart_id])
   end
 
   def clear_shopping_cart
@@ -56,8 +82,14 @@ class OrdersController < ApplicationController
     parameters = params.require(:order).permit(:printers, :cartridges, :revenue, :expense, :date_of_complete,
                                                :date_of_order, :suitable_time_start, :suitable_time_end,
                                                :additional_data, :customer_id, :status, :paid, :master_id,
-                                               :provider, printers_attributes: [:printer_service_guide_id],
-                                                          cartridges_attributes: [:cartridge_service_guide_id])
+                                               :manager_id, :provider, :qnt,
+                                               printers_attributes: [:printer_service_guide_id],
+                                               cartridges_attributes: [:cartridge_service_guide_id])
+
+    if (action_name == 'create') && (parameters[:customer_id].blank? || params[:new_client_flag] == 'true')
+      parameters[:customer_id] = check_and_create_company
+    end
+
     # Оставляем только те параметры, которые позволено редактировать для данного пользователя
     parameters.delete_if { |key, _value| Order.prohibited_params(current_user).include?(key) }
   end

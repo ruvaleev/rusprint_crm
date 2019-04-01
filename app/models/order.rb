@@ -1,4 +1,5 @@
 class Order < ApplicationRecord
+  acts_as_paranoid
   include AASM
   paginates_per 5
 
@@ -37,7 +38,7 @@ class Order < ApplicationRecord
   PROVIDERS = %w[RusPrint MetroPrint].freeze
 
   def calculate_profit
-    self.profit = revenue - (expense || 0)
+    self.profit = (revenue || 0) - (expense || 0)
   end
 
   def self.prohibited_params(current_user)
@@ -48,7 +49,7 @@ class Order < ApplicationRecord
     elsif current_user.master?
       # Параметры, которые разрешено редактировать юзеру
       permitted_params = %w[date_of_complete additional_data printers cartridges qnt
-                            revenue status expense master_id customer_id]
+                            revenue status expense]
     end
     column_names - permitted_params.to_a
   end

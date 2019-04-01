@@ -89,4 +89,11 @@ RSpec.describe User do
       end
     end
   end
+
+  context 'when trying to delete user' do
+    it 'is not destroyed really' do
+      user.destroy
+      expect(User.deleted.last.id).to eq user.id
+    end
+  end
 end

@@ -50,6 +50,7 @@ gem "cancancan"
 gem 'aasm'
 gem 'kaminari'
 gem 'rubocop'
+gem "paranoia", "~> 2.2"
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

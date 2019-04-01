@@ -16,14 +16,10 @@ require 'rails_helper'
 # end
 
 # Capybara.javascript_driver = :headless_chrome
-
-Capybara.ignore_hidden_elements = true
-
 RSpec.configure do |config|
   Capybara.javascript_driver = :webkit
   Capybara.server_port = 3100
   Capybara.server = :puma
-
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
@@ -44,6 +40,4 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
   end
-  
-
 end

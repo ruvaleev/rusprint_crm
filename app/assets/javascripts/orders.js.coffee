@@ -1,4 +1,20 @@
 $ ->
+#Подгружаем нового клиента в заказ 
+  $('.table-orders').on 'change', "[name='update_customer']", (e) ->
+    order_id = $(this).data('id')
+    customer_id = $(this).val()
+    $.ajax
+      url: '/orders/' + order_id + '/update_customer',
+      type: 'PUT',
+      beforeSend: (xhr) -> 
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      data: {
+        order: {
+          customer_id: customer_id
+        }
+      }
+      success: (response) -> 
+        console.log 'обновили клиента в заказе'
 
   $('#new_client_tab, #choose_client').on 'click', (e) ->
     value = $(this).attr('value_for_new_client_flag')
@@ -11,7 +27,7 @@ $ ->
   $('#order_customer_id').on 'change', (e) ->
     url = '/companies/' + $(this).val() + '/get_printers'
     $.get url, (data) ->
-    changeCustomer()
+    chooseAnotherCustomer()
 
   $('.customers_printers_list').on 'click', '.plus_printer', (e) ->
     model = $(this).data('model')
@@ -153,7 +169,7 @@ $ ->
       new_value_of_field = new_value_of_field.substr(0, new_value_of_field.length - 2)
     $(goal_elem).val(new_value_of_field)
 
-  changeCustomer = () ->
+  chooseAnotherCustomer = () ->
     customer = $('#order_customer_id option:selected').text()
     customer_id = $('#order_customer_id option:selected').val()
     $('.add_to_customer').html("Добавить принтер клиенту " + customer)
@@ -175,14 +191,14 @@ $ ->
 
   minusCartridge = (id, qnt, item_type) ->
     $.ajax
-      url: '/shopping_carts/0',
+      url: '/shopping_carts',
       type: 'DELETE',
       beforeSend: (xhr) -> 
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       data: { 
-        item_type: item_type,
         product_id:  id,
-        quantity: qnt 
+        quantity: qnt,
+        item_type: item_type
       }
       success: (response) ->
         console.log "удалили картриджи - #{qnt} шт"
