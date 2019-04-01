@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
+  before_action :find_order, except: %i[index create]
   before_action :find_shopping_cart, only: [:create]
   after_action :clear_shopping_cart, only: [:create]
   # разблокировать, когда починим ActionCable фичу
@@ -28,7 +29,6 @@ class OrdersController < ApplicationController
   end
 
   def update
-    @order = Order.find(params[:id])
     message = ''
     if @order.update(order_params)
       gon.order = @order
@@ -44,11 +44,17 @@ class OrdersController < ApplicationController
     end
   end
 
-  def show
-    @order = Order.find(params[:id])
+  def show; end
+
+  def update_customer
+    @order.update(customer_id: params[:order][:customer_id])
   end
 
   private
+
+  def find_order
+    @order = Order.find(params[:id])
+  end
 
   def check_and_create_company
     unless params[:new_client_flag] == 'true'
@@ -76,7 +82,7 @@ class OrdersController < ApplicationController
     parameters = params.require(:order).permit(:printers, :cartridges, :revenue, :expense, :date_of_complete,
                                                :date_of_order, :suitable_time_start, :suitable_time_end,
                                                :additional_data, :customer_id, :status, :paid, :master_id,
-                                               :manager_id, :provider,
+                                               :manager_id, :provider, :qnt,
                                                printers_attributes: [:printer_service_guide_id],
                                                cartridges_attributes: [:cartridge_service_guide_id])
 

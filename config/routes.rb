@@ -8,7 +8,9 @@ Rails.application.routes.draw do
     patch 'talk', on: :member
   end
 
-  resources :orders
+  resources :orders do
+    put 'update_customer', on: :member
+  end
 
   resources :printers
   get 'get_models', to: 'printers#get_models'

@@ -1,12 +1,8 @@
 tr id = "row_#{order.id}"
   th
     = order.id
-  td
-    = best_in_place_if true, order.customer, :name
-  td
-    = best_in_place_if true, order.customer, :telephone
-  td
-    = best_in_place_if true, order.customer, :adress
+  td id = "company_in_order_#{order.id}"
+    = render 'companies/company', order: order
   td
     = best_in_place_if current_user.can_update?(Order, 'printers'), order, :printers
   td

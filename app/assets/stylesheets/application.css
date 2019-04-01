@@ -59,6 +59,10 @@ td {
   text-align: right;
 }
 
+.icon-right {
+  float: right;
+}
+
 .name {
   width: 150px; 
 }
