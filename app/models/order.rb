@@ -1,4 +1,5 @@
 class Order < ApplicationRecord
+  acts_as_paranoid
   include AASM
   paginates_per 5
 

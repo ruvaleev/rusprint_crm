@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  acts_as_paranoid
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -12,9 +13,9 @@ class User < ApplicationRecord
   has_many :received_messages, class_name: 'Message', foreign_key: 'receiver_id',
                                dependent: :destroy, inverse_of: :receiver
 
-  has_many :customers, class_name: 'Company', foreign_key: 'manager_id', dependent: :nullify, inverse_of: :manager
-  has_many :orders, as: :master, dependent: :nullify, inverse_of: :master
-  has_many :orders, as: :manager, dependent: :nullify, inverse_of: :manager
+  has_many :customers, class_name: 'Company', foreign_key: 'manager_id', inverse_of: :manager
+  has_many :orders, as: :master, inverse_of: :master
+  has_many :orders, as: :manager, inverse_of: :manager
 
   has_many :logs, dependent: :destroy
 

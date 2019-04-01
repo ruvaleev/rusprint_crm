@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Company, type: :model do
+  let(:company) { create(:company) }
+
   it { should belong_to :manager }
   it { should have_many :orders }
   it { should have_many :employees }
@@ -14,4 +16,11 @@ RSpec.describe Company, type: :model do
   it { should validate_presence_of :telephone }
   it { is_expected.to callback(:increment_version).before(:save) }
   it { is_expected.to callback(:save_archive).after(:save) }
+
+  context 'when trying to delete company' do
+    it 'is not destroyed really' do
+      company.destroy
+      expect(Company.deleted.last.id).to eq company.id
+    end
+  end
 end
