@@ -3,11 +3,11 @@
   .collapse id = "customer_select_#{order.id}"
     = select_tag 'update_customer', options_from_collection_for_select(Company.all, "id", "name", order.customer_id), data: { id: order.id }
   br
-=  image_tag "edit", class: 'mini-icon', id: "edit_customer_name_in_order_#{order.id}" if can? :update, order.customer
+=  image_tag "edit.jpg", class: 'mini-icon', id: "edit_customer_name_in_order_#{order.id}" if can? :update, order.customer
 = best_in_place_if true, order.customer, :name, activator: "#edit_customer_name_in_order_#{order.id}", ok_button: 'save'
 br
-=  image_tag "edit", class: 'mini-icon', id: "edit_customer_telephone_in_order_#{order.id}" if can? :update, order.customer
+=  image_tag "edit.jpg", class: 'mini-icon', id: "edit_customer_telephone_in_order_#{order.id}" if can? :update, order.customer
 = best_in_place_if true, order.customer, :telephone, activator: "#edit_customer_telephone_in_order_#{order.id}", ok_button: 'save'
 br
-=  image_tag "edit", class: 'mini-icon', id: "edit_customer_adress_in_order_#{order.id}" if can? :update, order.customer
+=  image_tag "edit.jpg", class: 'mini-icon', id: "edit_customer_adress_in_order_#{order.id}" if can? :update, order.customer
 = best_in_place_if true, order.customer, :adress, activator: "#edit_customer_adress_in_order_#{order.id}", ok_button: 'save'
