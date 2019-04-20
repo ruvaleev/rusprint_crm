@@ -1,4 +1,4 @@
 class OtherOrderItem < ApplicationRecord
-  has_many :order_items, as: :item
+  has_one :order_item, as: :item, dependent: :destroy
   validates :body, presence: true
 end

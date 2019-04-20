@@ -53,4 +53,12 @@ class Order < ApplicationRecord
     end
     column_names - permitted_params.to_a
   end
+
+  def cartridges
+    order_items.where(item_type: 'CartridgeServiceGuide')
+  end
+
+  def other_order_items
+    order_items.where(item_type: 'OtherOrderItem')
+  end
 end

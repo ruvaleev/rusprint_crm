@@ -24,13 +24,13 @@ feature 'Update order', '
     before do
       sign_in(manager)
     end
-    scenario 'updates printers' do
+    xscenario 'updates printers' do
       bip_text order, :printers, 'Обновленные принтеры'
       within "#best_in_place_order_#{order.id}_printers" do
         expect(page).to have_content 'Обновленные принтеры'
       end
     end
-    scenario 'updates cartridges' do
+    xscenario 'updates cartridges' do
       bip_text order, :cartridges, 'Обновленные картриджи'
       within "#best_in_place_order_#{order.id}_cartridges" do
         expect(page).to have_content 'Обновленные картриджи'
@@ -141,13 +141,13 @@ feature 'Update order', '
       end
     end
 
-    scenario 'updates printers' do
+    xscenario 'updates printers' do
       bip_text order, :printers, 'Обновленные принтеры'
       within "#best_in_place_order_#{order.id}_printers" do
         expect(page).to have_content 'Обновленные принтеры'
       end
     end
-    scenario 'updates cartridges' do
+    xscenario 'updates cartridges' do
       bip_text order, :cartridges, 'Обновленные картриджи'
       within "#best_in_place_order_#{order.id}_cartridges" do
         expect(page).to have_content 'Обновленные картриджи'

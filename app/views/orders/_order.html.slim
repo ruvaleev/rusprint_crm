@@ -3,10 +3,8 @@ tr id = "row_#{order.id}"
     = order.id
   td id = "company_in_order_#{order.id}"
     = render 'companies/company', order: order
-  td
-    = best_in_place_if current_user.can_update?(Order, 'printers'), order, :printers
-  td
-    = best_in_place_if current_user.can_update?(Order, 'cartridges'), order, :cartridges
+  td.order_items style="padding:0px" id = "order_items_in_order_#{order.id}"
+    = render 'order_item_cell', { order: order }
   td
     = best_in_place_if current_user.can_update?(Order, 'qnt'), order, :qnt, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
   td

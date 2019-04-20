@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190322203939) do
+ActiveRecord::Schema.define(version: 20190406130246) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,8 +23,10 @@ ActiveRecord::Schema.define(version: 20190322203939) do
     t.string "version"
     t.bigint "user_id"
     t.bigint "company_id"
+    t.datetime "deleted_at"
     t.index ["adress"], name: "index_archive_companies_on_adress"
     t.index ["company_id"], name: "index_archive_companies_on_company_id"
+    t.index ["deleted_at"], name: "index_archive_companies_on_deleted_at"
     t.index ["user_id"], name: "index_archive_companies_on_user_id"
   end
 
@@ -55,7 +57,9 @@ ActiveRecord::Schema.define(version: 20190322203939) do
     t.string "email"
     t.bigint "manager_id"
     t.integer "version"
+    t.datetime "deleted_at"
     t.index ["adress"], name: "index_companies_on_adress"
+    t.index ["deleted_at"], name: "index_companies_on_deleted_at"
     t.index ["manager_id"], name: "index_companies_on_manager_id"
   end
 
@@ -109,7 +113,9 @@ ActiveRecord::Schema.define(version: 20190322203939) do
     t.string "status"
     t.boolean "paid"
     t.string "provider", default: "RusPrint"
+    t.datetime "deleted_at"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
+    t.index ["deleted_at"], name: "index_orders_on_deleted_at"
     t.index ["manager_id"], name: "index_orders_on_manager_id"
     t.index ["master_id"], name: "index_orders_on_master_id"
   end
@@ -178,6 +184,8 @@ ActiveRecord::Schema.define(version: 20190322203939) do
     t.datetime "updated_at", null: false
     t.bigint "employer_id"
     t.bigint "role_id"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["employer_id"], name: "index_users_on_employer_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

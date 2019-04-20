@@ -65,4 +65,30 @@ RSpec.describe Order, type: :model do
       end
     end
   end
+
+  describe 'cartridges' do
+    let!(:order) { create(:order) }
+    let!(:order_item) { create_list(:order_item, 4, order: order) }
+
+    it 'returns array of items with only type "CartridgeServiceGuide"' do
+      expect(order.cartridges.pluck(:item_type).uniq).to eq ['CartridgeServiceGuide']
+    end
+
+    it 'returns all of cartridge order items for the order' do
+      expect(order.cartridges.count).to eq 4
+    end
+  end
+
+  describe 'other order items' do
+    let!(:order) { create(:order) }
+    let!(:other_oi) { create_list(:other_oi, 4, order: order) }
+
+    it 'returns array of items with only type "OtherOrderItem"' do
+      expect(order.other_order_items.pluck(:item_type).uniq).to eq ['OtherOrderItem']
+    end
+
+    it 'returns all of other order items for the order' do
+      expect(order.other_order_items.count).to eq 4
+    end
+  end
 end

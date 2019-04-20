@@ -31,5 +31,7 @@ Rails.application.routes.draw do
     patch 'make_friend', on: :member
   end
 
+  resources :order_items
+
   mount ActionCable.server => '/cable'
 end

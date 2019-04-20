@@ -1,0 +1,64 @@
+table.order-items-cell id="order_items_edit_form_#{order.id}"
+  tr
+    td colspan='4'
+      button type="button" class="btn btn-default btn-sm icon-right"
+        span class="glyphicon glyphicon-refresh" aria-hidden="true"
+
+  - unless order.cartridges.empty?
+    tr.table-active
+      td colspan='4'
+        strong Картриджи
+    - order.cartridges.each do |order_item|
+      tr
+        = form_with model: order_item, remote: true do |f|
+          td
+            = order_item.item.printer_service_guide.vendor
+          td
+            = order_item.item.printer_service_guide.model
+          td
+            = best_in_place_if true, order_item, :quantity, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
+          td
+            = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
+
+  - unless order.other_order_items.empty?
+    tr.table-active
+      td colspan='4'
+        strong Прочее
+    - order.other_order_items.each do |order_item|
+      tr
+        = form_with model: order_item, remote: true do |f|
+          td colspan='2' style='text-align:right;'
+            = best_in_place_if true, order_item.item, :body
+          td
+            = best_in_place_if true, order_item, :quantity, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
+          td
+            = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
+
+
+  tr.table-active
+    td colspan='3' style='text-align:right; border-bottom:none;'
+      span Всего единиц:
+    td style='text-align:right; border-bottom:none;'
+      = order.order_items.sum(:quantity)
+  tr.table-active
+    td colspan='3' style='text-align:right; border-bottom:none;'
+      strong Сумма:
+    td style='text-align:right; border-bottom:none;'
+      = price_value(order.revenue)
+
+
+
+javascript:
+  $(document).ready(function () {
+    $("#change_order_items_#{order.id}").on('click', function(e) {
+      e.preventDefault();
+      $("#order_items_show_form_#{order.id}").hide();
+      $("#order_items_edit_form_#{order.id}").fadeIn();
+    });
+
+    $("#cancel_editing_order_items_#{order.id}").on('click', function(e) {
+      e.preventDefault();
+      $("#order_items_edit_form_#{order.id}").hide();
+      $("#order_items_show_form_#{order.id}").fadeIn();
+    });
+  });
