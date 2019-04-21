@@ -111,7 +111,7 @@ RSpec.describe OrdersController, type: :controller do
   describe 'GET #show' do
     sign_in_user
     let(:order) { create(:order) }
-    before { get :show, params: { id: order } }
+    before { get :show, params: { id: order }, xhr: true, format: :js }
 
     it 'assigns the requested order to @order' do
       expect(assigns(:order)).to eq order

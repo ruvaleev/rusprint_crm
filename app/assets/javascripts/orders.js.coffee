@@ -1,4 +1,17 @@
 $ ->
+  $('.table-orders').on 'click', '.refresh_order_items', (e) ->
+      id = $(this).data('id')
+      $.ajax
+        url: '/orders/' + id,
+        type: 'GET',
+        beforeSend: (xhr) -> 
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        data: {
+          id: id
+        }
+        success: (response) -> 
+          console.log('Отрендерили данные заказа ' + id)
+
 #Подгружаем нового клиента в заказ 
   $('.table-orders').on 'change', "[name='update_customer']", (e) ->
     order_id = $(this).data('id')

@@ -7,9 +7,9 @@ tr
         tr
           td = cartridge.model
           td = "#{cartridge.price} руб."
-          td = number_field '', "qnt_cartridges_#{cartridge.id}", class: 'qnt_input', data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } 
+          td = number_field '', "qnt_cartridges_#{cartridge.id}", class: 'qnt_input', data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}" } 
           td 
-            = image_tag('plus.jpg', class: "icon plus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } )
+            = image_tag('plus.jpg', class: "icon plus_possible_cartridge", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}" } )
             = image_tag('minus.jpg', class: "icon minus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } )
   
   td = printer.additional_data

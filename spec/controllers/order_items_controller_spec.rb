@@ -31,7 +31,7 @@ RSpec.describe OrderItemsController, type: :controller do
       it "updates the order after updating order_item's price_cents" do
         put :update, params: { id: order_item, order_item: { price_cents: '1010.00 руб' }, format: :json }
         order.reload
-        expect(order.revenue).to eq 101000
+        expect(order.revenue).to eq 1010
       end
 
       it "updates the order after updating order_item's quantity" do

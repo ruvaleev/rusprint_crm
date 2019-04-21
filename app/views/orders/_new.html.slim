@@ -38,7 +38,7 @@
             = image_tag('cancel.png', class: "icon cancel_printers")
             = f.input :printers, label: 'Принтеры'
             = image_tag('cancel.png', class: "icon cancel_cartridges")
-            = f.input :cartridges, label: 'Картриджи'
+            = f.input :cartridges, label: 'Картриджи', value: ''
             .other_order_item
               = render 'other_order_item_field'
             = f.input :revenue, label: 'Стоимость'

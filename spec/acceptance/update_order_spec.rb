@@ -13,6 +13,7 @@ feature 'Update order', '
   given(:master) { create(:user, role: master_role) }
   given(:new_master) { create(:user, role: master_role, second_name: 'New master secname') }
   given!(:order) { create(:order, master: master, manager: manager) }
+  given(:order_item) { create(:order_item, order: order) }
 
   scenario 'Non-authentificated user cannot see orders table' do
     visit root_path
@@ -38,8 +39,8 @@ feature 'Update order', '
     end
 
     scenario 'updates quantity of units' do
-      bip_select order, :qnt, '10'
-      within "#best_in_place_order_#{order.id}_qnt" do
+      bip_select order_item, :quantity, '10'
+      within "#best_in_place_order_item_#{order_item.id}_quantity" do
         expect(page).to have_content '10'
       end
     end
@@ -66,16 +67,16 @@ feature 'Update order', '
     end
 
     scenario 'updates additional data' do
-      bip_text order, :additional_data, 'Мастер ввел сюда примечания'
+      bip_area order, :additional_data, 'Мастер ввел сюда примечания'
       within "#best_in_place_order_#{order.id}_additional_data" do
         expect(page).to have_content 'Мастер ввел сюда примечания'
       end
     end
 
-    scenario 'updates revenue' do
-      bip_text order, :revenue, '10000'
-      within "#best_in_place_order_#{order.id}_revenue" do
-        expect(page).to have_content '10000'
+    scenario "updates cartridge's price" do
+      bip_text order_item, :price_cents, '1010'
+      within "#best_in_place_order_item_#{order_item.id}_price_cents" do
+        expect(page).to have_content '1010'
       end
     end
 
@@ -135,7 +136,7 @@ feature 'Update order', '
     end
 
     scenario 'updates additional data' do
-      bip_text order, :additional_data, 'Мастер ввел сюда примечания'
+      bip_area order, :additional_data, 'Мастер ввел сюда примечания'
       within "#best_in_place_order_#{order.id}_additional_data" do
         expect(page).to have_content 'Мастер ввел сюда примечания'
       end
@@ -147,6 +148,7 @@ feature 'Update order', '
         expect(page).to have_content 'Обновленные принтеры'
       end
     end
+
     xscenario 'updates cartridges' do
       bip_text order, :cartridges, 'Обновленные картриджи'
       within "#best_in_place_order_#{order.id}_cartridges" do
@@ -155,16 +157,16 @@ feature 'Update order', '
     end
 
     scenario 'updates quantity of units' do
-      bip_select order, :qnt, '10'
-      within "#best_in_place_order_#{order.id}_qnt" do
+      bip_select order_item, :quantity, '10'
+      within "#best_in_place_order_item_#{order_item.id}_quantity" do
         expect(page).to have_content '10'
       end
     end
 
     scenario 'updates revenue' do
-      bip_text order, :revenue, '10000'
-      within "#best_in_place_order_#{order.id}_revenue" do
-        expect(page).to have_content '10000'
+      bip_text order_item, :price_cents, '1010'
+      within "#best_in_place_order_item_#{order_item.id}_price_cents" do
+        expect(page).to have_content '1010'
       end
     end
 

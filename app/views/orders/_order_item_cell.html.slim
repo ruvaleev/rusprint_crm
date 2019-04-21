@@ -1,64 +1,79 @@
-table.order-items-cell id="order_items_edit_form_#{order.id}"
-  tr
-    td colspan='4'
-      button type="button" class="btn btn-default btn-sm icon-right"
+table.full-width id="order_items_edit_form_#{order.id}"
+  tr.min-padding
+    td colspan='7'
+      button type="button" class="btn btn-default btn-sm icon-right refresh_order_items" data-id="#{order.id}"
         span class="glyphicon glyphicon-refresh" aria-hidden="true"
 
   - unless order.cartridges.empty?
-    tr.table-active
-      td colspan='4'
+    tr.table-active.min-padding
+      td colspan='7'
         strong Картриджи
+    tr.small.table-active.min-padding
+      td Вендор
+      td Модель принтера
+      td Доп. данные
+      td Пометки мастера
+      td Модель картриджа
+      td Кол-во
+      td Цена
     - order.cartridges.each do |order_item|
       tr
         = form_with model: order_item, remote: true do |f|
-          td
+          td 
             = order_item.item.printer_service_guide.vendor
-          td
+          td 
             = order_item.item.printer_service_guide.model
+          td 
+            = order_item.item.try(:printer).try(:additional_data)
+          td
+            = order_item.item.try(:printer).try(:masters_note)
+          td
+            = order_item.item.model
           td
             = best_in_place_if true, order_item, :quantity, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
           td
             = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
 
   - unless order.other_order_items.empty?
-    tr.table-active
-      td colspan='4'
+    tr.table-active.min-padding
+      td colspan='7'
         strong Прочее
+    tr.small.table-active.min-padding
+      td colspan='5' Доп. услуга
+      td Кол-во
+      td Цена
     - order.other_order_items.each do |order_item|
       tr
         = form_with model: order_item, remote: true do |f|
-          td colspan='2' style='text-align:right;'
-            = best_in_place_if true, order_item.item, :body
+          td colspan='5' style='text-align:right;'
+            = best_in_place_if true, order_item.item, :body, as: :textarea
           td
             = best_in_place_if true, order_item, :quantity, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
           td
             = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
 
+  - unless order.additional_data.blank?
+    tr.table-active.min-padding
+      td colspan='7'
+        strong Дополнительные данные
+    tr
+      td colspan='7'
+        = best_in_place_if true, order, :additional_data, as: :textarea
 
-  tr.table-active
-    td colspan='3' style='text-align:right; border-bottom:none;'
+  tr.table-active.min-padding
+    td colspan='6' style='text-align:right; border-bottom:none;'
       span Всего единиц:
     td style='text-align:right; border-bottom:none;'
       = order.order_items.sum(:quantity)
-  tr.table-active
-    td colspan='3' style='text-align:right; border-bottom:none;'
+  tr.table-active.min-padding
+    td colspan='6' style='text-align:right; border-bottom:none;'
       strong Сумма:
     td style='text-align:right; border-bottom:none;'
-      = price_value(order.revenue)
+      = "#{order.revenue} руб."
 
 
 
 javascript:
   $(document).ready(function () {
-    $("#change_order_items_#{order.id}").on('click', function(e) {
-      e.preventDefault();
-      $("#order_items_show_form_#{order.id}").hide();
-      $("#order_items_edit_form_#{order.id}").fadeIn();
-    });
-
-    $("#cancel_editing_order_items_#{order.id}").on('click', function(e) {
-      e.preventDefault();
-      $("#order_items_edit_form_#{order.id}").hide();
-      $("#order_items_show_form_#{order.id}").fadeIn();
-    });
+    $('.best_in_place').best_in_place()
   });
