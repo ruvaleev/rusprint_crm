@@ -38,15 +38,17 @@ $ ->
 # Нажатие на плюс, прибавляем картриджи к заказу
   $('.customers_printers_list').on 'click', '.plus_possible_cartridge', (e) ->
     id = $(this).data('id')
+    printer_id =  $(this).data('printer')
     qnt = $("#qnt_cartridges_#{id}").val() || 1
-    plusCartridge(id, qnt) # Прибавляем картриджи к заказу
+    plusCartridge(id, printer_id, qnt) # Прибавляем картриджи к заказу
     $("#qnt_cartridges_#{id}").val('')
 
   $('.customers_printers_list').on 'keypress', '.qnt_input', (e) ->
     if (e.which == 13)
       id = $(this).data('id')
+      printer_id =  $(this).data('printer')
       qnt = $("#qnt_cartridges_#{id}").val() || 1
-      plusCartridge(id, qnt)
+      plusCartridge(id, printer_id, qnt)
       $(this).val('')
       return false
 
@@ -175,14 +177,15 @@ $ ->
     $('.add_to_customer').html("Добавить принтер клиенту " + customer)
     $('.company_id_input').val(customer_id)
 
-  plusCartridge = (id, qnt) ->
+  plusCartridge = (id, printer_id, qnt) ->
     $.ajax
       url: '/shopping_carts',
       type: 'POST',
       beforeSend: (xhr) -> 
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       data: { 
-        product_id:  id, 
+        product_id:  id,
+        printer_id: printer_id,
         quantity: qnt,
         item_type: 'CartridgeServiceGuide' 
       }

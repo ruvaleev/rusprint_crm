@@ -46,7 +46,7 @@ class OrderItemsController < ApplicationController
 
   def actualize_order
     order_params = {}
-    order_params[:revenue] = @order_item.owner.subtotal * 100 if @order_item
+    order_params[:revenue] = @order_item.owner.subtotal if @order_item
     order_params[:qnt] = @order_item.owner.total_unique_items if params[:order_item][:quantity]
     @order.update(order_params)
   end

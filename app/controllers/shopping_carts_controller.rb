@@ -12,6 +12,8 @@ class ShoppingCartsController < ApplicationController
     end
     quantity = params[:quantity].to_i || 1
     @shopping_cart.add(@product, @product.price, quantity)
+    order_item = @shopping_cart.shopping_cart_items.find_by(item_id: @product)
+    order_item.update(printer_id: params[:printer_id]) if params[:printer_id]
   end
 
   def clear
