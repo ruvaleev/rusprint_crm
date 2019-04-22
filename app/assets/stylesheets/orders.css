@@ -27,3 +27,15 @@ tr td.suitable_time {
   padding: 0.1rem !important;
   font-size: .7rem !important;
 }
+
+@media screen and (min-device-width: 1400px) {
+  .new-order-modal-form {
+    max-width: 50% !important;
+  }
+}
+
+@media handheld {
+  .new-order-modal-form {
+    max-width: 90% !important;
+  }
+}
