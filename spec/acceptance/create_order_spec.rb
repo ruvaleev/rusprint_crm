@@ -84,30 +84,35 @@ feature 'Create order', '
       end
 
       scenario "user can add customer's cartridges to order", js: true do
-        within '.customers_printers_list' do
+        within '#new_order .customers_printers_list' do
           find("img[alt='Plus']").click
         end
-        sleep(1)
-
+        wait_for_ajax
         expect(find_field('order[cartridges]').value).to have_content cartridge.model
       end
 
-      scenario "user can remove customer's cartridges from order" # , js: true do
-      # НЕ РАБОТАЕТ (JS не отрабатывает)
-      #   within '.customers_printers_list' do
-      #     find("img[alt='Minus']").click
-      #   end
-      #   sleep(1)
+      xscenario "user can remove customer's cartridges from order", js: true do
+        fill_in "qnt_cartridges_#{cartridge.id}", with: '10'
+        within '#new_order .customers_printers_list' do
+          find("img[alt='Plus']").click
+        end
+        wait_for_ajax
+        within '#new_order .customers_printers_list' do
+          fill_in "qnt_cartridges_#{cartridge.id}", with: '0'
+          find("img[alt='Minus']").click
+        end
+        wait_for_ajax
 
-      #   expect(find_field('order[cartridges]').value).to have_content " - 9 шт"
-      # end
+        expect(find_field('order[cartridges]').value).to have_content ' - 9 шт'
+      end
 
-      scenario 'user can save and see order after create', js: true do
+      scenario 'user can save and see order after create', js: true, retry: 7 do
         find("img[alt='Plus']").click
-        sleep(1)
+        wait_for_ajax
         click_on 'Создать заказ'
+        wait_for_ajax
         within '#row_1' do
-          expect(page).to have_content customer.name
+          expect(page).to have_content(customer.name, wait: 1.0)
         end
       end
 

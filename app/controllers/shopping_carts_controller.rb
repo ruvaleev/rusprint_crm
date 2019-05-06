@@ -14,6 +14,8 @@ class ShoppingCartsController < ApplicationController
     @shopping_cart.add(@product, @product.price, quantity)
     order_item = @shopping_cart.shopping_cart_items.find_by(item_id: @product)
     order_item.update(printer_id: params[:printer_id]) if params[:printer_id]
+    order_item.update(order_id: @shopping_cart.order_id) if @shopping_cart.order_id
+    Order.find(@shopping_cart.order_id).update(revenue: @shopping_cart.subtotal) if @shopping_cart.order_id
   end
 
   def clear
@@ -29,8 +31,8 @@ class ShoppingCartsController < ApplicationController
   private
 
   def extract_shopping_cart
-    shopping_cart_id = session[:shopping_cart_id]
-    @shopping_cart = if session[:shopping_cart_id]
+    shopping_cart_id = params[:shopping_cart_id].presence || session[:shopping_cart_id]
+    @shopping_cart = if shopping_cart_id
                        ShoppingCart.find_by(id: shopping_cart_id) || ShoppingCart.create
                      else
                        ShoppingCart.create

@@ -54,11 +54,15 @@ class Order < ApplicationRecord
     column_names - permitted_params.to_a
   end
 
-  def cartridges
+  def cartridge_order_items
     order_items.where(item_type: 'CartridgeServiceGuide')
   end
 
   def other_order_items
     order_items.where(item_type: 'OtherOrderItem')
+  end
+
+  def shopping_cart
+    order_items.first.try(:owner)
   end
 end

@@ -1,13 +1,17 @@
 table.full-width id="order_items_edit_form_#{order.id}"
   tr.min-padding
     td colspan='7'
-      button type="button" class="btn btn-default btn-sm icon-right refresh_order_items" data-id="#{order.id}"
+      button.btn.btn-default.btn-sm.icon-right.refresh_order_items id="refresh_order_items_#{order.id}" type="button" data-id="#{order.id}"
         span class="glyphicon glyphicon-refresh" aria-hidden="true"
 
-  - unless order.cartridges.empty?
+  - unless order.cartridge_order_items.empty?
     tr.table-active.min-padding
-      td colspan='7'
+      td colspan='6'
         strong Картриджи
+      td
+        button.btn.btn-default.btn-sm.icon-right.table-active type="button" data-toggle="modal" data-target="#new_cartridge_modal_#{order.id}" data-id="#{order.id}"
+          span class="glyphicon glyphicon-plus" aria-hidden="true"
+
     tr.small.table-active.min-padding
       td Вендор
       td Модель принтера
@@ -16,23 +20,8 @@ table.full-width id="order_items_edit_form_#{order.id}"
       td Модель картриджа
       td Кол-во
       td Цена
-    - order.cartridges.each do |order_item|
-      tr
-        = form_with model: order_item, remote: true do |f|
-          td 
-            = order_item.item.printer_service_guide.vendor
-          td 
-            = order_item.item.printer_service_guide.model
-          td 
-            = order_item.item.try(:printer).try(:additional_data)
-          td
-            = order_item.item.try(:printer).try(:masters_note)
-          td
-            = order_item.item.model
-          td
-            = best_in_place_if true, order_item, :quantity, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
-          td
-            = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
+    - order.cartridge_order_items.each do |order_item|
+      tr = render order_item
 
   - unless order.other_order_items.empty?
     tr.table-active.min-padding
@@ -43,14 +32,7 @@ table.full-width id="order_items_edit_form_#{order.id}"
       td Кол-во
       td Цена
     - order.other_order_items.each do |order_item|
-      tr
-        = form_with model: order_item, remote: true do |f|
-          td colspan='5' style='text-align:right;'
-            = best_in_place_if true, order_item.item, :body, as: :textarea
-          td
-            = best_in_place_if true, order_item, :quantity, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
-          td
-            = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
+      tr = render order_item
 
   - unless order.additional_data.blank?
     tr.table-active.min-padding
@@ -71,6 +53,17 @@ table.full-width id="order_items_edit_form_#{order.id}"
     td style='text-align:right; border-bottom:none;'
       = "#{order.revenue} руб."
 
+.modal.fade id="new_cartridge_modal_#{order.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+  .modal-dialog.new-order-modal-form role="document"
+    .modal-content
+      .modal-header
+        h5.modal-title id="exampleModalLongTitle" Добавить картридж
+        button.close type="button" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true" &times
+      .modal-body id = "new_order_form_for_order_#{order.id}"
+        = render 'add_cartridge_to_existing_order', order: order
+      .modal-footer
+        button.btn.btn-secondary type="button" data-dismiss="modal" id = "close_cartridge_item_modal_for_shopping_cart_#{order.shopping_cart.try(:id)}" Закрыть
 
 
 javascript:

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190420182959) do
+ActiveRecord::Schema.define(version: 20190427054836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,6 +93,8 @@ ActiveRecord::Schema.define(version: 20190420182959) do
     t.string "price_currency", default: "RUB", null: false
     t.bigint "order_id"
     t.bigint "printer_id"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_order_items_on_deleted_at"
     t.index ["order_id"], name: "index_order_items_on_order_id"
     t.index ["printer_id"], name: "index_order_items_on_printer_id"
   end
@@ -148,7 +150,9 @@ ActiveRecord::Schema.define(version: 20190420182959) do
     t.string "masters_note"
     t.bigint "printer_service_guide_id"
     t.bigint "company_id"
+    t.datetime "deleted_at"
     t.index ["company_id"], name: "index_printers_on_company_id"
+    t.index ["deleted_at"], name: "index_printers_on_deleted_at"
     t.index ["printer_service_guide_id"], name: "index_printers_on_printer_service_guide_id"
   end
 

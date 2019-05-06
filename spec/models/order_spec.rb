@@ -71,11 +71,11 @@ RSpec.describe Order, type: :model do
     let!(:order_item) { create_list(:order_item, 4, order: order) }
 
     it 'returns array of items with only type "CartridgeServiceGuide"' do
-      expect(order.cartridges.pluck(:item_type).uniq).to eq ['CartridgeServiceGuide']
+      expect(order.cartridge_order_items.pluck(:item_type).uniq).to eq ['CartridgeServiceGuide']
     end
 
     it 'returns all of cartridge order items for the order' do
-      expect(order.cartridges.count).to eq 4
+      expect(order.cartridge_order_items.count).to eq 4
     end
   end
 
@@ -89,6 +89,26 @@ RSpec.describe Order, type: :model do
 
     it 'returns all of other order items for the order' do
       expect(order.other_order_items.count).to eq 4
+    end
+  end
+
+  describe 'shopping cart' do
+    let!(:order) { create(:order) }
+    let(:other_oi) { create(:other_oi, order: order) }
+    let(:order_item) { create(:order_item, order: order) }
+
+    it "returns order's shopping cart with other order item" do
+      other_oi
+      expect(order.shopping_cart).to eq other_oi.owner
+    end
+
+    it "returns order's shopping cart with order item" do
+      order_item
+      expect(order.shopping_cart).to eq order_item.owner
+    end
+
+    it 'returns nil if no order items' do
+      expect(order.shopping_cart).to eq nil
     end
   end
 end

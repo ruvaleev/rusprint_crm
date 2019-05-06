@@ -1,0 +1,25 @@
+- case order_item.item_type
+- when 'CartridgeServiceGuide'
+  = form_with model: order_item, remote: true do |f|
+    td 
+      = order_item.item.printer_service_guide.vendor
+    td 
+      = order_item.item.printer_service_guide.model
+    td 
+      = order_item.item.try(:printer).try(:additional_data)
+    td
+      = order_item.item.try(:printer).try(:masters_note)
+    td
+      = order_item.item.model
+    td
+      = best_in_place_if true, order_item, :quantity, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
+    td
+      = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
+- when 'OtherOrderItem'
+  = form_with model: order_item, remote: true do |f|
+    td colspan='5' style='text-align:right;'
+      = best_in_place_if true, order_item.item, :body, as: :textarea
+    td
+      = best_in_place_if true, order_item, :quantity, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
+    td
+      = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)

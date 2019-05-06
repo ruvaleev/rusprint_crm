@@ -1,4 +1,5 @@
 class OrderItem < ApplicationRecord
+  acts_as_paranoid
   belongs_to :order, optional: true
   # has_many :logs, as: :registerable
   acts_as_shopping_cart_item_for :shopping_cart

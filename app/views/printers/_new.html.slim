@@ -4,6 +4,7 @@
       table class="table table-bordered"
         tr 
           td = f.text_field :model_like
-          td = hidden_field_tag :company, '', class: 'company_id_input'
+          td = hidden_field_tag :company_id, "#{ company_id ||= '' }", class: 'company_id_input'
+          td = hidden_field_tag :order_id, "#{ order_id ||= '' }"
 
-    = f.submit 'Найти принтер', class: 'btn btn-primary'
+    = f.submit 'Найти принтер', class: 'btn btn-primary' 

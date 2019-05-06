@@ -22,7 +22,7 @@
             tr
               td Пробег печки
               td = f.input :fuser_life_count, label: false
-              = hidden_field_tag :company_id, '', class: 'company_id_input'
+              = hidden_field_tag :company_id, "#{company_id ||= ''}", class: 'company_id_input'
               = hidden_field_tag :printer_service_guide_id, id
             tr
               td = f.submit 'Добавить', class: "btn btn-secondary btn-sm"

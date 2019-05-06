@@ -7,11 +7,72 @@ tr
         tr
           td = cartridge.model
           td = "#{cartridge.price} руб."
-          td = number_field '', "qnt_cartridges_#{cartridge.id}", class: 'qnt_input', data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}" } 
+          td = number_field '', "qnt_cartridges_#{cartridge.id}", id: "qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= '' }", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id ||= '' }", order_id: order_id } 
           td 
-            = image_tag('plus.jpg', class: "icon plus_possible_cartridge", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}" } )
-            = image_tag('minus.jpg', class: "icon minus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}" } )
-  
+            = image_tag('plus.jpg', class: "icon", id: "plus_#{cartridge.id}_for_#{ shopping_cart_id ||= '' }", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id ||= '' }", order_id: order_id } )
+            = image_tag('minus.jpg', class: "icon minus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id ||= '' }", order_id: order_id } )
+
+          javascript:
+            $(document).ready(function() {
+
+              $('#plus_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').on('click', function() {
+                id = $(this).data('id')
+                printer_id =  $(this).data('printer')
+                qnt = $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').val() || 1
+                shopping_cart_id = $(this).data('shopping-cart-id')
+                order = $(this).data('order-id')
+                plusCartridge(id, printer_id, qnt, shopping_cart_id, order)
+                $("#qnt_cartridges_#{cartridge.id}").val('')
+              });
+
+              $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').on('keypress', function(e) {
+                if (e.which == 13) {
+                  console.log('ads')
+                  id = $(this).data('id')
+                  printer_id =  $(this).data('printer')
+                  qnt = $(this).val() || 1
+                  shopping_cart_id = $(this).data('shopping-cart-id')
+                  order = $(this).data('order-id')
+                  plusCartridge(id, printer_id, qnt, shopping_cart_id, order)
+                  $(this).val('')
+                  return false 
+                }
+              });
+            });
+
   td = printer.additional_data
   td = button_tag('Добавить сам принтер', class: "btn btn-secondary plus_printer", type: 'button', data: { model: "#{printer.printer_service_guide.model}" } )
   td = printer.serial_number
+
+
+javascript:
+  $(document).ready(function() {
+    proba = function() {
+      console.log('Запробовали')
+    }
+
+    plusCartridge = function(id, printer_id, qnt, shopping_cart_id, order) {
+      $.ajax({
+        url: '/shopping_carts',
+        type: 'POST',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        },
+        data: {
+          product_id:  id,
+          printer_id: printer_id,
+          quantity: qnt,
+          shopping_cart_id: shopping_cart_id,
+          item_type: 'CartridgeServiceGuide' 
+        },
+        success: function(response) {
+          console.log("добавили картриджи -  шт")
+          console.log(qnt)
+          console.log(shopping_cart_id)
+          console.log(order)
+          $('#close_cartridge_item_modal_for_shopping_cart_' + shopping_cart_id).click()
+          $('#refresh_order_items_' + order).click()
+        }
+      })
+    }
+  });
