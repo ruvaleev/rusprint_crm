@@ -30,7 +30,7 @@ tr td.suitable_time {
 
 @media screen and (min-device-width: 1400px) {
   .new-order-modal-form {
-    max-width: 50% !important;
+    max-width: 80% !important;
   }
 }
 

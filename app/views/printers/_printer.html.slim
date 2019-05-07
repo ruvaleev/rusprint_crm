@@ -7,7 +7,7 @@ tr
         tr
           td = cartridge.model
           td = "#{cartridge.price} руб."
-          td = number_field '', "qnt_cartridges_#{cartridge.id}", id: "qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= '' }", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id ||= '' }", order_id: order_id } 
+          td = number_field '', "qnt_cartridges_#{cartridge.id}", class: 'qnt_input', id: "qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= '' }", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id ||= '' }", order_id: order_id }
           td 
             = image_tag('plus.jpg', class: "icon", id: "plus_#{cartridge.id}_for_#{ shopping_cart_id ||= '' }", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id ||= '' }", order_id: order_id } )
             = image_tag('minus.jpg', class: "icon minus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id ||= '' }", order_id: order_id } )
@@ -51,7 +51,7 @@ javascript:
       console.log('Запробовали')
     }
 
-    plusCartridge = function(id, printer_id, qnt, shopping_cart_id, order) {
+    plusCartridge = function(id, printer_id, qnt, shopping_cart_id, order_id) {
       $.ajax({
         url: '/shopping_carts',
         type: 'POST',
@@ -63,15 +63,16 @@ javascript:
           printer_id: printer_id,
           quantity: qnt,
           shopping_cart_id: shopping_cart_id,
-          item_type: 'CartridgeServiceGuide' 
+          item_type: 'CartridgeServiceGuide',
+          order_id: order_id,
         },
         success: function(response) {
           console.log("добавили картриджи -  шт")
           console.log(qnt)
           console.log(shopping_cart_id)
-          console.log(order)
-          $('#close_cartridge_item_modal_for_shopping_cart_' + shopping_cart_id).click()
-          $('#refresh_order_items_' + order).click()
+          console.log(order_id)
+          $('#close_cartridge_item_modal_for_order_' + order_id).click()
+          $('#refresh_order_items_' + order_id).click()
         }
       })
     }

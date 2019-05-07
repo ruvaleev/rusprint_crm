@@ -1,4 +1,5 @@
 class ShoppingCartsController < ApplicationController
+  before_action :find_order
   before_action :extract_shopping_cart
   skip_authorization_check
 
@@ -15,7 +16,7 @@ class ShoppingCartsController < ApplicationController
     order_item = @shopping_cart.shopping_cart_items.find_by(item_id: @product)
     order_item.update(printer_id: params[:printer_id]) if params[:printer_id]
     order_item.update(order_id: @shopping_cart.order_id) if @shopping_cart.order_id
-    Order.find(@shopping_cart.order_id).update(revenue: @shopping_cart.subtotal) if @shopping_cart.order_id
+    @order.update(revenue: @shopping_cart.subtotal) if @shopping_cart.order_id
   end
 
   def clear
@@ -30,13 +31,21 @@ class ShoppingCartsController < ApplicationController
 
   private
 
+  def find_order
+    @order = Order.find(params[:order_id]) if params[:order_id].present?
+  end
+
   def extract_shopping_cart
-    shopping_cart_id = params[:shopping_cart_id].presence || session[:shopping_cart_id]
-    @shopping_cart = if shopping_cart_id
-                       ShoppingCart.find_by(id: shopping_cart_id) || ShoppingCart.create
-                     else
-                       ShoppingCart.create
-                     end
-    session[:shopping_cart_id] = @shopping_cart.id
+    if @order
+      @shopping_cart = @order.shopping_cart
+    else
+      shopping_cart_id = params[:shopping_cart_id] || session[:shopping_cart_id]
+      @shopping_cart = if shopping_cart_id
+                         ShoppingCart.find_by(id: shopping_cart_id) || ShoppingCart.create
+                       else
+                         ShoppingCart.create
+                       end
+      session[:shopping_cart_id] = @shopping_cart.id # Не получится ли, что менеджер существующий заказ переписывать будет при создании нового?
+    end
   end
 end

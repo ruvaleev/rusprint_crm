@@ -63,7 +63,7 @@ table.full-width id="order_items_edit_form_#{order.id}"
       .modal-body id = "new_order_form_for_order_#{order.id}"
         = render 'add_cartridge_to_existing_order', order: order
       .modal-footer
-        button.btn.btn-secondary type="button" data-dismiss="modal" id = "close_cartridge_item_modal_for_shopping_cart_#{order.shopping_cart.try(:id)}" Закрыть
+        button.btn.btn-secondary type="button" data-dismiss="modal" id = "close_cartridge_item_modal_for_order_#{order.id}" Закрыть
 
 
 javascript:

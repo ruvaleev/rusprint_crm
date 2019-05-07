@@ -10,7 +10,11 @@ RSpec.describe Order, type: :model do
   it { should have_many :logs }
   it { should have_many :order_items }
 
+  it { should have_one :shopping_cart }
+
   it { should validate_presence_of :date_of_order }
+  it { should validate_presence_of :shopping_cart_id }
+
   it { is_expected.to callback(:calculate_profit).before(:save) }
   describe 'state machine' do
     let(:order) { create(:order) }
@@ -89,26 +93,6 @@ RSpec.describe Order, type: :model do
 
     it 'returns all of other order items for the order' do
       expect(order.other_order_items.count).to eq 4
-    end
-  end
-
-  describe 'shopping cart' do
-    let!(:order) { create(:order) }
-    let(:other_oi) { create(:other_oi, order: order) }
-    let(:order_item) { create(:order_item, order: order) }
-
-    it "returns order's shopping cart with other order item" do
-      other_oi
-      expect(order.shopping_cart).to eq other_oi.owner
-    end
-
-    it "returns order's shopping cart with order item" do
-      order_item
-      expect(order.shopping_cart).to eq order_item.owner
-    end
-
-    it 'returns nil if no order items' do
-      expect(order.shopping_cart).to eq nil
     end
   end
 end

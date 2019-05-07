@@ -106,11 +106,12 @@ $ ->
 # Добавляем найденный принтер клиенту
   $('.new_printers_for_new_order').on 'submit', '#new_printer', (e) ->
     e.preventDefault()
-    printer_service_guide_id = $(this).parent('.collapse').attr('id')
+    printer_service_guide_id = $(this).data('printer-service-guide-id')
     additional_data = $(this).find('#printer_additional_data').val()
     serial_number = $(this).find('#printer_serial_number').val()
     fuser_life_count = $(this).find('#printer_fuser_life_count').val()
-    company_id = $(this).find('#company_id').val()
+    company_id = $(this).data('company-id')
+    order_id = $(this).data('order-id')
     $.ajax
       url: '/printers',
       type: 'POST',
@@ -120,10 +121,11 @@ $ ->
         printer: {
           additional_data: additional_data,
           serial_number: serial_number,
-          fuser_life_count: fuser_life_count
+          fuser_life_count: fuser_life_count,
+          company_id: company_id,
+          order_id: order_id,
+          printer_service_guide_id: printer_service_guide_id
         }
-        company_id: company_id,
-        printer_service_guide_id: printer_service_guide_id
       }
       success: (response) -> 
         console.log 'добавили'
@@ -191,9 +193,9 @@ $ ->
     customer_id = $('#order_customer_id option:selected').val()
     $('.add_to_customer').html("Добавить принтер клиенту " + customer)
     $('.company_id_input').val(customer_id)
-    $('.customers_printers_list').attr('id', "printers_list_for_company_" + customer_id)
+    $('.customers_printers_list').attr('id', "printers_list_for_company_" + customer_id + "_order_")
 
-  plusCartridge = (id, printer_id, qnt, shopping_cart_id) ->
+  plusCartridge = (id, printer_id, qnt, shopping_cart_id, order_id = '') ->
     $.ajax
       url: '/shopping_carts',
       type: 'POST',
@@ -204,11 +206,12 @@ $ ->
         printer_id: printer_id,
         quantity: qnt,
         shopping_cart_id: shopping_cart_id,
+        order_id: order_id,
         item_type: 'CartridgeServiceGuide' 
       }
       success: (response) -> 
         console.log "добавили картриджи - #{qnt} шт"
-        $("#close_cartridge_item_modal_for_shopping_cart_#{shopping_cart_id}").click()
+        $("#close_cartridge_item_modal_for_order_#{order_id}").click()
 
 
   minusCartridge = (id, qnt, item_type) ->

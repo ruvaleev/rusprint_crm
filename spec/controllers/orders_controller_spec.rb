@@ -37,24 +37,70 @@ RSpec.describe OrdersController, type: :controller do
 
     context 'Authorized user' do
       sign_in_user
-      it 'creates with valid attributes' do
-        session[:shopping_cart_id] = shopping_cart.id
-        expect do
-          post :create, params: { order: build(:order).attributes, customer: company, format: :js }
-        end.to change(Order, :count).by(1)
+      before { session[:shopping_cart_id] = shopping_cart.id }
+
+      context 'with existed customer' do
+        it 'creates with valid attributes' do
+          expect do
+            post :create, params: { order: attributes_for(:order).merge(customer_id: company), format: :js }
+          end.to change(Order, :count).by(1)
+        end
+
+        it "can't create with invalid attributes" do
+          expect do
+            post :create, params: { order: attributes_for(:invalid_order).merge(customer_id: company), format: :js }
+          end.to_not change(Order, :count)
+        end
+
+        it "updates shopping_cart's order_id after creating" do
+          post :create, params: { order: attributes_for(:order)
+            .merge(customer_id: company), customer: company, format: :js }
+          expect(shopping_cart.reload.order_id).to eq Order.last.id
+        end
+
+        it "can't create without shopping_cart_id" do
+          session.delete(:shopping_cart_id)
+          expect do
+            post :create, params: { order: attributes_for(:order).merge(customer_id: company), format: :js }
+          end.to_not change(Order, :count)
+        end
       end
-      it "can't create with invalid attributes" do
-        session[:shopping_cart_id] = shopping_cart.id
-        expect do
-          post :create, params: { order: build(:invalid_order).attributes, customer: company, format: :js }
-        end.to_not change(Order, :count)
+
+      context 'with new customer' do
+        it 'creates with valid attributes' do
+          expect do
+            post :create, params: { order: attributes_for(:order),
+                                    company: company.attributes, new_client_flag: true, format: :js }
+          end.to change(Order, :count).by(1)
+        end
+
+        it "can't create with invalid attributes" do
+          expect do
+            post :create, params: { order: attributes_for(:invalid_order),
+                                    company: company.attributes, new_client_flag: true, format: :js }
+          end.to_not change(Order, :count)
+        end
+
+        it "updates shopping_cart's order_id after creating" do
+          post :create, params: { order: attributes_for(:order),
+                                  company: company.attributes, new_client_flag: true, format: :js }
+          expect(shopping_cart.reload.order_id).to eq Order.last.id
+        end
+
+        it "can't create without shopping_cart_id" do
+          session.delete(:shopping_cart_id)
+          expect do
+            post :create, params: { order: attributes_for(:order),
+                                    company: company.attributes, new_client_flag: true, format: :js }
+          end.to_not change(Order, :count)
+        end
       end
     end
 
     context 'Unauthorized user' do
       it "can't create an Order" do
         expect do
-          post :create, params: { order: build(:order).attributes, customer: company, format: :js }
+          post :create, params: { order: attributes_for(:order).merge(customer_id: company), format: :js }
         end.to_not change(Order, :count)
       end
     end
