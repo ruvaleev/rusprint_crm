@@ -6,6 +6,10 @@ class Ability
 
     if user.master?
       can :manage, Order, master_id: user.id
+      can :manage, OrderItem, order: { master_id: user.id }
+      can :manage, OtherOrderItem do |other_order_item|
+        other_order_item.order_item.order.master_id == user.id
+      end
       can :manage, User, id: user.id
       can :update, Company
     end

@@ -7,10 +7,13 @@ class Order < ApplicationRecord
   belongs_to :master, class_name: 'User', foreign_key: 'master_id', optional: true, inverse_of: :orders
   belongs_to :manager, class_name: 'User', foreign_key: 'manager_id', optional: true, inverse_of: :orders
 
+  has_one :shopping_cart
+
   has_many :logs, as: :registerable, dependent: :destroy, inverse_of: :registerable
   has_many :order_items, dependent: :destroy
 
   validates :date_of_order, presence: true
+  validates :shopping_cart_id, presence: true
 
   before_save :calculate_profit
 
@@ -52,5 +55,13 @@ class Order < ApplicationRecord
                             revenue status expense]
     end
     column_names - permitted_params.to_a
+  end
+
+  def cartridge_order_items
+    order_items.where(item_type: 'CartridgeServiceGuide')
+  end
+
+  def other_order_items
+    order_items.where(item_type: 'OtherOrderItem')
   end
 end

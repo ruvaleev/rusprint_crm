@@ -1,5 +1,18 @@
 $ ->
-#Подгружаем нового клиента в заказ 
+  $('.table-orders').on 'click', '.refresh_order_items', (e) ->
+    id = $(this).data('id')
+    $.ajax
+      url: '/orders/' + id,
+      type: 'GET',
+      beforeSend: (xhr) -> 
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      data: {
+        id: id
+      }
+      success: (response) -> 
+        console.log('Отрендерили данные заказа ' + id)
+
+# Подгружаем нового клиента в заказ 
   $('.table-orders').on 'change', "[name='update_customer']", (e) ->
     order_id = $(this).data('id')
     customer_id = $(this).val()
@@ -38,15 +51,19 @@ $ ->
 # Нажатие на плюс, прибавляем картриджи к заказу
   $('.customers_printers_list').on 'click', '.plus_possible_cartridge', (e) ->
     id = $(this).data('id')
+    printer_id =  $(this).data('printer')
     qnt = $("#qnt_cartridges_#{id}").val() || 1
-    plusCartridge(id, qnt) # Прибавляем картриджи к заказу
+    shopping_cart_id = $(this).data('shopping-cart-id')
+    plusCartridge(id, printer_id, qnt, shopping_cart_id) # Прибавляем картриджи к заказу
     $("#qnt_cartridges_#{id}").val('')
 
   $('.customers_printers_list').on 'keypress', '.qnt_input', (e) ->
     if (e.which == 13)
       id = $(this).data('id')
+      printer_id =  $(this).data('printer')
       qnt = $("#qnt_cartridges_#{id}").val() || 1
-      plusCartridge(id, qnt)
+      shopping_cart_id = $(this).data('shopping-cart-id')
+      plusCartridge(id, printer_id, qnt, shopping_cart_id)
       $(this).val('')
       return false
 
@@ -72,7 +89,7 @@ $ ->
     $('#order_revenue').val('')
 
 # Выполняем поиск внутри формы заказа
-  $("#new_printer_model_search").on 'submit', (e) ->
+  $('#new_printer_model_search').on 'submit', (e) ->
     e.preventDefault()
     model_like = $("#new_printer_model_search #printer_model_search_model_like").val()
     $.ajax
@@ -87,13 +104,14 @@ $ ->
         console.log 'запрос прошел успешно'
 
 # Добавляем найденный принтер клиенту
-  $(".new_printers_table").on 'submit', '#new_printer', (e) ->
+  $('.new_printers_for_new_order').on 'submit', '#new_printer', (e) ->
     e.preventDefault()
-    printer_service_guide_id = $(this).parent('.collapse').attr('id')
+    printer_service_guide_id = $(this).data('printer-service-guide-id')
     additional_data = $(this).find('#printer_additional_data').val()
     serial_number = $(this).find('#printer_serial_number').val()
     fuser_life_count = $(this).find('#printer_fuser_life_count').val()
-    company_id = $(this).find('#company_id').val()
+    company_id = $('#order_customer_id option:selected').val()
+    order_id = $(this).data('order-id')
     $.ajax
       url: '/printers',
       type: 'POST',
@@ -103,10 +121,11 @@ $ ->
         printer: {
           additional_data: additional_data,
           serial_number: serial_number,
-          fuser_life_count: fuser_life_count
+          fuser_life_count: fuser_life_count,
+          company_id: company_id,
+          order_id: order_id,
+          printer_service_guide_id: printer_service_guide_id
         }
-        company_id: company_id,
-        printer_service_guide_id: printer_service_guide_id
       }
       success: (response) -> 
         console.log 'добавили'
@@ -173,21 +192,27 @@ $ ->
     customer = $('#order_customer_id option:selected').text()
     customer_id = $('#order_customer_id option:selected').val()
     $('.add_to_customer').html("Добавить принтер клиенту " + customer)
-    $('.company_id_input').val(customer_id)
+    $('#new_order_form #printer_company_id').val(customer_id)
+    $('.customers_printers_list').attr('id', "printers_list_for_company_" + customer_id + "_order_")
 
-  plusCartridge = (id, qnt) ->
+  plusCartridge = (id, printer_id, qnt, shopping_cart_id, order_id = '') ->
     $.ajax
       url: '/shopping_carts',
       type: 'POST',
       beforeSend: (xhr) -> 
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       data: { 
-        product_id:  id, 
+        product_id:  id,
+        printer_id: printer_id,
         quantity: qnt,
+        shopping_cart_id: shopping_cart_id,
+        order_id: order_id,
         item_type: 'CartridgeServiceGuide' 
       }
       success: (response) -> 
         console.log "добавили картриджи - #{qnt} шт"
+        $("#close_cartridge_item_modal_for_order_#{order_id}").click()
+
 
   minusCartridge = (id, qnt, item_type) ->
     $.ajax
@@ -202,6 +227,7 @@ $ ->
       }
       success: (response) ->
         console.log "удалили картриджи - #{qnt} шт"
+
 
   #App.cable.subscriptions.create('OrdersChannel', {
   #  connected: ->

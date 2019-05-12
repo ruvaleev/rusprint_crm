@@ -1,0 +1,3 @@
+$('#order_items_in_order_<%= @order.id %>').hide()
+$('#order_items_in_order_<%= @order.id %>').html('<%= j render "order_item_cell", order: @order %>')
+$('#order_items_in_order_<%= @order.id %>').fadeIn()

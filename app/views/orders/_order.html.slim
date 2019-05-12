@@ -1,39 +1,63 @@
 tr id = "row_#{order.id}"
-  th
+  th style="vertical-align: top;"
     = order.id
-  td id = "company_in_order_#{order.id}"
-    = render 'companies/company', order: order
-  td
-    = best_in_place_if current_user.can_update?(Order, 'printers'), order, :printers
-  td
-    = best_in_place_if current_user.can_update?(Order, 'cartridges'), order, :cartridges
-  td
-    = best_in_place_if current_user.can_update?(Order, 'qnt'), order, :qnt, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
-  td
-    = best_in_place_if current_user.can_update?(Order, 'date_of_complete'), order.decorate, :date_of_complete, display_as: :completing_date, value: order.decorate.completing_date
-  td
-    table
+  td.without-padding 
+    table.full-width
+      tr
+        td id = "company_in_order_#{order.id}"
+          = render 'companies/company', order: order
+      tr.table-active
+        td
+          small Дата выполнения:
+      tr
+        td
+          = best_in_place_if current_user.can_update?(Order, 'date_of_complete'), order.decorate, :date_of_complete, display_as: :completing_date, value: order.decorate.completing_date
+      tr.table-active
+        td
+          small Удобное время:
       tr
         td.suitable_time
           = best_in_place_if current_user.can_update?(Order, 'suitable_time_start'), order.decorate, :suitable_time_start, as: :select, collection: order.decorate.time_hash('С ')
-      tr
-        td.suitable_time
+          = " - "
           = best_in_place_if current_user.can_update?(Order, 'suitable_time_end'), order.decorate, :suitable_time_end, as: :select, collection: order.decorate.time_hash('До ')
-  td
-    = best_in_place_if current_user.can_update?(Order, 'additional_data'), order, :additional_data
-  td
-    = best_in_place_if current_user.can_update?(Order, 'revenue'), order, :revenue
-  td
-    = best_in_place_if current_user.can_update?(Order, 'status'), order.decorate, :status, as: :select, collection: order.decorate.status_collection
-  td
-    = best_in_place_if current_user.can_update?(Order, 'expense'), order, :expense
-  td
-    = order.profit
-  td
-    = best_in_place_if current_user.can_update?(Order, 'manager_id'), order.decorate, :manager_id, as: :select, collection: User.managers.map { |u| [u.id, u.second_name] }
-  td
-    = best_in_place_if current_user.can_update?(Order, 'master_id'), order.decorate, :master_id, as: :select, collection: User.masters.map { |u| [u.id, u.second_name] }
-  td
-    = best_in_place_if current_user.can_update?(Order, 'date_of_order'), order.decorate, :date_of_order, display_as: :date_of_customers_order, value: order.decorate.date_of_customers_order
-  td
-    = best_in_place_if current_user.can_update?(Order, 'provider'), order, :provider, as: :select, collection: Order::PROVIDERS.map { |i| [i, i] }
+      tr.table-active
+        td colspan='2'
+          small Дата заказа:
+      tr
+        td colspan='2'
+          = best_in_place_if current_user.can_update?(Order, 'date_of_order'), order.decorate, :date_of_order, display_as: :date_of_customers_order, value: order.decorate.date_of_customers_order
+  td.order_items.without-padding id = "order_items_in_order_#{order.id}"
+    = render 'order_item_cell', { order: order }
+  td.without-padding
+    table.full-width
+      tr.table-active
+        td
+          strong Статус:
+        td
+          small Расход:
+      tr
+        td
+          = best_in_place_if current_user.can_update?(Order, 'status'), order.decorate, :status, as: :select, collection: order.decorate.status_collection
+        td
+          = best_in_place_if current_user.can_update?(Order, 'expense'), order, :expense
+      tr.table-active
+        td
+          small Мастер:
+        td
+          small Менеджер:
+      tr
+        td
+          = best_in_place_if current_user.can_update?(Order, 'master_id'), order.decorate, :master_id, as: :select, collection: User.masters.map { |u| [u.id, u.second_name] }
+        td
+          = best_in_place_if current_user.can_update?(Order, 'manager_id'), order.decorate, :manager_id, as: :select, collection: User.managers.map { |u| [u.id, u.second_name] }
+      - if current_user.admin? || current_user.manager?
+        tr.table-active
+          td
+            small Прибыль:
+          td
+            small Провайдер:
+        tr
+          td
+            = order.profit
+          td
+            = best_in_place_if current_user.can_update?(Order, 'provider'), order, :provider, as: :select, collection: Order::PROVIDERS.map { |i| [i, i] }

@@ -12,7 +12,9 @@ feature 'Update order', '
   given(:new_manager) { create(:user, role: manager_role, second_name: 'New manager secname') }
   given(:master) { create(:user, role: master_role) }
   given(:new_master) { create(:user, role: master_role, second_name: 'New master secname') }
-  given!(:order) { create(:order, master: master, manager: manager) }
+  given!(:company) { create(:company) }
+  given!(:order) { create(:order, master: master, manager: manager, customer: company) }
+  given(:order_item) { create(:order_item, order: order) }
 
   scenario 'Non-authentificated user cannot see orders table' do
     visit root_path
@@ -24,13 +26,13 @@ feature 'Update order', '
     before do
       sign_in(manager)
     end
-    scenario 'updates printers' do
+    xscenario 'updates printers' do
       bip_text order, :printers, 'Обновленные принтеры'
       within "#best_in_place_order_#{order.id}_printers" do
         expect(page).to have_content 'Обновленные принтеры'
       end
     end
-    scenario 'updates cartridges' do
+    xscenario 'updates cartridges' do
       bip_text order, :cartridges, 'Обновленные картриджи'
       within "#best_in_place_order_#{order.id}_cartridges" do
         expect(page).to have_content 'Обновленные картриджи'
@@ -38,8 +40,8 @@ feature 'Update order', '
     end
 
     scenario 'updates quantity of units' do
-      bip_select order, :qnt, '10'
-      within "#best_in_place_order_#{order.id}_qnt" do
+      bip_select order_item, :quantity, '10'
+      within "#best_in_place_order_item_#{order_item.id}_quantity" do
         expect(page).to have_content '10'
       end
     end
@@ -66,16 +68,16 @@ feature 'Update order', '
     end
 
     scenario 'updates additional data' do
-      bip_text order, :additional_data, 'Мастер ввел сюда примечания'
+      bip_area order, :additional_data, 'Мастер ввел сюда примечания'
       within "#best_in_place_order_#{order.id}_additional_data" do
         expect(page).to have_content 'Мастер ввел сюда примечания'
       end
     end
 
-    scenario 'updates revenue' do
-      bip_text order, :revenue, '10000'
-      within "#best_in_place_order_#{order.id}_revenue" do
-        expect(page).to have_content '10000'
+    scenario "updates cartridge's price" do
+      bip_text order_item, :price_cents, '1010'
+      within "#best_in_place_order_item_#{order_item.id}_price_cents" do
+        expect(page).to have_content '1010'
       end
     end
 
@@ -120,6 +122,77 @@ feature 'Update order', '
         expect(page).to have_content '09.05.1945'
       end
     end
+
+    context 'through modal window function' do
+      given!(:printer_service_guide) { create(:printer_service_guide) }
+      given!(:printer) { create(:printer, printer_service_guide: printer_service_guide, company: company) }
+      given!(:cartridge_service_guide) do
+        create(:cartridge_service_guide, printer_service_guide: printer_service_guide)
+      end
+      given!(:another_printer_service_guide) { create(:printer_service_guide) }
+      given!(:another_cartridge_service_guide) do
+        create(:cartridge_service_guide, printer_service_guide: another_printer_service_guide)
+      end
+
+      before { find("#show_new_cartridge_modal_#{order.id}").click }
+
+      scenario 'see modal adding new cartridge to order' do
+        expect(page).to have_content 'Добавить картридж'
+      end
+
+      scenario 'see printer and cartridges in modal' do
+        expect(page).to have_content printer.printer_service_guide.model
+        expect(page).to have_content cartridge_service_guide.model
+      end
+
+      scenario 'adds new cartridge to order' do
+        find("#plus_#{cartridge_service_guide.id}_for_#{order.shopping_cart_id || ''}").click
+        sleep(1)
+        expect(page).to_not have_selector("#new_cartridge_modal_#{order.id}", visible: true)
+
+        within "#order_items_in_order_#{order.id}" do
+          expect(page).to have_content printer.printer_service_guide.model
+          expect(page).to have_content cartridge_service_guide.model
+        end
+      end
+
+      scenario 'adds new printer to company', retry: 7 do
+        within "#new_cartridge_modal_#{order.id}" do
+          fill_in 'printer_model_search[model_like]', with: another_printer_service_guide.model
+          click_on 'Найти принтер'
+          click_on 'Добавить принтер клиенту'
+          click_on 'Добавить'
+          sleep(1)
+          wait_for_ajax
+          within "#printers_list_for_company_#{company.id}_order_#{order.id}" do
+            expect(page).to have_content another_printer_service_guide.model
+          end
+        end
+      end
+
+      xscenario 'adds new cartridge of new printer to order', retry: 7 do
+        within  "#new_cartridge_modal_#{order.id}" do
+          fill_in 'printer_model_search[model_like]', with: another_printer_service_guide.model
+          click_on 'Найти принтер'
+          click_on 'Добавить принтер клиенту'
+          click_on 'Добавить'
+          wait_for_ajax
+          sleep(1)
+          within "#printers_list_for_company_#{company.id}_order_#{order.id}" do
+            find("#plus_#{another_cartridge_service_guide.id}_for_#{order.shopping_cart_id}").click
+            sleep(1)
+            expect(page).to have_selector("#new_cartridge_modal_#{order.id}")
+
+            within "#order_items_in_order_#{order.id}" do
+              expect(page).to_not have_content another_printer_service_guide.model
+              expect(page).to_not have_content another_service_guide.model
+            end
+          end
+        end
+      end
+
+      scenario 'updates order item cell'
+    end
   end
 
   context 'Master', js: true do
@@ -135,19 +208,20 @@ feature 'Update order', '
     end
 
     scenario 'updates additional data' do
-      bip_text order, :additional_data, 'Мастер ввел сюда примечания'
+      bip_area order, :additional_data, 'Мастер ввел сюда примечания'
       within "#best_in_place_order_#{order.id}_additional_data" do
         expect(page).to have_content 'Мастер ввел сюда примечания'
       end
     end
 
-    scenario 'updates printers' do
+    xscenario 'updates printers' do
       bip_text order, :printers, 'Обновленные принтеры'
       within "#best_in_place_order_#{order.id}_printers" do
         expect(page).to have_content 'Обновленные принтеры'
       end
     end
-    scenario 'updates cartridges' do
+
+    xscenario 'updates cartridges' do
       bip_text order, :cartridges, 'Обновленные картриджи'
       within "#best_in_place_order_#{order.id}_cartridges" do
         expect(page).to have_content 'Обновленные картриджи'
@@ -155,16 +229,16 @@ feature 'Update order', '
     end
 
     scenario 'updates quantity of units' do
-      bip_select order, :qnt, '10'
-      within "#best_in_place_order_#{order.id}_qnt" do
+      bip_select order_item, :quantity, '10'
+      within "#best_in_place_order_item_#{order_item.id}_quantity" do
         expect(page).to have_content '10'
       end
     end
 
     scenario 'updates revenue' do
-      bip_text order, :revenue, '10000'
-      within "#best_in_place_order_#{order.id}_revenue" do
-        expect(page).to have_content '10000'
+      bip_text order_item, :price_cents, '1010'
+      within "#best_in_place_order_item_#{order_item.id}_price_cents" do
+        expect(page).to have_content '1010'
       end
     end
 

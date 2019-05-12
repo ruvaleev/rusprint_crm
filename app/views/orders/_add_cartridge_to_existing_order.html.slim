@@ -1,0 +1,4 @@
+= render 'printers/new', company_id: order.customer.id, order_id: order.id
+.new_printers_table
+.customers_printers_list id = "printers_list_for_company_#{order.customer.id}_order_#{order.id}"
+  = render 'printers/printers_list_for_form', printers: order.customer.printers, shopping_cart_id: order.shopping_cart.try(:id), order_id: order.id

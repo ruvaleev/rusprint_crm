@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190322203939) do
+ActiveRecord::Schema.define(version: 20190507144928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,8 +23,10 @@ ActiveRecord::Schema.define(version: 20190322203939) do
     t.string "version"
     t.bigint "user_id"
     t.bigint "company_id"
+    t.datetime "deleted_at"
     t.index ["adress"], name: "index_archive_companies_on_adress"
     t.index ["company_id"], name: "index_archive_companies_on_company_id"
+    t.index ["deleted_at"], name: "index_archive_companies_on_deleted_at"
     t.index ["user_id"], name: "index_archive_companies_on_user_id"
   end
 
@@ -55,7 +57,9 @@ ActiveRecord::Schema.define(version: 20190322203939) do
     t.string "email"
     t.bigint "manager_id"
     t.integer "version"
+    t.datetime "deleted_at"
     t.index ["adress"], name: "index_companies_on_adress"
+    t.index ["deleted_at"], name: "index_companies_on_deleted_at"
     t.index ["manager_id"], name: "index_companies_on_manager_id"
   end
 
@@ -88,7 +92,11 @@ ActiveRecord::Schema.define(version: 20190322203939) do
     t.integer "price_cents", default: 0, null: false
     t.string "price_currency", default: "RUB", null: false
     t.bigint "order_id"
+    t.bigint "printer_id"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_order_items_on_deleted_at"
     t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["printer_id"], name: "index_order_items_on_printer_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -109,9 +117,13 @@ ActiveRecord::Schema.define(version: 20190322203939) do
     t.string "status"
     t.boolean "paid"
     t.string "provider", default: "RusPrint"
+    t.datetime "deleted_at"
+    t.bigint "shopping_cart_id"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
+    t.index ["deleted_at"], name: "index_orders_on_deleted_at"
     t.index ["manager_id"], name: "index_orders_on_manager_id"
     t.index ["master_id"], name: "index_orders_on_master_id"
+    t.index ["shopping_cart_id"], name: "index_orders_on_shopping_cart_id"
   end
 
   create_table "other_order_items", force: :cascade do |t|
@@ -140,7 +152,9 @@ ActiveRecord::Schema.define(version: 20190322203939) do
     t.string "masters_note"
     t.bigint "printer_service_guide_id"
     t.bigint "company_id"
+    t.datetime "deleted_at"
     t.index ["company_id"], name: "index_printers_on_company_id"
+    t.index ["deleted_at"], name: "index_printers_on_deleted_at"
     t.index ["printer_service_guide_id"], name: "index_printers_on_printer_service_guide_id"
   end
 
@@ -153,6 +167,8 @@ ActiveRecord::Schema.define(version: 20190322203939) do
   create_table "shopping_carts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "order_id"
+    t.index ["order_id"], name: "index_shopping_carts_on_order_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -178,6 +194,8 @@ ActiveRecord::Schema.define(version: 20190322203939) do
     t.datetime "updated_at", null: false
     t.bigint "employer_id"
     t.bigint "role_id"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["employer_id"], name: "index_users_on_employer_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -190,10 +208,13 @@ ActiveRecord::Schema.define(version: 20190322203939) do
   add_foreign_key "companies", "users", column: "manager_id"
   add_foreign_key "messages", "users", column: "receiver_id"
   add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "order_items", "printers"
   add_foreign_key "orders", "companies", column: "customer_id"
+  add_foreign_key "orders", "shopping_carts"
   add_foreign_key "orders", "users", column: "manager_id"
   add_foreign_key "orders", "users", column: "master_id"
   add_foreign_key "printers", "companies"
+  add_foreign_key "shopping_carts", "orders"
   add_foreign_key "users", "companies", column: "employer_id"
   add_foreign_key "users", "roles"
 end

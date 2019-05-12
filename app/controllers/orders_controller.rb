@@ -16,13 +16,15 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @order = Order.create(order_params.merge(qnt: @shopping_cart.total_unique_items))
+    @order = Order.create(order_params.merge(qnt: @shopping_cart.total_unique_items,
+                                             shopping_cart_id: @shopping_cart.id))
 
     if @order.errors.any?
       @message = @order.errors.messages
     else
       gon.order = @order
       @shopping_cart.shopping_cart_items.update(order_id: @order.id)
+      @shopping_cart.update(order_id: @order.id)
       @message = "Заказ #{@order.id} успешно внесен"
     end
     redirect_to :root

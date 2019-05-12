@@ -48,7 +48,7 @@
             .collapse id = "new_printer_form"
               .form_for_search_printer
                 = render 'printers/new'
-              .new_printers_table
-            .customers_printers_list
+              .new_printers_table.new_printers_for_new_order
+            .customers_printers_list id = "printers_list_for_company_"
 
     = f.submit 'Создать заказ', class: 'btn btn-primary'

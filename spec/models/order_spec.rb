@@ -10,7 +10,11 @@ RSpec.describe Order, type: :model do
   it { should have_many :logs }
   it { should have_many :order_items }
 
+  it { should have_one :shopping_cart }
+
   it { should validate_presence_of :date_of_order }
+  it { should validate_presence_of :shopping_cart_id }
+
   it { is_expected.to callback(:calculate_profit).before(:save) }
   describe 'state machine' do
     let(:order) { create(:order) }
@@ -63,6 +67,32 @@ RSpec.describe Order, type: :model do
         order.destroy
         expect(Order.deleted.last.id).to eq order.id
       end
+    end
+  end
+
+  describe 'cartridges' do
+    let!(:order) { create(:order) }
+    let!(:order_item) { create_list(:order_item, 4, order: order) }
+
+    it 'returns array of items with only type "CartridgeServiceGuide"' do
+      expect(order.cartridge_order_items.pluck(:item_type).uniq).to eq ['CartridgeServiceGuide']
+    end
+
+    it 'returns all of cartridge order items for the order' do
+      expect(order.cartridge_order_items.count).to eq 4
+    end
+  end
+
+  describe 'other order items' do
+    let!(:order) { create(:order) }
+    let!(:other_oi) { create_list(:other_oi, 4, order: order) }
+
+    it 'returns array of items with only type "OtherOrderItem"' do
+      expect(order.other_order_items.pluck(:item_type).uniq).to eq ['OtherOrderItem']
+    end
+
+    it 'returns all of other order items for the order' do
+      expect(order.other_order_items.count).to eq 4
     end
   end
 end

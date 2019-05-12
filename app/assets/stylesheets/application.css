@@ -109,3 +109,17 @@ td {
   font-weight: bolder;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
+
+.min-padding td {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  white-space: nowrap;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.without-padding {
+  padding: 0px !important;
+}

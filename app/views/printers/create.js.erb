@@ -1,2 +1,1 @@
-$('.customers_printers_list').append('<%= j render 'printers/printers_list_for_form', printers: [@printer] %>')
-$('html, body').animate({ scrollTop: $('.customers_printers_list span').last().offset().top }, 500)
+$('#printers_list_for_company_<%= @company_id %>_order_<%= @order_id || '' %>').html('<%= j render 'printers/printers_list_for_form', printers: @printers_list, order_id: @order_id, shopping_cart_id: @shopping_cart_id  %>')
