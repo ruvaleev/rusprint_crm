@@ -2,9 +2,9 @@ class OrderItemsController < ApplicationController
   before_action :authenticate_user!
   before_action :order_item
   before_action :order_item_params, only: :update
-  before_action :find_order, only: :update
+  before_action :find_order, only: %i[update destroy]
   before_action :serialize_price_cents, only: :update
-  after_action :actualize_order, only: :update
+  after_action :actualize_order, only: %i[update destroy]
 
   load_and_authorize_resource
 
@@ -62,7 +62,10 @@ class OrderItemsController < ApplicationController
   def actualize_order
     order_params = {}
     order_params[:revenue] = @order_item.owner.subtotal if @order_item
-    order_params[:qnt] = @order_item.owner.total_unique_items if params[:order_item][:quantity]
+    # Отрефачить
+    if params[:order_item]
+      order_params[:qnt] = @order_item.owner.total_unique_items if params[:order_item][:quantity]
+    end
     @order.update(order_params)
   end
 end

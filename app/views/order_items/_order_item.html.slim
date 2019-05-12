@@ -16,7 +16,7 @@
     td
       = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
       - if can? :destroy, order_item
-        button.btn.btn-default.btn-sm.icon-right.table-active type="button" data-toggle="modal" data-target="#destroy_order_item_#{order_item.id}" data-id="#{order_item.id}"
+        button.btn.btn-default.btn-sm.icon-right.table-active id="destroy_order_item_#{order_item.id}" type="button" data-id="#{order_item.id}" data-order-id="#{order_id}"
           span class="glyphicon glyphicon-minus" aria-hidden="true"
 - when 'OtherOrderItem'
   = form_with model: order_item, remote: true do |f|
@@ -27,5 +27,29 @@
     td
       = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
       - if can? :destroy, order_item
-        button.btn.btn-default.btn-sm.icon-right.table-active type="button" data-toggle="modal" data-target="#destroy_order_item_#{order_item.id}" data-id="#{order_item.id}"
+        button.btn.btn-default.btn-sm.icon-right.table-active id="destroy_order_item_#{order_item.id}" type="button" data-id="#{order_item.id}" data-order-id="#{order_id}"
           span class="glyphicon glyphicon-minus" aria-hidden="true"
+
+javascript:
+  $(document).ready(function () {
+    $('.best_in_place').best_in_place()
+
+    $("#destroy_order_item_#{order_item.id}").on('click', function() {
+      id = $(this).data('id')
+      order_id = $(this).data('order-id')
+      $.ajax({
+        url: '/order_items/' + id,
+        type: 'DELETE',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        },
+        data: {
+          id:  id
+        },
+        success: function(response) {
+          console.log('удалили картриджи ' + id)
+          $('#refresh_order_items_' + order_id).click()
+        }
+      })
+    });
+  });

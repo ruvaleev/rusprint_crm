@@ -21,7 +21,7 @@ table.full-width id="order_items_edit_form_#{order.id}"
       td Кол-во
       td Цена
     - order.cartridge_order_items.each do |order_item|
-      tr = render order_item
+      tr = render order_item, order_id: order.id
   
   tr.table-active.min-padding
     td colspan='7'
@@ -32,7 +32,7 @@ table.full-width id="order_items_edit_form_#{order.id}"
       td Кол-во
       td Цена
     - order.other_order_items.each do |order_item|
-      tr = render order_item
+      tr = render order_item, order_id: order.id
 
   tr.table-active.min-padding
     td colspan='7'
