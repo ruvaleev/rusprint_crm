@@ -111,7 +111,7 @@ feature 'Create order', '
         wait_for_ajax
         click_on 'Создать заказ'
         wait_for_ajax
-        within '#row_1' do
+        within "#row_#{Order.last.id}" do
           expect(page).to have_content(customer.name, wait: 1.0)
         end
       end

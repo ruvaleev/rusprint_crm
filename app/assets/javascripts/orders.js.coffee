@@ -110,7 +110,7 @@ $ ->
     additional_data = $(this).find('#printer_additional_data').val()
     serial_number = $(this).find('#printer_serial_number').val()
     fuser_life_count = $(this).find('#printer_fuser_life_count').val()
-    company_id = $(this).data('company-id')
+    company_id = $('#order_customer_id option:selected').val()
     order_id = $(this).data('order-id')
     $.ajax
       url: '/printers',
@@ -192,7 +192,7 @@ $ ->
     customer = $('#order_customer_id option:selected').text()
     customer_id = $('#order_customer_id option:selected').val()
     $('.add_to_customer').html("Добавить принтер клиенту " + customer)
-    $('.company_id_input').val(customer_id)
+    $('#new_order_form #printer_company_id').val(customer_id)
     $('.customers_printers_list').attr('id', "printers_list_for_company_" + customer_id + "_order_")
 
   plusCartridge = (id, printer_id, qnt, shopping_cart_id, order_id = '') ->

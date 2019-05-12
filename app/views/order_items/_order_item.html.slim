@@ -1,7 +1,7 @@
 - case order_item.item_type
 - when 'CartridgeServiceGuide'
   = form_with model: order_item, remote: true do |f|
-    td 
+    td
       = order_item.item.printer_service_guide.vendor
     td 
       = order_item.item.printer_service_guide.model
@@ -15,6 +15,9 @@
       = best_in_place_if true, order_item, :quantity, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
     td
       = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
+      - if can? :destroy, order_item
+        button.btn.btn-default.btn-sm.icon-right.table-active type="button" data-toggle="modal" data-target="#destroy_order_item_#{order_item.id}" data-id="#{order_item.id}"
+          span class="glyphicon glyphicon-minus" aria-hidden="true"
 - when 'OtherOrderItem'
   = form_with model: order_item, remote: true do |f|
     td colspan='5' style='text-align:right;'
@@ -23,3 +26,6 @@
       = best_in_place_if true, order_item, :quantity, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
     td
       = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
+      - if can? :destroy, order_item
+        button.btn.btn-default.btn-sm.icon-right.table-active type="button" data-toggle="modal" data-target="#destroy_order_item_#{order_item.id}" data-id="#{order_item.id}"
+          span class="glyphicon glyphicon-minus" aria-hidden="true"

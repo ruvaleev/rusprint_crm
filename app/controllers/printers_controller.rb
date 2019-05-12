@@ -5,7 +5,9 @@ class PrintersController < ApplicationController
     @printer = Printer.create(printer_params)
     @company_id = printer_params[:company_id]
     @printers_list = Company.find(printer_params[:company_id]).printers
+    return unless params[:order_id]
     @order_id = params[:order_id]
+    @shopping_cart_id = Order.find(params[:order_id]).shopping_cart_id 
   end
 
   def get_models
