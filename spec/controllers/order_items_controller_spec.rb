@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe OrderItemsController, type: :controller do
+  describe 'POST #create'
+  # НАПИСАТЬ ТЕСТЫ!
+
   describe 'PUT #update' do
     let(:admin) { create(:user) }
     let(:order) { create(:order) }

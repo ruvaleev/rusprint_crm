@@ -24,8 +24,11 @@ table.full-width id="order_items_edit_form_#{order.id}"
       tr = render order_item, order_id: order.id
   
   tr.table-active.min-padding
-    td colspan='7'
+    td colspan='6'
       strong Прочее
+    td
+      button.btn.btn-default.btn-sm.icon-right.table-active type="button" data-toggle="modal" data-target="#new_other_item_modal_#{order.id}" data-id="#{order.id}" id="show_new_other_item_modal_#{order.id}"
+        span class="glyphicon glyphicon-plus" aria-hidden="true"
   - unless order.other_order_items.empty?
     tr.small.table-active.min-padding
       td colspan='5' Доп. услуга
@@ -37,10 +40,9 @@ table.full-width id="order_items_edit_form_#{order.id}"
   tr.table-active.min-padding
     td colspan='7'
       strong Дополнительные данные
-  - unless order.additional_data.blank?
-    tr
-      td colspan='7'
-        = best_in_place_if true, order, :additional_data, as: :textarea
+  tr
+    td colspan='7'
+      = best_in_place_if true, order, :additional_data, as: :textarea
 
   tr.table-active.min-padding
     td colspan='6' style='text-align:right; border-bottom:none;'
@@ -65,6 +67,17 @@ table.full-width id="order_items_edit_form_#{order.id}"
       .modal-footer
         button.btn.btn-secondary type="button" data-dismiss="modal" id = "close_cartridge_item_modal_for_order_#{order.id}" Закрыть
 
+.modal.fade id="new_other_item_modal_#{order.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+  .modal-dialog.new-order-modal-form role="document"
+    .modal-content
+      .modal-header
+        h5.modal-title id="exampleModalLongTitle" Добавить прочий пункт заказа
+        button.close type="button" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true" &times
+      .modal-body id = "new_other_order_item_form_for_order_#{order.id}"
+        = render 'other_order_item_field', order_id: order.id
+      .modal-footer
+        button.btn.btn-secondary type="button" data-dismiss="modal" id = "close_other_order_item_modal_for_order_#{order.id}" Закрыть
 
 javascript:
   $(document).ready(function () {

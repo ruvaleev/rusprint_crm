@@ -1,9 +1,18 @@
 class OtherOrderItemsController < ApplicationController
   before_action :authenticate_user!
-  before_action :order_item
+  before_action :order_item, only: :update
   before_action :order_item_params
 
   load_and_authorize_resource
+
+  def create
+    other_order_item = OtherOrderItem.create(create_params)
+    @order = Order.find(params[:order_id])
+    shopping_cart = @order.shopping_cart
+    order_item = shopping_cart.add(other_order_item, other_order_item.price, 1)
+    order_item.update(order_id: @order.id)
+    @order.update(revenue: shopping_cart.subtotal)
+  end
 
   def update
     message = ''
@@ -27,6 +36,10 @@ class OtherOrderItemsController < ApplicationController
   end
 
   def order_item_params
-    @order_item_params = params.require(:other_order_item).permit(:body)
+    @order_item_params = params.require(:other_order_item).permit(:body, :price)
+  end
+
+  def create_params
+    params.require(:other_order_item).permit(:body, :price)
   end
 end

@@ -4,5 +4,6 @@
       tr
         = f.input :body, label: 'Доп. пункты'
         = f.input :price, label: 'Цена'
+        = hidden_field_tag :order_id, "#{order_id ||= ''}"
         = button_tag 'Добавить к заказу', class: 'btn btn-secondary', id: 'add_other_order_item'
 .other_order_items_list
