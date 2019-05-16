@@ -39,13 +39,14 @@ class ShoppingCartsController < ApplicationController
     if @order
       @shopping_cart = @order.shopping_cart
     else
-      shopping_cart_id = params[:shopping_cart_id] || session[:shopping_cart_id]
+      shopping_cart_id = params[:shopping_cart_id].presence || session[:shopping_cart_id]
       @shopping_cart = if shopping_cart_id
                          ShoppingCart.find_by(id: shopping_cart_id) || ShoppingCart.create
                        else
                          ShoppingCart.create
                        end
-      session[:shopping_cart_id] = @shopping_cart.id # Не получится ли, что менеджер существующий заказ переписывать будет при создании нового?
+      # Не получится ли, что менеджер существующий заказ переписывать будет при создании нового?
+      session[:shopping_cart_id] = @shopping_cart.id
     end
   end
 end
