@@ -91,14 +91,13 @@ feature 'Create order', '
         expect(find_field('order[cartridges]').value).to have_content cartridge.model
       end
 
-      xscenario "user can remove customer's cartridges from order", js: true do
-        fill_in "qnt_cartridges_#{cartridge.id}", with: '10'
+      scenario "user can remove customer's cartridges from order", js: true do
+        fill_in "qnt_field_#{cartridge.id}_for_", with: '10'
         within '#new_order .customers_printers_list' do
           find("img[alt='Plus']").click
         end
         wait_for_ajax
         within '#new_order .customers_printers_list' do
-          fill_in "qnt_cartridges_#{cartridge.id}", with: '0'
           find("img[alt='Minus']").click
         end
         wait_for_ajax
@@ -132,20 +131,21 @@ feature 'Create order', '
         expect(Company.last.name).to eq 'Новая компания'
       end
 
-      scenario 'user adding printers to customer' # , js: true do
-      # НЕ РАБОТАЕТ (JS не отрабатывает)
-      #   new_printer_service_guide
-      #   click_on 'Добавить принтер'
-      #   fill_in 'printer_model_search[model_like]', with: 'new_printer_HP'
-      #   click_on 'Найти принтер'
-      #   sleep(1)
-      #   within '.new_printers_table' do
-      #     click_on 'Добавить принтер клиенту'
-      #     click_on 'Добавить'
-      #   end
+      scenario 'user adding printers to customer', js: true do
+        new_printer_service_guide
+        click_on 'Добавить принтер'
+        fill_in 'printer_model_search[model_like]', with: 'new_printer_HP'
+        click_on 'Найти принтер'
+        sleep(1)
+        within '.new_printers_table' do
+          click_on 'Добавить принтер клиенту'
+          click_on 'Добавить'
+        end
+        wait_for_ajax
 
-      #   expect(Company.last.printers.last.printer_service_guide.model).to_not eq 'new_printer_HP'
-      # end
+        expect(Company.last.printers.count).to eq 2
+        expect(Company.last.printers.last.printer_service_guide.model).to eq 'new_printer_HP'
+      end
     end
   end
 end

@@ -48,21 +48,13 @@ $ ->
     fillField(model, 1, goal_elem)
     $('.cancel_printers').fadeIn()
 
-# Нажатие на плюс, прибавляем картриджи к заказу
-  $('.customers_printers_list').on 'click', '.plus_possible_cartridge', (e) ->
-    id = $(this).data('id')
-    printer_id =  $(this).data('printer')
-    qnt = $("#qnt_cartridges_#{id}").val() || 1
-    shopping_cart_id = $(this).data('shopping-cart-id')
-    plusCartridge(id, printer_id, qnt, shopping_cart_id) # Прибавляем картриджи к заказу
-    $("#qnt_cartridges_#{id}").val('')
-
+# Нажимаем на Enter в поле с количеством картриджей
   $('.customers_printers_list').on 'keypress', '.qnt_input', (e) ->
     if (e.which == 13)
       id = $(this).data('id')
       printer_id =  $(this).data('printer')
-      qnt = $("#qnt_cartridges_#{id}").val() || 1
       shopping_cart_id = $(this).data('shopping-cart-id')
+      qnt = $(this).val() || 1
       plusCartridge(id, printer_id, qnt, shopping_cart_id)
       $(this).val('')
       return false
@@ -70,9 +62,10 @@ $ ->
 # Нажатие на минус, вычитываем картриджи из заказа
   $('.customers_printers_list').on 'click', '.minus_possible_cartridge', (e) ->
     id = $(this).data('id')
-    qnt = $("#qnt_cartridges_#{id}").val() || 1
+    shopping_cart_id = $(this).data('shopping-cart-id')
+    qnt = $("#qnt_field_#{id}_for_#{shopping_cart_id}").val() || 1
     minusCartridge(id, qnt, 'CartridgeServiceGuide')
-    $("#qnt_cartridges_#{id}").val('')
+    $("#qnt_field_#{id}_for_#{shopping_cart_id}").val('')
 
   $('.cancel_printers').on 'click', (e) ->
     $('#order_printers').val('')
@@ -216,12 +209,12 @@ $ ->
 
   minusCartridge = (id, qnt, item_type) ->
     $.ajax
-      url: '/shopping_carts',
-      type: 'DELETE',
+      url: '/shopping_carts/' + id + '/destroy',
+      type: 'POST',
       beforeSend: (xhr) -> 
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       data: { 
-        product_id:  id,
+        product_id: id,
         quantity: qnt,
         item_type: item_type
       }

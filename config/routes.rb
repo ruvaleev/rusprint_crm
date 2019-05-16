@@ -24,6 +24,7 @@ Rails.application.routes.draw do
 
   resources :shopping_carts do
     post 'clear', on: :member
+    post 'destroy', on: :member
   end
   delete 'shopping_carts', to: 'shopping_carts#destroy'
 
