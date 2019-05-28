@@ -1,48 +1,59 @@
-tr
-  td = printer.id
-  td = printer.printer_service_guide.model
-  td style="text-align:right"
-    table
-      - printer.possible_cartridges.each do |cartridge|
-        tr
-          td = cartridge.model
-          td = "#{cartridge.price} руб."
-          td = number_field '', "qnt_cartridges_#{cartridge.id}", class: 'qnt_input', id: "qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= '' }", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id ||= '' }", order_id: order_id }
-          td 
-            = image_tag('plus.jpg', class: "icon", id: "plus_#{cartridge.id}_for_#{ shopping_cart_id ||= '' }", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id ||= '' }", order_id: order_id } )
-            = image_tag('minus.jpg', class: "icon minus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id ||= '' }", order_id: order_id } )
+- shopping_cart_id ||= ''
+td = printer.id
+td = printer.printer_service_guide.model
+td style="text-align:right"
+  table
+    - printer.possible_cartridges.each do |cartridge|
+      tr
+        td = cartridge.model
+        td = "#{cartridge.price} руб."
+        td = number_field '', "qnt_cartridges_#{cartridge.id}", class: 'qnt_input', id: "qnt_field_#{cartridge.id}_for_#{ shopping_cart_id }", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id }", order_id: order_id }
+        td 
+          = image_tag('plus.jpg', class: "icon", id: "plus_#{cartridge.id}_for_#{ shopping_cart_id }", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id }", order_id: order_id } )
+          = image_tag('minus.jpg', class: "icon minus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id }", order_id: order_id } )
 
-          javascript:
-            $(document).ready(function() {
+        javascript:
+          $(document).ready(function() {
 
-              $('#plus_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').on('click', function() {
+            $('#plus_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').on('click', function() {
+              id = $(this).data('id')
+              printer_id =  $(this).data('printer')
+              qnt = $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').val() || 1
+              shopping_cart_id = $(this).data('shopping-cart-id')
+              order = $(this).data('order-id')
+              plusCartridge(id, printer_id, qnt, shopping_cart_id, order)
+              $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').val('')
+            });
+
+            $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').on('keypress', function(e) {
+              if (e.which == 13) {
                 id = $(this).data('id')
                 printer_id =  $(this).data('printer')
-                qnt = $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').val() || 1
+                qnt = $(this).val() || 1
                 shopping_cart_id = $(this).data('shopping-cart-id')
                 order = $(this).data('order-id')
                 plusCartridge(id, printer_id, qnt, shopping_cart_id, order)
-                $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').val('')
-              });
-
-              $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').on('keypress', function(e) {
-                if (e.which == 13) {
-                  id = $(this).data('id')
-                  printer_id =  $(this).data('printer')
-                  qnt = $(this).val() || 1
-                  shopping_cart_id = $(this).data('shopping-cart-id')
-                  order = $(this).data('order-id')
-                  plusCartridge(id, printer_id, qnt, shopping_cart_id, order)
-                  $(this).val('')
-                  return false 
-                }
-              });
+                $(this).val('')
+                return false 
+              }
             });
+          });
 
-  td = printer.additional_data
-  td = button_tag('Добавить сам принтер', class: "btn btn-secondary plus_printer", type: 'button', data: { model: "#{printer.printer_service_guide.model}" } )
-  td = printer.serial_number
+td = printer.additional_data
+td 
+  button.btn.btn-secondary.table-active.create_cartridge type="button" data-toggle="modal" data-target="#create_cartridge_modal_#{printer.id}" data-printer-id="#{printer.id}" id="show_create_cartridge_modal_#{printer.id}"
+    span aria-hidden="true" Добавить новый картридж к принтеру
 
+td = printer.serial_number
+
+
+.modal.fade id="create_cartridge_modal_#{printer.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+  .modal-dialog.new-order-modal-form role="document"
+    .modal-content
+      .modal-header
+        h5.modal-title id="exampleModalLongTitle" Создать картридж
+      .modal-body id = "new_cartridge_for_#{printer.id}"
+        = render 'cartridge_service_guides/new', printer_service_guide_id: printer.printer_service_guide.id, shopping_cart_id: shopping_cart_id, printer_id: printer.id, order_id: order_id
 
 javascript:
   $(document).ready(function() {

@@ -1,4 +1,6 @@
 - id = printer_service_guide.id
+- company_id ||= ''
+- order_id ||= ''
 . id = "new_printer_row_#{id}"
   td = printer_service_guide.id
   td = printer_service_guide.vendor
@@ -10,7 +12,7 @@
   td 
     = button_to "Добавить принтер клиенту", '', class: 'btn btn-secondary', 'data-toggle': "collapse", 'data-target': "##{id}", 'aria-expanded': "false", 'aria-controls': "collapse_form"
     .collapse id = "#{id}"
-      = simple_form_for Printer.new, data: { order_id: "#{order_id ||= ''}", company_id: "#{company_id ||= ''}", printer_service_guide_id: printer_service_guide.id }, remote: true do |f|
+      = simple_form_for Printer.new, data: { order_id: "#{order_id}", company_id: "#{company_id}", printer_service_guide_id: printer_service_guide.id }, remote: true do |f|
         .table-responsive
           table class="table table-hover table-sm"
             tr
@@ -22,8 +24,8 @@
             tr
               td Пробег печки
               td = f.input :fuser_life_count, label: false
-              = f.input :company_id, as: :hidden, input_html: { value: "#{company_id ||= ''}" }
+              = f.input :company_id, as: :hidden, input_html: { value: "#{company_id}" }
               = f.input :printer_service_guide_id, as: :hidden, input_html: { value: id }
-              = hidden_field_tag :order_id, "#{order_id ||= ''}"
+              = hidden_field_tag :order_id, "#{order_id}"
             tr
               td = f.submit 'Добавить', class: "btn btn-secondary btn-sm"

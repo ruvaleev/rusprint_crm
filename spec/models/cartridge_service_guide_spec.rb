@@ -10,4 +10,8 @@ RSpec.describe CartridgeServiceGuide, type: :model do
   it { should validate_presence_of :color }
   it { should validate_presence_of :price }
   it { should validate_presence_of :toner_life_count }
+  it do
+    should validate_uniqueness_of(:model).scoped_to(:printer_service_guide_id)
+                                         .with_message(I18n.t('cartridge_service_guides.errors.model_taken_psg'))
+  end
 end

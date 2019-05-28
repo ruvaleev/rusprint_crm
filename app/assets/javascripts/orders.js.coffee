@@ -96,8 +96,40 @@ $ ->
       success: (response) -> 
         console.log 'запрос прошел успешно'
 
+# Создаем принтер внутри формы заказа
+  $('#new_printer_service_guide_for_order_').on 'submit', (e) ->
+    e.preventDefault()
+    model = $("#new_printer_service_guide_for_order_ #printer_service_guide_model").val()
+    fuser_life_count = $('#new_printer_service_guide_for_order_ #printer_service_guide_fuser_life_count').val()
+    sheet_size = $('#new_printer_service_guide_for_order_ #printer_service_guide_sheet_size').val()
+    color = $('#new_printer_service_guide_for_order_ #printer_service_guide_color').is(':checked')
+    type_of_system = $('#new_printer_service_guide_for_order_ #type_of_system').val()
+    vendor = $('#new_printer_service_guide_for_order_ #printer_service_guide_vendor').val()
+    order_id = $('#new_printer_service_guide_for_order_ #order_id').val()
+    company_id = $('#new_printer_service_guide_for_order_ #company_id').val()
+
+    $.ajax
+      url: '/printer_service_guides',
+      type: 'POST',
+      beforeSend: (xhr) -> 
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      data: {
+        printer_service_guide: { 
+          model: model,
+          fuser_life_count: fuser_life_count,
+          sheet_size: sheet_size,
+          color: color,
+          type_of_system: type_of_system,
+          vendor: vendor
+        },
+        order_id: order_id,
+        company_id: company_id
+      }
+      success: (response) -> 
+        console.log 'запрос прошел успешно'
+
 # Добавляем найденный принтер клиенту
-  $('.new_printers_for_new_order').on 'submit', '#new_printer', (e) ->
+  $('.new_printers_for_new_order, .new_printer_for_').on 'submit', '#new_printer', (e) ->
     e.preventDefault()
     printer_service_guide_id = $(this).data('printer-service-guide-id')
     additional_data = $(this).find('#printer_additional_data').val()
