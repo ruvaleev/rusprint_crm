@@ -2,7 +2,7 @@
 .form_group
   = simple_form_for Order.new do |f|
     .table-responsive
-      table class="table table-bordered"
+      table.table.table-bordered
         tr
           td = label_tag :provider, 'Компания-провайдер'
           td = f.select :provider, Order::PROVIDERS
@@ -21,16 +21,16 @@
         tr
           td = label_tag :customer_id, 'Клиент'
           td 
-            ul class="nav nav-tabs" role="tablist"
-              li class="nav-item"
-                a class="nav-link active btn btn-primary" data-toggle="tab" href="#first_tab" role="tab" id="choose_client"  value_for_new_client_flag="false" Выбрать клиента
-              li class="nav-item"
-                a class="nav-link btn btn-primary" data-toggle="tab" href="#second_tab" role="tab" id="new_client_tab"  value_for_new_client_flag="true" Новый клиент
+            ul.nav.nav-tabs role="tablist"
+              li.nav-item
+                a.nav-link.active.btn.btn-primary data-toggle="tab" href="#first_tab" role="tab" id="choose_client"  value_for_new_client_flag="false" Выбрать клиента
+              li.nav-item
+                a.nav-link.btn.btn-primary data-toggle="tab" href="#second_tab" role="tab" id="new_client_tab"  value_for_new_client_flag="true" Новый клиент
 
-            div class="tab-content"
-              div class="tab-pane active" id="first_tab" role="tabpanel"
+            .tab-content
+              .tab-pane.active id="first_tab" role="tabpanel"
                 = f.input :customer_id, collection: Company.all, label: false, prompt: 'Выберите клиента', selected: '', input_html: { class: 'order_customer_select btn' }
-              div class="tab-pane" id="second_tab" role="tabpanel"
+              .tab-pane id="second_tab" role="tabpanel"
                 = render partial: 'companies/new', locals: { without_order: false }
         tr
           td

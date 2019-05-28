@@ -39,3 +39,7 @@ tr td.suitable_time {
     max-width: 90% !important;
   }
 }
+
+.error_required_field {
+  border-color: #d8512d !important;
+}

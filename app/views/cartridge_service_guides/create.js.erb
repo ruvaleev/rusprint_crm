@@ -1,0 +1,3 @@
+$('.printer_row_<%= @printer.id %>:visible').html('<%= j render 'printers/printer', shopping_cart_id: @shopping_cart_id, order_id: @order_id, printer: @printer %>')
+$('#create_cartridge_modal_<%= @printer.id %>').fadeOut()
+$('.modal-backdrop').fadeOut()

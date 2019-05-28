@@ -11,4 +11,5 @@
       th 
       th Серийный номер
     - printers.each do |printer|
-      = render printer, shopping_cart_id: shopping_cart_id ||= '', order_id: order_id ||= ''
+      tr class="printer_row_#{printer.id}"
+        = render printer, shopping_cart_id: shopping_cart_id ||= '', order_id: order_id ||= ''

@@ -75,7 +75,8 @@ feature 'Create order', '
         expect(page).to have_content printer_service_guide.model
       end
 
-      scenario "user can add customer's printers to order", js: true do
+      xscenario "user can add customer's printers to order", js: true do
+        # Пока отключили такую возможность
         within '.customers_printers_list' do
           click_on 'Добавить сам принтер'
         end
