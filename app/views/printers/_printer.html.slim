@@ -1,8 +1,11 @@
 - shopping_cart_id ||= ''
 td = printer.id
 td = printer.printer_service_guide.model
-td style="text-align:right"
+td.without-padding style="text-align:right"
   table
+    tr 
+      button.btn.btn-secondary.table-active.create_cartridge type="button" data-toggle="modal" data-target="#create_cartridge_modal_#{printer.id}_sc_#{shopping_cart_id}" data-printer-id="#{printer.id}" id="show_create_cartridge_modal_#{printer.id}"
+        span aria-hidden="true" Создать новый картридж для принтера
     - printer.possible_cartridges.each do |cartridge|
       tr
         td = cartridge.model
@@ -39,20 +42,16 @@ td style="text-align:right"
             });
           });
 
-td = printer.additional_data
-td 
-  button.btn.btn-secondary.table-active.create_cartridge type="button" data-toggle="modal" data-target="#create_cartridge_modal_#{printer.id}" data-printer-id="#{printer.id}" id="show_create_cartridge_modal_#{printer.id}"
-    span aria-hidden="true" Добавить новый картридж к принтеру
-
-td = printer.serial_number
+td = best_in_place_if true, printer, :additional_data
+td = best_in_place_if true, printer, :serial_number
 
 
-.modal.fade id="create_cartridge_modal_#{printer.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+.modal.fade id="create_cartridge_modal_#{printer.id}_sc_#{shopping_cart_id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
   .modal-dialog.new-order-modal-form role="document"
     .modal-content
       .modal-header
         h5.modal-title id="exampleModalLongTitle" Создать картридж
-      .modal-body id = "new_cartridge_for_#{printer.id}"
+      .modal-body id = "new_cartridge_for_#{printer.id}_sc_#{shopping_cart_id}"
         = render 'cartridge_service_guides/new', printer_service_guide_id: printer.printer_service_guide.id, shopping_cart_id: shopping_cart_id, printer_id: printer.id, order_id: order_id
 
 javascript:

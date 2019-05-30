@@ -1,4 +1,12 @@
 $ ->
+# Функция, чтобы по клику на модальное окно скролл был по модальному окну, а не по фону
+  $('#new_order').on 'click', (e) ->
+    $("body").addClass("modal-open")
+
+# Функция, чтобы по клику по фону, оставшемуся после закрытия модального окна, он исчезал
+  $('body').on 'click', '.modal-backdrop', (e) ->
+    $(this).fadeOut()
+
   $('.table-orders').on 'click', '.refresh_order_items', (e) ->
     id = $(this).data('id')
     $.ajax
@@ -38,7 +46,7 @@ $ ->
   })
 
   $('#order_customer_id').on 'change', (e) ->
-    url = '/companies/' + $(this).val() + '/get_printers'
+    url = '/companies/' + $(this).val()
     $.get url, (data) ->
     chooseAnotherCustomer()
 
@@ -60,7 +68,7 @@ $ ->
       return false
 
 # Нажатие на минус, вычитываем картриджи из заказа
-  $('.customers_printers_list').on 'click', '.minus_possible_cartridge', (e) ->
+  $('.customer').on 'click', '.minus_possible_cartridge', (e) ->
     id = $(this).data('id')
     shopping_cart_id = $(this).data('shopping-cart-id')
     qnt = $("#qnt_field_#{id}_for_#{shopping_cart_id}").val() || 1
@@ -253,6 +261,38 @@ $ ->
       success: (response) ->
         console.log "удалили картриджи - #{qnt} шт"
 
+
+
+  validateForm = (form_id) ->
+    empty_strings = []
+    $("#" + form_id + " input.required").each (e) ->
+      if $(this).val().length == 0
+        empty_strings.push(false)
+        $(this).addClass('error_required_field')
+      else
+        $(this).removeClass('error_required_field')
+    
+    if empty_strings.length == 0
+      $("#" + form_id).find('[type="submit"]').removeClass('disabled')
+    else
+      $("#" + form_id).find('[type="submit"]').addClass('disabled')
+
+  #validateForm = function(form_id) {
+  #  empty_strings = []
+  #  $("#" + form_id + " input.required").each(function(){
+  #    if ($(this).val().length == 0) {
+  #      empty_strings.push(false)
+  #      $(this).addClass('error_required_field');
+  #    } else {
+  #      $(this).removeClass('error_required_field');
+  #    }
+  #  });
+  #  if (empty_strings.length == 0) {
+  #    $("#" + form_id).find('[type="submit"]').removeClass('disabled')
+  #  } else {
+  #    $("#" + form_id).find('[type="submit"]').addClass('disabled')
+  #  }
+  #}
 
   #App.cable.subscriptions.create('OrdersChannel', {
   #  connected: ->

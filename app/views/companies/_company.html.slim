@@ -1,19 +1,29 @@
-- if current_user.can_update?(Order, 'customer_id')
-  = link_to 'Сменить клиента', '', class: 'change_customer_btn btn btn-secondary btn-sm', id: "change_customer_#{order.id}", 'data-toggle': "collapse", 'data-target': "#customer_select_#{order.id}", 'aria-expanded': "false", 'aria-controls': "collapse_form"
-  .collapse id = "customer_select_#{order.id}"
-    = select_tag 'update_customer', options_from_collection_for_select(Company.all, "id", "name", order.customer_id), data: { id: order.id }
+- if defined?(order)
+  - order_id = order.id
+  - customer = order.customer
+- else
+  - order_id = ''
+  - customer = company
+
+- if current_user.can_update?(Order, 'customer_id') && order_id.present?
+  = link_to 'Сменить клиента', '', class: 'change_customer_btn btn btn-secondary btn-sm', id: "change_customer_#{order_id}", 'data-toggle': "collapse", 'data-target': "#customer_select_#{order_id}", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+  .collapse id = "customer_select_#{order_id}"
+    = select_tag 'update_customer', options_from_collection_for_select(Company.all, "id", "name", customer.id), data: { id: order_id }
   br
-- if can? :update, order.customer
-  button type="button" class="btn btn-default btn-sm" id="edit_customer_name_in_order_#{order.id}"
+- if can? :update, customer
+  button type="button" class="btn btn-default btn-sm" id="edit_customer_name_in_order_#{order_id}"
     span class="glyphicon glyphicon-pencil" aria-hidden="true"
-= best_in_place_if true, order.customer, :name, activator: "#edit_customer_name_in_order_#{order.id}", ok_button: 'save'
+= best_in_place_if true, customer, :name, activator: "#edit_customer_name_in_order_#{order_id}", ok_button: 'save'
 br
-- if can? :update, order.customer
-  button type="button" class="btn btn-default btn-sm" id="edit_customer_telephone_in_order_#{order.id}"
+- if can? :update, customer
+  button type="button" class="btn btn-default btn-sm" id="edit_customer_telephone_in_order_#{order_id}"
     span class="glyphicon glyphicon-pencil" aria-hidden="true"
-= best_in_place_if true, order.customer, :telephone, activator: "#edit_customer_telephone_in_order_#{order.id}", ok_button: 'save'
+= best_in_place_if true, customer, :telephone, activator: "#edit_customer_telephone_in_order_#{order_id}", ok_button: 'save'
 br
-- if can? :update, order.customer
-  button type="button" class="btn btn-default btn-sm" id="edit_customer_adress_in_order_#{order.id}"
+- if can? :update, customer
+  button type="button" class="btn btn-default btn-sm" id="edit_customer_adress_in_order_#{order_id}"
     span class="glyphicon glyphicon-pencil" aria-hidden="true"
-= best_in_place_if true, order.customer, :adress, activator: "#edit_customer_adress_in_order_#{order.id}", ok_button: 'save'
+= best_in_place_if true, customer, :adress, activator: "#edit_customer_adress_in_order_#{order_id}", ok_button: 'save'
+
+javascript:
+  $('.best_in_place').best_in_place()

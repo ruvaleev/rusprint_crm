@@ -1,0 +1,2 @@
+td = render 'company', company: company
+td.without-padding = render 'printers/printers_list_for_form', printers: company.try(:printers)

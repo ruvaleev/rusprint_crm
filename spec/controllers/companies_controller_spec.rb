@@ -61,7 +61,8 @@ RSpec.describe CompaniesController, type: :controller do
     it "returns customer's @printers" do
       expect(assigns(:printers)).to eq customer.printers
     end
-    it 'returns printers @vendors' do
+    xit 'returns printers @vendors' do
+      # Не актуальный кейс пока (отменили константу временно)
       expect(assigns(:vendors)).to eq Printer::VENDORS.map.with_index.to_a
     end
   end

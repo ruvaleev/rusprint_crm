@@ -85,7 +85,7 @@ feature 'Create order', '
       end
 
       scenario "user can add customer's cartridges to order", js: true do
-        within '#new_order .customers_printers_list' do
+        within '#new_order .customer' do
           find("img[alt='Plus']").click
         end
         wait_for_ajax
@@ -94,11 +94,11 @@ feature 'Create order', '
 
       scenario "user can remove customer's cartridges from order", js: true do
         fill_in "qnt_field_#{cartridge.id}_for_", with: '10'
-        within '#new_order .customers_printers_list' do
+        within '#new_order .customer' do
           find("img[alt='Plus']").click
         end
         wait_for_ajax
-        within '#new_order .customers_printers_list' do
+        within '#new_order .customer' do
           find("img[alt='Minus']").click
         end
         wait_for_ajax
@@ -108,26 +108,22 @@ feature 'Create order', '
 
       scenario 'user can save and see order after create', js: true, retry: 7 do
         find("img[alt='Plus']").click
-        wait_for_ajax
+        sleep(1)
         click_on 'Создать заказ'
-        wait_for_ajax
+        sleep(1)
         within "#row_#{Order.last.id}" do
           expect(page).to have_content(customer.name, wait: 1.0)
         end
       end
 
       scenario 'user creates company while creating order', js: true do
-        click_on 'new_client_tab'
-        within '#second_tab' do
+        click_on 'Добавить нового клиента'
+        within '#new_company_form' do
           fill_in 'company[name]', with: 'Новая компания'
           fill_in 'company[adress]', with: 'Адрес компании'
           fill_in 'company[telephone]', with: '89151001010'
+          click_on 'Внести в каталог'
         end
-        fill_in 'other_order_item[body]', with: 'Прочие единицы'
-        fill_in 'other_order_item[price]', with: '100'
-        click_on 'Добавить к заказу'
-        sleep(1)
-        click_on 'Создать заказ'
         sleep(1)
         expect(Company.last.name).to eq 'Новая компания'
       end

@@ -12,6 +12,7 @@ class Ability
       end
       can :manage, User, id: user.id
       can :update, Company
+      can :update, Printer
     end
 
     can :manage, :all               if user.admin?

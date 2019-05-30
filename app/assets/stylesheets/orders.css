@@ -43,3 +43,7 @@ tr td.suitable_time {
 .error_required_field {
   border-color: #d8512d !important;
 }
+
+body.modal-open {
+  overflow: visible !important;
+}

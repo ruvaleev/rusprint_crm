@@ -19,22 +19,17 @@
           td = label_tag :suitable_time_end, 'Удобное время до:'
           td = f.select :suitable_time_end, time_hash, selected: time_hash['18:00']
         tr
-          td = label_tag :customer_id, 'Клиент'
-          td 
-            ul.nav.nav-tabs role="tablist"
-              li.nav-item
-                a.nav-link.active.btn.btn-primary data-toggle="tab" href="#first_tab" role="tab" id="choose_client"  value_for_new_client_flag="false" Выбрать клиента
-              li.nav-item
-                a.nav-link.btn.btn-primary data-toggle="tab" href="#second_tab" role="tab" id="new_client_tab"  value_for_new_client_flag="true" Новый клиент
-
-            .tab-content
-              .tab-pane.active id="first_tab" role="tabpanel"
-                = f.input :customer_id, collection: Company.all, label: false, prompt: 'Выберите клиента', selected: '', input_html: { class: 'order_customer_select btn' }
-              .tab-pane id="second_tab" role="tabpanel"
-                = render partial: 'companies/new', locals: { without_order: false }
+          td = label_tag :additional_data, 'Дополнительные данные'
+          td = f.input :additional_data, label: false, as: :text
         tr
           td
-            = f.input :additional_data, label: 'Дополнительные данные'
+            = f.input :customer_id, collection: Company.all, label: false, prompt: 'Выберите клиента', selected: '', input_html: { class: 'order_customer_select btn' }
+          td
+            button.btn.btn-default.btn-primary.table-active type="button" data-toggle="modal" data-target="#new_customer_modal" id="show_new_company_modal" Добавить нового клиента
+        tr.customer.without-padding
+            
+        tr
+          td
             = image_tag('cancel.png', class: "icon cancel_printers")
             = f.input :printers, label: 'Принтеры'
             = image_tag('cancel.png', class: "icon cancel_cartridges")
