@@ -25,7 +25,7 @@ html lang="en"
 
   body
     .navbar.navbar-default.navbar-static-top
-      a.navbar-brand = link_to image_tag('logo', class: 'logo'), root_path
+      a.navbar-brand = link_to image_tag('logo.jpg', class: 'logo'), root_path
       .navbar-collapse.collapse.navbar-responsive-collapse
         ul.nav.navbar-nav
           - if user_signed_in?
