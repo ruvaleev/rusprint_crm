@@ -14,7 +14,10 @@ feature 'Update order', '
   given(:new_master) { create(:user, role: master_role, second_name: 'New master secname') }
   given!(:company) { create(:company) }
   given!(:order) { create(:order, master: master, manager: manager, customer: company) }
-  given(:order_item) { create(:order_item, order: order) }
+  given!(:printer_service_guide) { create(:printer_service_guide) }
+  given!(:printer) { create(:printer, printer_service_guide: printer_service_guide) }
+  given!(:cartridge) { create(:cartridge_service_guide, printer_service_guide: printer_service_guide) }
+  given!(:order_item) { create(:order_item, order: order, item: cartridge, owner: order.shopping_cart) }
 
   scenario 'Non-authentificated user cannot see orders table' do
     visit root_path
@@ -134,7 +137,20 @@ feature 'Update order', '
         create(:cartridge_service_guide, printer_service_guide: another_printer_service_guide)
       end
 
-      before { find("#show_new_cartridge_modal_#{order.id}").click }
+      before { find("#show_new_cartridge_modal_#{order.shopping_cart_id}").click }
+
+      scenario 'adds new printer to company', retry: 7 do
+        within "#new_cartridge_modal_#{order.id}" do
+          fill_in 'printer_model_search[model_like]', with: another_printer_service_guide.model
+          click_on 'Найти принтер'
+          page.execute_script %($('input[value="Добавить принтер клиенту"]').click())
+          page.execute_script %($('input[value="Добавить"]').click())
+          wait_for_ajax
+          within '.customers_printers_list' do
+            expect(page).to have_content another_printer_service_guide.model
+          end
+        end
+      end
 
       scenario 'see modal adding new cartridge to order' do
         expect(page).to have_content 'Добавить картридж'
@@ -147,26 +163,12 @@ feature 'Update order', '
 
       scenario 'adds new cartridge to order' do
         find("#plus_#{cartridge_service_guide.id}_for_#{order.shopping_cart_id || ''}").click
-        sleep(1)
+        wait_for_ajax
         expect(page).to_not have_selector("#new_cartridge_modal_#{order.id}", visible: true)
 
-        within "#order_items_in_order_#{order.id}" do
+        within "#shopping_cart_cell_#{order.shopping_cart_id}" do
           expect(page).to have_content printer.printer_service_guide.model
           expect(page).to have_content cartridge_service_guide.model
-        end
-      end
-
-      scenario 'adds new printer to company', retry: 7 do
-        within "#new_cartridge_modal_#{order.id}" do
-          fill_in 'printer_model_search[model_like]', with: another_printer_service_guide.model
-          click_on 'Найти принтер'
-          click_on 'Добавить принтер клиенту'
-          click_on 'Добавить'
-          sleep(1)
-          wait_for_ajax
-          within "#printers_list_for_company_#{company.id}_order_#{order.id}" do
-            expect(page).to have_content another_printer_service_guide.model
-          end
         end
       end
 
@@ -178,7 +180,7 @@ feature 'Update order', '
           click_on 'Добавить'
           wait_for_ajax
           sleep(1)
-          within "#printers_list_for_company_#{company.id}_order_#{order.id}" do
+          within '.customers_printers_list' do
             find("#plus_#{another_cartridge_service_guide.id}_for_#{order.shopping_cart_id}").click
             sleep(1)
             expect(page).to have_selector("#new_cartridge_modal_#{order.id}")

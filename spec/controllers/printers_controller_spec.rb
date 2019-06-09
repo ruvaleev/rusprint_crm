@@ -30,18 +30,6 @@ RSpec.describe PrintersController, type: :controller do
     end
   end
 
-  describe 'GET #get_models' do
-    sign_in_user
-    let(:printer_service_guide) { create(:printer_service_guide, model: 'HP test printer') }
-    let(:printer) { create(:printer) }
-    let(:search) { PrinterModelSearch.new(model_like: 'HP') }
-
-    it "returns user's search results as @models" do
-      get :get_models, params: { printer_model_search: { model_like: 'HP' } }, xhr: true
-      expect(assigns(:models)).to eq search.results
-    end
-  end
-
   describe 'PUT #update' do
     let(:printer_service_guide) { create(:printer_service_guide) }
     let(:printer) { create(:printer) }

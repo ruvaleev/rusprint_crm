@@ -10,9 +10,9 @@ feature 'Create order', '
   given(:manager) { create(:user, role: manager_role) }
   given!(:customer) { create(:customer) }
   given(:printer_service_guide) { create(:printer_service_guide) }
-  given(:printer) { create(:printer, company: customer, printer_service_guide: printer_service_guide) }
+  given!(:printer) { create(:printer, company: customer, printer_service_guide: printer_service_guide) }
   given(:new_printer_service_guide) { create(:printer_service_guide, model: 'new_printer_HP') }
-  given(:cartridge) { create(:cartridge_service_guide, printer_service_guide: printer_service_guide) }
+  given!(:cartridge) { create(:cartridge_service_guide, printer_service_guide: printer_service_guide) }
 
   scenario 'Non-authentificated user cannot create order' do
     visit root_path
@@ -34,22 +34,56 @@ feature 'Create order', '
         expect(page).to have_content I18n.t 'orders.errors.order_have_no_shopping_carts'
       end
 
-      scenario 'user see errors when creates order without customer', js: true do
-        fill_in 'other_order_item[body]', with: 'Прочие единицы'
-        fill_in 'other_order_item[price]', with: '100'
-        click_on 'Добавить к заказу'
+      scenario 'see errors when creates order without customer', js: true, retry: 5 do
+        select(customer.name, from: 'order_customer_id')
+        within '#new_order .customer' do
+          find("img[alt='Plus']").click
+        end
+        select('Выберите клиента', from: 'order_customer_id')
         sleep(1)
         click_on 'Создать заказ'
 
         expect(page).to have_content I18n.t 'orders.errors.order_have_no_customer'
       end
 
-      scenario "other order item doesn't creates without body", js: true do
-        fill_in 'other_order_item[price]', with: '100'
-        click_on 'Добавить к заказу'
-        sleep(1)
+      scenario "can't create other order item without body", js: true do
+        select(customer.name, from: 'order_customer_id')
+        loop do
+          within '#new_order .customer' do
+            find("img[alt='Plus']").click
+          end
+          wait_for_ajax
+          break if ShoppingCart.last.try(:id)
+        end
+        shopping_cart_id = ShoppingCart.last.try(:id)
+        within '.shopping_cart_for_new_order' do
+          page.execute_script %($("#show_new_other_item_modal_#{shopping_cart_id}").click())
 
-        expect(find_field('order[revenue]').value).to_not eq '100.00'
+          within "#new_other_order_item_form_for_shopping_cart_#{shopping_cart_id}" do
+            fill_in 'other_order_item[price]', with: '100'
+
+            expect(page).to have_css('#add_other_order_item.disabled')
+            expect(page).to have_css('#other_order_item_body.error_required_field')
+          end
+        end
+      end
+
+      scenario "can't create other order item without price", js: true do
+        select(customer.name, from: 'order_customer_id')
+        within '#new_order .customer' do
+          find("img[alt='Plus']").click
+          sleep(1)
+        end
+        shopping_cart_id = ShoppingCart.last.try(:id)
+        within '.shopping_cart_for_new_order' do
+          find("#show_new_other_item_modal_#{shopping_cart_id}").click
+        end
+        within "#new_other_order_item_form_for_shopping_cart_#{shopping_cart_id}" do
+          fill_in 'other_order_item[body]', with: 'other order item body'
+
+          expect(page).to have_css('#add_other_order_item.disabled')
+          expect(page).to have_css('#other_order_item_price.error_required_field')
+        end
       end
     end
 
@@ -59,16 +93,26 @@ feature 'Create order', '
         cartridge
         select(customer.name, from: 'order_customer_id')
       end
-      scenario 'other order item creates with body and price', js: true do
-        fill_in 'other_order_item[body]', with: 'Прочие единицы'
-        fill_in 'other_order_item[price]', with: '100'
-        click_on 'Добавить к заказу'
-        sleep(1)
 
-        within '.other_order_items_list' do
-          expect(page).to have_content 'Прочие единицы'
+      scenario 'other order item creates with body and price', js: true, retry: 5 do
+        within '#new_order .customer' do
+          find("img[alt='Plus']").click
+          sleep(1)
         end
-        expect(find_field('order[revenue]').value).to eq '100.00'
+        shopping_cart_id = ShoppingCart.last.try(:id)
+        within '.shopping_cart_for_new_order' do
+          find("#show_new_other_item_modal_#{shopping_cart_id}").click
+        end
+        within "#new_other_order_item_form_for_shopping_cart_#{shopping_cart_id}" do
+          fill_in 'other_order_item[body]', with: 'other order item body'
+          fill_in 'other_order_item[price]', with: '100'
+          click_on 'Добавить к заказу'
+          sleep(1)
+        end
+
+        within '.shopping_cart_for_new_order' do
+          expect(page).to have_content '100.00 руб.'
+        end
       end
 
       scenario "user see customer's printers and cartridges when choosing him", js: true do
@@ -89,21 +133,24 @@ feature 'Create order', '
           find("img[alt='Plus']").click
         end
         wait_for_ajax
-        expect(find_field('order[cartridges]').value).to have_content cartridge.model
+        within '.shopping_cart_for_new_order' do
+          expect(page).to have_content cartridge.model
+        end
       end
 
       scenario "user can remove customer's cartridges from order", js: true do
-        fill_in "qnt_field_#{cartridge.id}_for_", with: '10'
         within '#new_order .customer' do
+          fill_in "qnt_field_#{cartridge.id}_for_", with: '10'
           find("img[alt='Plus']").click
         end
         wait_for_ajax
-        within '#new_order .customer' do
-          find("img[alt='Minus']").click
-        end
-        wait_for_ajax
+        order_item_id = OrderItem.last.try(:id)
+        within '.shopping_cart_for_new_order' do
+          find("#destroy_order_item_#{order_item_id}").click
+          wait_for_ajax
 
-        expect(find_field('order[cartridges]').value).to have_content ' - 9 шт'
+          expect(page).to_not have_content cartridge.model
+        end
       end
 
       scenario 'user can save and see order after create', js: true, retry: 7 do
@@ -130,15 +177,18 @@ feature 'Create order', '
 
       scenario 'user adding printers to customer', js: true do
         new_printer_service_guide
+        select(customer.name, from: 'order_customer_id')
         click_on 'Добавить принтер'
-        fill_in 'printer_model_search[model_like]', with: 'new_printer_HP'
-        click_on 'Найти принтер'
-        sleep(1)
-        within '.new_printers_table' do
-          click_on 'Добавить принтер клиенту'
-          click_on 'Добавить'
+        within '#new_printer_modal' do
+          fill_in 'printer_model_search[model_like]', with: 'new_printer_HP'
+          # Костыль, который позволяет обойти баг капибары
+          page.execute_script %($('form#search_printer_form_for_company__sc_').submit())
+          within '#add_new_printer_table' do
+            page.execute_script %($('input[value="Добавить принтер клиенту"]').click())
+            page.execute_script %($('input[value="Добавить"]').click())
+            sleep(1)
+          end
         end
-        wait_for_ajax
 
         expect(Company.last.printers.count).to eq 2
         expect(Company.last.printers.last.printer_service_guide.model).to eq 'new_printer_HP'

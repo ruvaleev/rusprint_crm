@@ -1,6 +1,6 @@
 - id = printer_service_guide.id
 - company_id ||= ''
-- order_id ||= ''
+- shopping_cart_id ||= ''
 . id = "new_printer_row_#{id}"
   td = printer_service_guide.id
   td = printer_service_guide.vendor
@@ -10,9 +10,9 @@
   td = printer_service_guide.sheet_size
   td = printer_service_guide.fuser_life_count
   td 
-    = button_to "Добавить принтер клиенту", '', class: 'btn btn-secondary', 'data-toggle': "collapse", 'data-target': "##{id}", 'aria-expanded': "false", 'aria-controls': "collapse_form"
-    .collapse id = "#{id}"
-      = simple_form_for Printer.new, data: { order_id: "#{order_id}", company_id: "#{company_id}", printer_service_guide_id: printer_service_guide.id }, remote: true do |f|
+    = button_to "Добавить принтер клиенту", '', class: 'btn btn-secondary', 'data-toggle': "collapse", 'data-target': "#printer_service_guide_#{id}_for_sc_#{shopping_cart_id}", 'aria-expanded': "false", 'aria-controls': "collapse_form"
+    .collapse id = "printer_service_guide_#{id}_for_sc_#{shopping_cart_id}"
+      = simple_form_for Printer.new, data: { company_id: "#{company_id}", printer_service_guide_id: id, shopping_cart_id: shopping_cart_id }, remote: true do |f|
         .table-responsive
           table class="table table-hover table-sm"
             tr
@@ -26,6 +26,42 @@
               td = f.input :fuser_life_count, label: false
               = f.input :company_id, as: :hidden, input_html: { value: "#{company_id}" }
               = f.input :printer_service_guide_id, as: :hidden, input_html: { value: id }
-              = hidden_field_tag :order_id, "#{order_id}"
             tr
-              td = f.submit 'Добавить', class: "btn btn-secondary btn-sm"
+              td = f.submit 'Добавить', class: "btn btn-secondary btn-sm", id: "new_printer_form_#{id}"
+
+javascript:
+  $("#printer_service_guide_#{id}_for_sc_#{shopping_cart_id} form#new_printer").on('submit', function(e){
+    e.preventDefault()
+    e.stopPropagation()
+    // Здесь мы проверяем, для нового ли заказа эта форма или для старого (update)
+    if($(this).data('company-id') == '') {
+      company_id = $('select#order_customer_id:visible').val()
+    } else {
+      company_id = $(this).data('company-id')
+    }
+    printer_service_guide_id = $(this).data('printer-service-guide-id')
+    shopping_cart_id = $(this).data('shopping-cart-id')
+    additional_data = $(this).find('#printer_additional_data').val()
+    serial_number = $(this).find('#printer_serial_number').val()
+    fuser_life_count = $(this).find('#printer_fuser_life_count').val()
+    $.ajax({
+      url: '/printers',
+      type: 'POST',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      data: {
+        printer: {
+          company_id: company_id,
+          printer_service_guide_id: printer_service_guide_id,
+          additional_data: additional_data,
+          serial_number: serial_number,
+          fuser_life_count: fuser_life_count
+        },
+        shopping_cart_id: shopping_cart_id
+      },
+      success: function(response) {
+        console.log('Добавили принтер клиенту')
+      }
+    })
+  })

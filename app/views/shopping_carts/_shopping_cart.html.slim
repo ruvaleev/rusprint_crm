@@ -1,0 +1,107 @@
+- shopping_cart ||= ShoppingCart.find_by_id(id)
+- if shopping_cart
+  table.full-width id="order_items_shopping_cart_#{shopping_cart.id}_form"
+    tr.min-padding
+      td colspan='7'
+        button.btn.btn-default.btn-sm.icon-right.refresh_shopping_cart id="refresh_shopping_cart_#{shopping_cart.id}" type="button" data-id="#{shopping_cart.id}"
+          span class="glyphicon glyphicon-refresh" aria-hidden="true"
+
+    tr.table-active.min-padding
+      td colspan='6'
+        strong Картриджи
+      td
+        button.btn.btn-default.btn-sm.icon-right.table-active type="button" data-toggle="modal" data-target="#new_cartridge_modal_#{shopping_cart.id}" id="show_new_cartridge_modal_#{shopping_cart.id}"
+          span class="glyphicon glyphicon-plus" aria-hidden="true"
+
+    - unless shopping_cart.cartridge_order_items.empty?
+      tr.small.table-active.min-padding
+        td Вендор
+        td Модель принтера
+        td Доп. данные
+        td Пометки мастера
+        td Модель картриджа
+        td Кол-во
+        td Цена
+      - shopping_cart.cartridge_order_items.each do |order_item|
+        tr id="order_item_#{order_item.id}"
+          = render order_item
+    
+    tr.table-active.min-padding
+      td colspan='6'
+        strong Прочее
+      td
+        button.btn.btn-default.btn-sm.icon-right.table-active type="button" data-toggle="modal" data-target="#new_other_item_modal_#{shopping_cart.id}" id="show_new_other_item_modal_#{shopping_cart.id}"
+          span class="glyphicon glyphicon-plus" aria-hidden="true"
+    - unless shopping_cart.other_order_items.empty?
+      tr.small.table-active.min-padding
+        td colspan='5' Доп. услуга
+        td Кол-во
+        td Цена
+      - shopping_cart.other_order_items.each do |order_item|
+        tr id="order_item_#{order_item.id}"
+          = render order_item
+    - unless shopping_cart.order.nil?
+      tr.table-active.min-padding
+        td colspan='7'
+          strong Дополнительные данные
+      tr
+        td colspan='7'
+          = best_in_place_if true, shopping_cart.order, :additional_data, as: :textarea
+
+    tr.table-active.min-padding
+      td colspan='6' style='text-align:right; border-bottom:none;'
+        span Всего единиц:
+      td style='text-align:right; border-bottom:none;'
+        = shopping_cart.total_unique_items
+    tr.table-active.min-padding
+      td colspan='6' style='text-align:right; border-bottom:none;'
+        strong Сумма:
+      td style='text-align:right; border-bottom:none;'
+        = "#{shopping_cart.subtotal} руб."
+
+  - if shopping_cart.order
+    .modal.fade id="new_cartridge_modal_#{shopping_cart.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+      .modal-dialog.new-order-modal-form role="document"
+        .modal-content
+          .modal-header
+            h5.modal-title id="exampleModalLongTitle" Добавить картридж
+            button.close type="button" data-dismiss="modal" aria-label="Close"
+              span aria-hidden="true" &times
+          .modal-body id = "new_order_form_for_shopping_cart_#{shopping_cart.id}"
+            = render 'orders/add_cartridge_to_existing_order', shopping_cart: shopping_cart
+          .modal-footer
+            button.btn.btn-secondary type="button" data-dismiss="modal" id = "close_cartridge_item_modal_for_shopping_cart_#{shopping_cart.id}" Закрыть
+
+  .modal.fade id="new_other_item_modal_#{shopping_cart.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+    .modal-dialog.new-order-modal-form role="document"
+      .modal-content
+        .modal-header
+          h5.modal-title id="exampleModalLongTitle" Добавить прочий пункт заказа
+          button.close type="button" data-dismiss="modal" aria-label="Close"
+            span aria-hidden="true" &times
+        .modal-body id = "new_other_order_item_form_for_shopping_cart_#{shopping_cart.id}"
+          = render 'other_order_items/new', shopping_cart_id: shopping_cart.id
+        .modal-footer
+          button.btn.btn-secondary type="button" data-dismiss="modal" id = "close_other_order_item_modal_for_shopping_cart_#{shopping_cart.id}" Закрыть
+
+javascript:
+  $(document).ready(function () {
+    $('.best_in_place').best_in_place()
+
+    $('#refresh_shopping_cart_#{shopping_cart.try(:id)}').on('click', function(e) {
+      id = $(this).data('id')
+      $.ajax({
+        url: '/shopping_carts/' + id,
+        type: 'GET',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        },
+        data: {
+          id:  id
+        },
+        success: function(response) {
+          console.log('Отрендерили данные заказа, корзина ' + id)
+        }
+      })
+    })
+  });

@@ -1,23 +1,46 @@
-- order_id ||= ''
 - company_id ||= ''
+- shopping_cart_id ||= ''
 ul.nav.nav-tabs role="tablist"
   li.nav-item
-    a.nav-link.active.btn.btn-primary data-toggle="tab" href="#first_printer_tab_#{ order_id }" role="tab" id="choose_client"  value_for_new_client_flag="false" Выбрать существующий принтер
+    a.nav-link.active.btn.btn-primary data-toggle="tab" href="#first_printer_tab_#{ company_id }" role="tab" id="choose_client"  value_for_new_client_flag="false" Выбрать существующий принтер
   li.nav-item
-    a.nav-link.btn.btn-primary data-toggle="tab" href="#second_printer_tab_#{ order_id }" role="tab" id="new_client_tab"  value_for_new_client_flag="true" Создать новый принтер
+    a.nav-link.btn.btn-primary data-toggle="tab" href="#second_printer_tab_#{ company_id }" role="tab" id="new_client_tab"  value_for_new_client_flag="true" Создать новый принтер
 .tab-content
-  .tab-pane.active id="first_printer_tab_#{ order_id }" role="tabpanel"
+  .tab-pane.active id="first_printer_tab_#{ company_id }" role="tabpanel"
     .form_group
-      = form_for(PrinterModelSearch.new, url: get_models_path, method: 'get', remote: true) do |f|
+      = form_for PrinterModelSearch.new, url: search_models_path, method: 'get', remote: true, html: { id: "search_printer_form_for_company_#{company_id}_sc_#{shopping_cart_id}", data: { company_id: company_id, shopping_cart_id: shopping_cart_id } } do |s|
         .table-responsive
           table.table.table-bordered
             tr 
               td
-                = f.text_field :model_like
+                = s.text_field :model_like
                 = hidden_field_tag :company_id, "#{ company_id }", class: 'company_id_input'
-                = hidden_field_tag :order_id, "#{ order_id }"
 
-        = f.submit 'Найти принтер', class: 'btn btn-primary' 
-  .tab-pane id="second_printer_tab_#{ order_id }" role="tabpanel"
-    = render 'printer_service_guides/new', order_id: order_id, company_id: company_id
-    div class="new_printer_for_#{ order_id }"
+        = s.submit 'Найти принтер', class: 'btn btn-primary', data: { disable_with: "Ищем..." }
+  .tab-pane id="second_printer_tab_#{ company_id }" role="tabpanel"
+    = render 'printer_service_guides/new', company_id: company_id
+    . id="new_printer_for_#{ company_id }"
+
+javascript:
+  $("#search_printer_form_for_company_#{company_id}_sc_#{shopping_cart_id}").on('submit', function(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    model_like = $(this).find("[name='printer_model_search[model_like]']").val()
+    company_id = $(this).data('company-id')
+    shopping_cart_id = $(this).data('shopping-cart-id')
+    $.ajax({
+      url: '/search_models',
+      type: 'GET',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      data: {
+        printer_model_search: { model_like: model_like },
+        company_id: company_id,
+        shopping_cart_id: shopping_cart_id
+      },
+      success: function(response) {
+        console.log('запрос прошел успешно')
+      }
+    })
+  })

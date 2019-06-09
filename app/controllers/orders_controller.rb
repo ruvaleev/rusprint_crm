@@ -9,8 +9,8 @@ class OrdersController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @orders           = orders_collection
-    @complete_orders  = complete_orders_collection
+    @orders           = orders_due_status_collection('pending', 'signed')
+    @complete_orders  = orders_due_status_collection('completed', 'closed', 'canceled')
     @customers        = Company.all
     gon.current_user = current_user
   end
@@ -100,24 +100,15 @@ class OrdersController < ApplicationController
     params.require(:company).permit(:name, :adress, :telephone, :email)
   end
 
-  def orders_collection
+  def orders_due_status_collection(*status)
     if current_user.master?
-      Order.where(master: current_user).order(date_of_complete: :desc, status: :desc).page(params[:page]).per(10)
+      Order.where(master: current_user, status: status)
+           .order(date_of_complete: :desc, status: :desc)
+           .page(params[:page]).per(10)
     elsif current_user.manager? || current_user.admin?
-      Order.all.order(date_of_complete: :desc, status: :desc).page(params[:page]).per(10)
-    else
-      []
-    end
-  end
-
-  def complete_orders_collection
-    if current_user.master?
-      Order.completed.where(master: current_user).order(date_of_complete: :desc, status: :desc)
-           .order(date_of_complete: :desc, status: :desc).page(params[:page]).per(10)
-    elsif current_user.manager? || current_user.admin?
-      Order.completed.order(date_of_complete: :desc, status: :desc).page(params[:page]).per(10)
-    else
-      []
+      Order.where(status: status)
+           .order(date_of_complete: :desc, status: :desc)
+           .page(params[:page]).per(10)
     end
   end
 

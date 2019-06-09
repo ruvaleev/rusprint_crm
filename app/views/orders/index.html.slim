@@ -2,3 +2,10 @@ h1 Заказы
 = render 'top_menu'
 = render partial: 'order_table', locals: { orders: @orders } unless @orders.empty?
 = render partial: 'order_table', locals: { orders: @complete_orders } unless @complete_orders.empty?
+
+.table-bordered.corner_modal.shopping_cart_for_new_order style="display: none;"
+  .glyphicon.glyphicon-remove.freezed id='close_shopping_cart_index'
+  . id="shopping_cart_cell_#{session[:shopping_cart_id]}"
+    = render 'shopping_carts/shopping_cart', id: session[:shopping_cart_id]
+button.btn.btn-default.btn-lg.icon-right.table-active.corner_modal type='button' id='open_shopping_cart_index'
+  span class='glyphicon glyphicon-shopping-cart' aria-hidden='true'

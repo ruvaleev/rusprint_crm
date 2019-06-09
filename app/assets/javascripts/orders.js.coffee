@@ -1,24 +1,12 @@
 $ ->
+
 # Функция, чтобы по клику на модальное окно скролл был по модальному окну, а не по фону
-  $('#new_order').on 'click', (e) ->
+  $('.modal-body, .modal-header').on 'click', (e) ->
     $("body").addClass("modal-open")
 
 # Функция, чтобы по клику по фону, оставшемуся после закрытия модального окна, он исчезал
   $('body').on 'click', '.modal-backdrop', (e) ->
     $(this).fadeOut()
-
-  $('.table-orders').on 'click', '.refresh_order_items', (e) ->
-    id = $(this).data('id')
-    $.ajax
-      url: '/orders/' + id,
-      type: 'GET',
-      beforeSend: (xhr) -> 
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      data: {
-        id: id
-      }
-      success: (response) -> 
-        console.log('Отрендерили данные заказа ' + id)
 
 # Подгружаем нового клиента в заказ 
   $('.table-orders').on 'change', "[name='update_customer']", (e) ->
@@ -55,17 +43,6 @@ $ ->
     goal_elem = "#order_printers"
     fillField(model, 1, goal_elem)
     $('.cancel_printers').fadeIn()
-
-# Нажимаем на Enter в поле с количеством картриджей
-  $('.customers_printers_list').on 'keypress', '.qnt_input', (e) ->
-    if (e.which == 13)
-      id = $(this).data('id')
-      printer_id =  $(this).data('printer')
-      shopping_cart_id = $(this).data('shopping-cart-id')
-      qnt = $(this).val() || 1
-      plusCartridge(id, printer_id, qnt, shopping_cart_id)
-      $(this).val('')
-      return false
 
 # Нажатие на минус, вычитываем картриджи из заказа
   $('.customer').on 'click', '.minus_possible_cartridge', (e) ->
@@ -163,31 +140,6 @@ $ ->
       success: (response) -> 
         console.log 'добавили'
 
-
-
-  $('#add_other_order_item').on 'click', (e) ->
-    e.preventDefault()
-    body = $('#other_order_item_body').val()
-    price = $('#other_order_item_price').val()
-    $.ajax
-      url: '/shopping_carts',
-      type: 'POST',
-      beforeSend: (xhr) -> 
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      data: { 
-        body: body, 
-        quantity: 1,
-        price: price 
-      }
-      success: (response) -> 
-        console.log 'добавили'
-
-  $('.other_order_item').on 'click', '.cancel_other_items', (e) ->
-    id = $(this).data('id')
-    minusCartridge(id, 1, 'OtherOrderItem')
-
-
-
   fillField = (model, qnt, goal_elem) ->
     searched_string = "#{model}"
     value_of_field = $(goal_elem).val()
@@ -221,78 +173,12 @@ $ ->
       new_value_of_field = new_value_of_field.substr(0, new_value_of_field.length - 2)
     $(goal_elem).val(new_value_of_field)
 
+# Нужно, чтобы когда меняешь клиента в новом заказе, изменялись необходимые данные в формах добавления нового принтера
   chooseAnotherCustomer = () ->
     customer = $('#order_customer_id option:selected').text()
     customer_id = $('#order_customer_id option:selected').val()
     $('.add_to_customer').html("Добавить принтер клиенту " + customer)
     $('#new_order_form #printer_company_id').val(customer_id)
-    $('.customers_printers_list').attr('id', "printers_list_for_company_" + customer_id + "_order_")
-
-  plusCartridge = (id, printer_id, qnt, shopping_cart_id, order_id = '') ->
-    $.ajax
-      url: '/shopping_carts',
-      type: 'POST',
-      beforeSend: (xhr) -> 
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      data: { 
-        product_id:  id,
-        printer_id: printer_id,
-        quantity: qnt,
-        shopping_cart_id: shopping_cart_id,
-        order_id: order_id,
-        item_type: 'CartridgeServiceGuide' 
-      }
-      success: (response) -> 
-        console.log "добавили картриджи - #{qnt} шт"
-        $("#close_cartridge_item_modal_for_order_#{order_id}").click()
-
-
-  minusCartridge = (id, qnt, item_type) ->
-    $.ajax
-      url: '/shopping_carts/' + id + '/destroy',
-      type: 'POST',
-      beforeSend: (xhr) -> 
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      data: { 
-        product_id: id,
-        quantity: qnt,
-        item_type: item_type
-      }
-      success: (response) ->
-        console.log "удалили картриджи - #{qnt} шт"
-
-
-
-  validateForm = (form_id) ->
-    empty_strings = []
-    $("#" + form_id + " input.required").each (e) ->
-      if $(this).val().length == 0
-        empty_strings.push(false)
-        $(this).addClass('error_required_field')
-      else
-        $(this).removeClass('error_required_field')
-    
-    if empty_strings.length == 0
-      $("#" + form_id).find('[type="submit"]').removeClass('disabled')
-    else
-      $("#" + form_id).find('[type="submit"]').addClass('disabled')
-
-  #validateForm = function(form_id) {
-  #  empty_strings = []
-  #  $("#" + form_id + " input.required").each(function(){
-  #    if ($(this).val().length == 0) {
-  #      empty_strings.push(false)
-  #      $(this).addClass('error_required_field');
-  #    } else {
-  #      $(this).removeClass('error_required_field');
-  #    }
-  #  });
-  #  if (empty_strings.length == 0) {
-  #    $("#" + form_id).find('[type="submit"]').removeClass('disabled')
-  #  } else {
-  #    $("#" + form_id).find('[type="submit"]').addClass('disabled')
-  #  }
-  #}
 
   #App.cable.subscriptions.create('OrdersChannel', {
   #  connected: ->

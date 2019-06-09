@@ -1,5 +1,5 @@
 - form_id = "create_cartridge_for_#{printer_id}_for_order_#{order_id}"
-h3 НОВАЯ ФОРМА ДЛЯ СОЗДАНИЯ КАРТРИДЖЕЙ
+h3 Форма создания картриджа
 . id=form_id
   = simple_form_for CartridgeServiceGuide.new, remote: true do |f|
     = f.input :model, label: 'Модель'

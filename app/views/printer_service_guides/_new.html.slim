@@ -1,5 +1,5 @@
-- order_id ||= ''
-= simple_form_for PrinterServiceGuide.new, authenticity_token: true, remote: true, html: { id: "new_printer_service_guide_for_order_#{ order_id }" } do |f|
+- company_id ||= ''
+= simple_form_for PrinterServiceGuide.new, authenticity_token: true, remote: true, html: { id: "new_printer_service_guide_for_company_#{ company_id }" } do |f|
   .table-responsive
     table.table.table-bordered
       tr 
@@ -10,7 +10,6 @@
           = f.input :color, label: 'Цветной', default: false
           = select_tag(:type_of_system, options_for_select([['Лазерный', 'laser'], ['Струйный', 'ink']]), name: 'printer_service_guide[type_of_system]', class: 'form-control')
           = f.input :vendor, label: 'Вендор'
-          = hidden_field_tag :order_id, order_id
-          = hidden_field_tag :company_id, company_id ||= ''
+          = hidden_field_tag :company_id, company_id
 
   = f.submit 'Создать принтер', class: 'btn btn-primary'

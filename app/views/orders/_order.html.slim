@@ -26,8 +26,8 @@ tr id = "row_#{order.id}"
       tr
         td colspan='2'
           = best_in_place_if current_user.can_update?(Order, 'date_of_order'), order.decorate, :date_of_order, display_as: :date_of_customers_order, value: order.decorate.date_of_customers_order
-  td.order_items.without-padding id = "order_items_in_order_#{order.id}"
-    = render 'order_item_cell', { order: order }
+  td.order_items.without-padding id = "shopping_cart_cell_#{order.shopping_cart_id}"
+    = render order.shopping_cart
   td.without-padding
     table.full-width
       tr.table-active

@@ -2,7 +2,7 @@
 .form_group
   = simple_form_for Order.new do |f|
     .table-responsive
-      table.table.table-bordered
+      table.table.table-bordered.table-new-order
         tr
           td = label_tag :provider, 'Компания-провайдер'
           td = f.select :provider, Order::PROVIDERS
@@ -26,24 +26,18 @@
             = f.input :customer_id, collection: Company.all, label: false, prompt: 'Выберите клиента', selected: '', input_html: { class: 'order_customer_select btn' }
           td
             button.btn.btn-default.btn-primary.table-active type="button" data-toggle="modal" data-target="#new_customer_modal" id="show_new_company_modal" Добавить нового клиента
-        tr.customer.without-padding
-            
+        tr.customer colspan='2'
         tr
           td
-            = image_tag('cancel.png', class: "icon cancel_printers")
-            = f.input :printers, label: 'Принтеры'
-            = image_tag('cancel.png', class: "icon cancel_cartridges")
-            = f.input :cartridges, label: 'Картриджи'
-            .other_order_item
-              = render 'other_order_item_field'
-            = f.input :revenue, label: 'Стоимость'
-            = hidden_field_tag 'new_client_flag', 'false'
-          td
-            = link_to 'Добавить принтер', '', class: 'btn btn-primary', id: 'new_printer', 'data-toggle': "collapse", 'data-target': "#new_printer_form", 'aria-expanded': "false", 'aria-controls': "collapse_form"
-            .collapse id = "new_printer_form"
-              .form_for_search_printer
-                = render 'printers/new'
-              .new_printers_table.new_printers_for_new_order
-            .customers_printers_list id = "printers_list_for_company_"
-
+            button.btn.btn-primary type="button" data-toggle="modal" data-target="#new_printer_modal" Добавить принтер
+    
     = f.submit 'Создать заказ', class: 'btn btn-primary'
+
+.modal.fade id="new_printer_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+  .modal-dialog.new-printer-modal-form role="document"
+    .modal-content
+      .modal-header
+        h5.modal-title id="exampleModalLongTitle" Добавить принтер
+      .modal-body id = "new_printer_form"
+        = render 'printers/new'
+      .modal-footer id = "printers_search_result_"

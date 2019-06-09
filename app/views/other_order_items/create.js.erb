@@ -1,2 +1,5 @@
-$('#close_other_order_item_modal_for_order_<%= @order.id %>').click()
-$('#refresh_order_items_<%= @order.id %>').click()
+$('#new_other_item_modal_<%= @shopping_cart.id %>').hide()
+$("body").addClass("modal-open")
+$('#refresh_shopping_cart_<%= @shopping_cart.id %>').click()
+
+
