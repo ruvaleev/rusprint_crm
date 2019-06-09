@@ -13,7 +13,9 @@ RSpec.describe PrinterServiceGuidesController, type: :controller do
 
       it "can't create with invalid attributes (without printer_service_guide_id)" do
         expect do
-          post :create, params: { printer_service_guide: build(:printer_service_guide).attributes.except('model'), format: :js }
+          post :create, params: {
+            printer_service_guide: build(:printer_service_guide).attributes.except('model'), format: :js
+          }
         end.to_not change(PrinterServiceGuide, :count)
       end
     end
@@ -24,6 +26,18 @@ RSpec.describe PrinterServiceGuidesController, type: :controller do
           post :create, params: { printer_service_guide: build(:printer_service_guide).attributes, format: :js }
         end.to_not change(PrinterServiceGuide, :count)
       end
+    end
+  end
+
+  describe 'GET #search_models' do
+    sign_in_user
+    let(:printer_service_guide) { create(:printer_service_guide, model: 'HP test printer') }
+    let(:printer) { create(:printer) }
+    let(:search) { PrinterModelSearch.new(model_like: 'HP') }
+
+    it "returns user's search results as @models" do
+      get :search_models, params: { printer_model_search: { model_like: 'HP' } }, xhr: true
+      expect(assigns(:models)).to eq search.results
     end
   end
 end

@@ -25,7 +25,7 @@ html lang="en"
 
   body
     .navbar.navbar-default.navbar-static-top
-      a.navbar-brand href="/"RusPrint
+      a.navbar-brand = link_to image_tag('logo', class: 'logo'), root_path
       .navbar-collapse.collapse.navbar-responsive-collapse
         ul.nav.navbar-nav
           - if user_signed_in?
@@ -34,17 +34,11 @@ html lang="en"
           - unless user_signed_in?
             li= link_to 'Войти', new_user_session_path
             li= link_to 'Регистрация', new_user_registration_path
-      br
-        div.greetings
-          - if user_signed_in?
-            span
-              | Здравствуйте, 
-              = current_user.name || current_user.email
-          .fixed-menu.alert
-            = alert
+      .fixed-menu.alert.float-right
+        h6 = "Доброго дня, #{current_user.name || current_user.email}" if user_signed_in?
+        = alert
 
     .container-fluid
-      .row
       .row
         .col-md-12
           = bootstrap_flash

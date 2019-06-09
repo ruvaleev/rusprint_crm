@@ -30,15 +30,34 @@ RSpec.describe PrintersController, type: :controller do
     end
   end
 
-  describe 'GET #get_models' do
-    sign_in_user
-    let(:printer_service_guide) { create(:printer_service_guide, model: 'HP test printer') }
+  describe 'PUT #update' do
+    let(:printer_service_guide) { create(:printer_service_guide) }
     let(:printer) { create(:printer) }
-    let(:search) { PrinterModelSearch.new(model_like: 'HP') }
 
-    it "returns user's search results as @models" do
-      get :get_models, params: { printer_model_search: { model_like: 'HP' } }, xhr: true
-      expect(assigns(:models)).to eq search.results
+    context 'Authorized user' do
+      let(:master_role) { create(:role, name: 'master') }
+      let(:master) { create(:user, role: master_role) }
+      sign_in_user
+
+      it 'updates with valid attributes' do
+        put :update, params: { id: printer, printer: { additional_data: 'new additional_data' } }
+        printer.reload
+        expect(printer.additional_data).to eq 'new additional_data'
+      end
+
+      it "can't update with invalid attributes" do
+        put :update, params: { id: printer, printer: { printer_service_guide_id: '' } }
+        printer.reload
+        expect(printer.printer_service_guide_id).to_not eq ''
+      end
+    end
+
+    context 'Unauthorized user' do
+      it "can't update orders" do
+        put :update, params: { id: printer, order: { additional_data: 'new additional_data' } }
+        printer.reload
+        expect(printer.additional_data).to_not eq 'new additional_data'
+      end
     end
   end
 end

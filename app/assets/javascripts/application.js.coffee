@@ -44,6 +44,32 @@ $(document).ready ->
     else
       $nav.removeClass('fixed')
 
+# Функия, чтобы показывать корзину при создании заказа
+  $('#new_order_modal').on 'shown.bs.modal', (e) ->
+    if $('.shopping_cart_for_new_order').is(':hidden')
+      $('#open_shopping_cart_index').click()
+  
+  $("#new_order_modal").on 'hidden.bs.modal', () ->
+    $('#open_shopping_cart_index').fadeIn()
+    $('.shopping_cart_for_new_order').hide()
+
+  $('#open_shopping_cart_index').on 'click', (e) ->
+    $('.shopping_cart_for_new_order').fadeIn()
+    $(this).hide()
+
+  $('#close_shopping_cart_index').on 'click', (e) ->
+    $('#open_shopping_cart_index').fadeIn()
+    $('.shopping_cart_for_new_order').hide()
+    
+# Реагируем на движение мышки над окном (прозрачнее, непрозрачнее делаем)
+  $('.shopping_cart_for_new_order').on 'mousemove', (e) ->
+    $(this).css('opacity', 1)
+    $(this).css('overflow-y', 'auto')
+
+  $('.shopping_cart_for_new_order').on 'mouseleave', (e) ->
+    if $(this).is(':visible')
+      $(this).fadeTo('fast', 0.5)
+
 class Application
   constructor: (@$container) ->
 

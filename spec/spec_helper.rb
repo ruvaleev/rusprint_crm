@@ -11,14 +11,12 @@ RSpec.configure do |config|
     ex.run_with_retry retry: 3
   end
 
-  # callback to be run between retries  
+  # callback to be run between retries
   config.retry_callback = proc do |ex|
     # run some additional clean up task - can be filtered by example metadata
-    if ex.metadata[:js]
-      Capybara.reset!     
-    end
+    Capybara.reset! if ex.metadata[:js]
   end
-  
+
   config.expect_with :rspec do |expectations|
     # This option will default to `true` in RSpec 4. It makes the `description`
     # and `failure_message` of custom matchers include text for helper methods

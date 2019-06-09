@@ -13,7 +13,9 @@ RSpec.describe CartridgeServiceGuidesController, type: :controller do
 
       it "can't create with invalid attributes (without cartridge_service_guide_id)" do
         expect do
-          post :create, params: { cartridge_service_guide: build(:cartridge_service_guide).attributes.except('model'), format: :js }
+          post :create, params: {
+            cartridge_service_guide: build(:cartridge_service_guide).attributes.except('model'), format: :js
+          }
         end.to_not change(CartridgeServiceGuide, :count)
       end
     end

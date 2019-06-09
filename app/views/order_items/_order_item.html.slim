@@ -6,7 +6,7 @@
     td 
       = order_item.item.printer_service_guide.model
     td 
-      = order_item.item.try(:printer).try(:additional_data)
+      = best_in_place_if true, order_item.try(:printer), :additional_data, as: :textarea if order_item.try(:printer)
     td
       = order_item.item.try(:printer).try(:masters_note)
     td
@@ -16,18 +16,18 @@
     td
       = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
       - if can? :destroy, order_item
-        button.btn.btn-default.btn-sm.icon-right.table-active id="destroy_order_item_#{order_item.id}" type="button" data-id="#{order_item.id}" data-order-id="#{order_id}"
+        button.btn.btn-default.btn-sm.icon-right.table-active id="destroy_order_item_#{order_item.id}" type="button" data-id="#{order_item.id}" data-shopping-cart-id="#{order_item.owner_id}"
           span class="glyphicon glyphicon-minus" aria-hidden="true"
 - when 'OtherOrderItem'
   = form_with model: order_item, remote: true do |f|
     td colspan='5' style='text-align:right;'
-      = best_in_place_if true, order_item.item, :body, as: :textarea
+      = best_in_place_if true, order_item.item, :body, as: :textarea if order_item.item
     td
       = best_in_place_if true, order_item, :quantity, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
     td
       = best_in_place_if true, order_item, :price_cents, display_with: lambda { |pc| price_value(pc) },value: price_value(order_item.price_cents)
       - if can? :destroy, order_item
-        button.btn.btn-default.btn-sm.icon-right.table-active id="destroy_order_item_#{order_item.id}" type="button" data-id="#{order_item.id}" data-order-id="#{order_id}"
+        button.btn.btn-default.btn-sm.icon-right.table-active id="destroy_order_item_#{order_item.id}" type="button" data-id="#{order_item.id}" data-shopping-cart-id="#{order_item.owner_id}"
           span class="glyphicon glyphicon-minus" aria-hidden="true"
 
 javascript:
@@ -36,19 +36,20 @@ javascript:
 
     $("#destroy_order_item_#{order_item.id}").on('click', function() {
       id = $(this).data('id')
-      order_id = $(this).data('order-id')
+      shopping_cart_id = $(this).data('shopping-cart-id')
       $.ajax({
         url: '/order_items/' + id,
         type: 'DELETE',
         beforeSend: function(xhr) {
           xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+          return confirm('Удаляем Order Item ' + id + '?')
         },
         data: {
           id:  id
         },
         success: function(response) {
-          console.log('удалили картриджи ' + id)
-          $('#refresh_order_items_' + order_id).click()
+          console.log('удалили картридж ' + id)
+          $('#order_item_' + id).hide()
         }
       })
     });

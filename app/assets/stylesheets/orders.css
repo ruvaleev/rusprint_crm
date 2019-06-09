@@ -30,6 +30,9 @@ tr td.suitable_time {
 
 @media screen and (min-device-width: 1400px) {
   .new-order-modal-form {
+    max-width: 90% !important;
+  }
+  .new-printer-modal-form {
     max-width: 80% !important;
   }
 }
@@ -38,8 +41,15 @@ tr td.suitable_time {
   .new-order-modal-form {
     max-width: 90% !important;
   }
+  .new-printer-modal-form {
+    max-width: 80% !important;
+  }
 }
 
 .error_required_field {
   border-color: #d8512d !important;
+}
+
+body.modal-open {
+  overflow: visible !important;
 }

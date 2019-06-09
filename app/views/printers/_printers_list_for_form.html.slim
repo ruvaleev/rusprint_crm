@@ -3,12 +3,11 @@
     tr
       th colspan = 6 style = 'text-align: center'
         span Принтеры клиента
-    tr
+    tr.printer_headers
       th ID
       th Модель
       th Картриджи
       th Дополнительные данные
-      th 
       th Серийный номер
     - printers.each do |printer|
       tr class="printer_row_#{printer.id}"

@@ -1,5 +1,5 @@
 .form_group
-  = simple_form_for Company.new, remote: true do |f|
+  = simple_form_for Company.new, remote: true, html: { id: 'new_company_form' } do |f|
     .table-responsive
       table class="table table-bordered"
         tr 
@@ -9,4 +9,26 @@
             = f.input :telephone, label: 'Телефон'
             = f.input :email, label: 'Email'
 
-    = f.submit 'Внести в каталог', class: 'btn btn-primary' if without_order
+    = f.submit 'Внести в каталог', class: 'btn btn-primary disabled'
+
+javascript:
+  $("#new_company_form input.required").on('click keydown', function(){
+    validateForm('new_company_form')
+  });
+
+  validateForm = function(form_id) {
+    empty_strings = []
+    $("#" + form_id + " input.required").each(function(){
+      if ($(this).val().length == 0) {
+        empty_strings.push(false)
+        $(this).addClass('error_required_field');
+      } else {
+        $(this).removeClass('error_required_field');
+      }
+    });
+    if (empty_strings.length == 0) {
+      $("#" + form_id).find('[type="submit"]').removeClass('disabled')
+    } else {
+      $("#" + form_id).find('[type="submit"]').addClass('disabled')
+    }
+  }

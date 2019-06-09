@@ -17,6 +17,9 @@
  *= require jquery-ui
  */
 
+.navbar-static-top {
+  height: 4rem;
+}
 .icon {
   width: 20px;
 }
@@ -81,6 +84,10 @@ td {
   top: 0;
 }
 
+.freezed {
+  position: fixed;
+}
+
 .purr {
   position: fixed;
   top: 60px;
@@ -122,4 +129,37 @@ td {
 
 .without-padding {
   padding: 0px !important;
+}
+
+.modal-body {
+  max-height: calc(100vh - 210px);
+  overflow-y: auto;
+}
+
+.hidden {
+  display: none;
+}
+
+.corner_modal {
+  z-index: 2000;
+  position: fixed;
+  top: 3px;
+  right: 3px;
+  margin-right: 20px;
+  max-height: 50%;
+  background-color: white;
+  opacity: 0.5;
+}
+
+.logo {
+  max-width: 200px;
+  float: left;
+}
+
+.navbar-default {
+  background-color: white;
+}
+
+.float-right {
+  float: right;
 }

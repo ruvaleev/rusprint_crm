@@ -1,8 +1,12 @@
 - shopping_cart_id ||= ''
+- order_id ||= ''
 td = printer.id
 td = printer.printer_service_guide.model
-td style="text-align:right"
+td.without-padding style="text-align:right"
   table
+    tr 
+      button.btn.btn-secondary.table-active.create_cartridge type="button" data-toggle="modal" data-target="#create_cartridge_modal_#{printer.id}_sc_#{shopping_cart_id}" data-printer-id="#{printer.id}" id="show_create_cartridge_modal_#{printer.id}"
+        span aria-hidden="true" Создать новый картридж для принтера
     - printer.possible_cartridges.each do |cartridge|
       tr
         td = cartridge.model
@@ -10,22 +14,25 @@ td style="text-align:right"
         td = number_field '', "qnt_cartridges_#{cartridge.id}", class: 'qnt_input', id: "qnt_field_#{cartridge.id}_for_#{ shopping_cart_id }", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id }", order_id: order_id }
         td 
           = image_tag('plus.jpg', class: "icon", id: "plus_#{cartridge.id}_for_#{ shopping_cart_id }", data: { id: "#{cartridge.id}", printer: "#{printer.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id }", order_id: order_id } )
-          = image_tag('minus.jpg', class: "icon minus_possible_cartridge", data: { id: "#{cartridge.id}", model: "#{cartridge.model}", shopping_cart_id: "#{ shopping_cart_id }", order_id: order_id } )
+          = image_tag('wait.gif', class: 'icon hidden', id: "wait_#{cartridge.id}_for_#{ shopping_cart_id }")
 
         javascript:
           $(document).ready(function() {
 
-            $('#plus_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').on('click', function() {
+            $('#plus_#{cartridge.id}_for_#{ shopping_cart_id }').on('click', function() {
+              $(this).hide()
+              $('#wait_#{cartridge.id}_for_#{shopping_cart_id}').removeClass('hidden')
               id = $(this).data('id')
               printer_id =  $(this).data('printer')
-              qnt = $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').val() || 1
+              qnt = $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id }').val() || 1
               shopping_cart_id = $(this).data('shopping-cart-id')
               order = $(this).data('order-id')
+              icon_id = $(this).id
               plusCartridge(id, printer_id, qnt, shopping_cart_id, order)
-              $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').val('')
+              $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id }').val('')
             });
 
-            $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id ||= "" }').on('keypress', function(e) {
+            $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id }').on('keypress', function(e) {
               if (e.which == 13) {
                 id = $(this).data('id')
                 printer_id =  $(this).data('printer')
@@ -39,20 +46,16 @@ td style="text-align:right"
             });
           });
 
-td = printer.additional_data
-td 
-  button.btn.btn-secondary.table-active.create_cartridge type="button" data-toggle="modal" data-target="#create_cartridge_modal_#{printer.id}" data-printer-id="#{printer.id}" id="show_create_cartridge_modal_#{printer.id}"
-    span aria-hidden="true" Добавить новый картридж к принтеру
-
-td = printer.serial_number
+td = best_in_place_if true, printer, :additional_data
+td = best_in_place_if true, printer, :serial_number
 
 
-.modal.fade id="create_cartridge_modal_#{printer.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+.modal.fade id="create_cartridge_modal_#{printer.id}_sc_#{shopping_cart_id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
   .modal-dialog.new-order-modal-form role="document"
     .modal-content
       .modal-header
         h5.modal-title id="exampleModalLongTitle" Создать картридж
-      .modal-body id = "new_cartridge_for_#{printer.id}"
+      .modal-body id = "new_cartridge_for_#{printer.id}_sc_#{shopping_cart_id}"
         = render 'cartridge_service_guides/new', printer_service_guide_id: printer.printer_service_guide.id, shopping_cart_id: shopping_cart_id, printer_id: printer.id, order_id: order_id
 
 javascript:
@@ -73,8 +76,13 @@ javascript:
           order_id: order_id,
         },
         success: function(response) {
-          $('#close_cartridge_item_modal_for_order_' + order_id).click()
-          $('#refresh_order_items_' + order_id).click()
+          if(order_id) {
+            $('#close_cartridge_item_modal_for_order_' + shopping_cart_id).click()
+            $('.modal-backdrop').fadeOut()
+          } else {
+            $('#wait_' + id + '_for_#{shopping_cart_id}').hide()
+            $('#plus_' + id + '_for_#{shopping_cart_id}').show()
+          }
         }
       })
     }

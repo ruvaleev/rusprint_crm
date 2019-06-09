@@ -6,7 +6,7 @@
         button.btn.btn-primary type="button" data-toggle="modal" data-target="#new_customer_modal" Новый клиент
         button.btn.btn-primary type="button" data-toggle="modal" data-target="#new_order_modal" Добавить заказ
 
-.modal.fade id="new_order_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
+.modal.fade.col-lg-12 id="new_order_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
   .modal-dialog.new-order-modal-form role="document"
     .modal-content
       .modal-header
@@ -29,7 +29,7 @@
       .modal-body id = "new_customer_form_without_order"
         = render partial: 'companies/new', locals: { without_order: true }
       .modal-footer
-        button.btn.btn-secondary type="button" data-dismiss="modal" id = 'new_customer' Закрыть
+        button.btn.btn-secondary type="button" data-dismiss="modal" id = 'close_new_customer_modal' Закрыть
 
 .modal.fade id="new_price_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true"
   .modal-dialog.new-order-modal-form role="document"

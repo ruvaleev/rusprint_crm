@@ -1,4 +1,5 @@
 - models = @models || [printer_service_guide]
+- shopping_cart_id ||= ''
 - if models.empty? 
   span ничего не найдено
 - else  
@@ -15,4 +16,4 @@
           th Ресурс печки
           th.add_to_customer Добавить принтер клиенту
         - models.each do |printer_service_guide|
-          tr = render printer_service_guide, company_id: company_id, order_id: order_id
+          tr = render printer_service_guide, company_id: company_id, shopping_cart_id: shopping_cart_id

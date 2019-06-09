@@ -6,9 +6,9 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     sign_in_new_user('facebook') if @user.persisted?
   end
 
-# Если понадобятся другие операторы, 
-# то их можно будет добавить вот так
-  
+  # Если понадобятся другие операторы,
+  # то их можно будет добавить вот так
+
   # def vkontakte
   #   sign_in_new_user('vkontakte') if @user.persisted?
   # end
@@ -33,5 +33,4 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       set_flash_message(:notice, :success, kind: provider) if is_navigational_format?
     end
   end
-
 end

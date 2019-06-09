@@ -3,7 +3,11 @@ class PricesController < ApplicationController
   def create
     price = Price.create(price_params)
     price.parse
-    @message = price.errors.any? ? "При загрузке произошли следующие ошибки: #{price.errors.messages}" : "Прайс #{price.file.filename} успешно загружен"
+    @message = if price.errors.any?
+                 "При загрузке произошли следующие ошибки: #{price.errors.messages}"
+               else
+                 "Прайс #{price.file.filename} успешно загружен"
+               end
   end
 
   private

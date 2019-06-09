@@ -1,0 +1,2 @@
+$('.customer:visible').html('<%= j render 'companies/customer_form_for_order', company: @company %>')
+$('#new_order_modal #new_printer_form input#company_id').val('<%= @company.id %>')

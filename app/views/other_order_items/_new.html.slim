@@ -1,0 +1,33 @@
+= simple_form_for OtherOrderItem.new, remote: true do |f|
+  .table-responsive
+    table class="table table-bordered"
+      tr
+        = f.input :body, label: 'Доп. пункты'
+        = f.input :price, label: 'Цена'
+        = hidden_field_tag :shopping_cart_id, "#{shopping_cart_id ||= ''}"
+        = f.submit 'Добавить к заказу', class: 'btn btn-secondary disabled', id: 'add_other_order_item'
+
+.other_order_items_list
+
+javascript:
+  $("#new_other_order_item input.required").on('click keydown', function(){
+    validateForm('new_other_order_item')
+  });
+
+  validateForm = function(form_id) {
+    empty_strings = []
+    $("#" + form_id + ":visible input.required").each(function(){
+      if ($(this).val().length == 0) {
+        empty_strings.push(false)
+        $(this).addClass('error_required_field');
+      } else {
+        $(this).removeClass('error_required_field');
+      }
+    });
+    if (empty_strings.length == 0) {
+      $("#" + form_id).find('[type="submit"]').removeClass('disabled')
+      $('.new_other_order_item:visible').find('[type="submit"]').removeClass('disabled')
+    } else {
+      $('.new_other_order_item:visible').find('[type="submit"]').addClass('disabled')
+    }
+  }

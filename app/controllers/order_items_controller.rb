@@ -49,8 +49,8 @@ class OrderItemsController < ApplicationController
   end
 
   def find_order
-    @order       = @order_item.order
-    @order_items = @order.order_items
+    @order       = @order_item.try(:order)
+    @order_items = @order.order_items if @order
   end
 
   def serialize_price_cents
@@ -60,6 +60,8 @@ class OrderItemsController < ApplicationController
   end
 
   def actualize_order
+    return unless @order
+
     order_params = {}
     order_params[:revenue] = @order_item.owner.subtotal if @order_item
     # Отрефачить

@@ -13,14 +13,13 @@ Rails.application.routes.draw do
   end
 
   resources :printers
-  get 'get_models', to: 'printers#get_models'
+
+  get 'search_models', to: 'printer_service_guides#search_models'
 
   post 'printer_service_guides', to: 'printer_service_guides#create'
   post 'cartridge_service_guides', to: 'cartridge_service_guides#create'
 
-  resources :companies do
-    get 'get_printers', on: :member
-  end
+  resources :companies
 
   resources :prices
   resources :other_order_items

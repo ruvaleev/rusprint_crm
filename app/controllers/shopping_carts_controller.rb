@@ -1,6 +1,6 @@
 class ShoppingCartsController < ApplicationController
-  before_action :find_order
-  before_action :extract_shopping_cart
+  before_action :find_order, except: :show
+  before_action :extract_shopping_cart, except: :show
   skip_authorization_check
 
   def create
@@ -12,8 +12,7 @@ class ShoppingCartsController < ApplicationController
       @product = params[:item_type].classify.constantize.find(params[:product_id])
     end
     quantity = params[:quantity].to_i || 1
-    @shopping_cart.add(@product, @product.price, quantity)
-    order_item = @shopping_cart.shopping_cart_items.find_by(item_id: @product)
+    order_item = @shopping_cart.add(@product, @product.price, quantity)
     order_item.update(printer_id: params[:printer_id]) if params[:printer_id]
     order_item.update(order_id: @shopping_cart.order_id) if @shopping_cart.order_id
     @order.update(revenue: @shopping_cart.subtotal) if @shopping_cart.order_id
@@ -21,6 +20,10 @@ class ShoppingCartsController < ApplicationController
 
   def clear
     @shopping_cart.clear
+  end
+
+  def show
+    @shopping_cart = ShoppingCart.find_by(id: params[:id])
   end
 
   def destroy
@@ -39,12 +42,8 @@ class ShoppingCartsController < ApplicationController
     if @order
       @shopping_cart = @order.shopping_cart
     else
-      shopping_cart_id = params[:shopping_cart_id].presence || session[:shopping_cart_id]
-      @shopping_cart = if shopping_cart_id
-                         ShoppingCart.find_by(id: shopping_cart_id) || ShoppingCart.create
-                       else
-                         ShoppingCart.create
-                       end
+      @shopping_cart_id = params[:shopping_cart_id].presence || session[:shopping_cart_id]
+      @shopping_cart = ShoppingCart.find_by(id: @shopping_cart_id.presence) || ShoppingCart.create
       # Не получится ли, что менеджер существующий заказ переписывать будет при создании нового?
       session[:shopping_cart_id] = @shopping_cart.id
     end

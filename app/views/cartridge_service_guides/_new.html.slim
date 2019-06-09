@@ -1,21 +1,62 @@
-h3 НОВАЯ ФОРМА ДЛЯ СОЗДАНИЯ КАРТРИДЖЕЙ
-. id="create_cartridge_for_#{printer_id}_for_order_#{order_id}"
-  = simple_form_for CartridgeServiceGuide.new, remote: true, html: { class: "create_cartridge_for_#{printer_id}_for_order_#{order_id}" } do |f|
-    = f.input :model, label: 'Модель', input_html: { class: 'rfield' }
-    = f.input :toner_life_count, label: 'Ресурс', input_html: { class: 'rfield' }
-    = f.input :price, label: 'Цена', input_html: { class: 'rfield' }
-    = f.input :color, label: 'Цвет', input_html: { class: 'rfield' }
+- form_id = "create_cartridge_for_#{printer_id}_for_order_#{order_id}"
+h3 Форма создания картриджа
+. id=form_id
+  = simple_form_for CartridgeServiceGuide.new, remote: true do |f|
+    = f.input :model, label: 'Модель'
+    = f.input :toner_life_count, label: 'Ресурс'
+    = f.input :price, label: 'Цена'
+    = f.input :color, label: 'Цвет'
     = f.input :printer_service_guide_id, input_html: { value: printer_service_guide_id }, as: :hidden
     = hidden_field_tag :shopping_cart_id, shopping_cart_id
     = hidden_field_tag :printer_id, printer_id
     = hidden_field_tag :order_id, order_id
-    = f.submit 'Создать', class: 'btn btn-primary disabled'
+    = f.submit 'Создать', class: 'btn btn-primary disabled', id: "#{form_id}_form"
+
 
 javascript:
-  $("#create_cartridge_for_#{printer_id}_for_order_#{order_id} input.required").on('click keydown', function(){
-    console.log('Кликнули')
+  $("##{form_id} input.required").on('click keydown', function(){
+    validateForm("#{form_id}")
+  });
+
+
+  $("##{form_id}_form").on('click', function(e){
+    e.preventDefault()
+    model = $("##{form_id}").find('[name="cartridge_service_guide[model]"]').val()
+    toner_life_count = $("##{form_id}").find('[name="cartridge_service_guide[toner_life_count]"]').val()
+    price = $("##{form_id}").find('[name="cartridge_service_guide[price]"]').val()
+    color = $("##{form_id}").find('[name="cartridge_service_guide[color]"]').val()
+    printer_service_guide_id = $("##{form_id}").find('[name="cartridge_service_guide[printer_service_guide_id]"]').val()
+    shopping_cart_id = $("##{form_id}").find('[name="shopping_cart_id"]').val()
+    printer_id = $("##{form_id}").find('[name="printer_id"]').val()
+    order_id = $("##{form_id}").find('[name="order_id"]').val()
+
+    $.ajax({
+      url: '/cartridge_service_guides',
+      type: 'POST',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      data: {
+        cartridge_service_guide: {
+          model: model,
+          toner_life_count: toner_life_count,
+          price: price,
+          color: color,
+          printer_service_guide_id: printer_service_guide_id
+        },
+        shopping_cart_id: shopping_cart_id,
+        printer_id: printer_id,
+        order_id: order_id
+      },
+      success: function(response) {
+        console.log('Картридж создали')
+      }
+    })
+  });
+
+  validateForm = function(form_id) {
     empty_strings = []
-    $("#create_cartridge_for_#{printer_id}_for_order_#{order_id} input.required").each(function(){
+    $("#" + form_id + " input.required").each(function(){
       if ($(this).val().length == 0) {
         empty_strings.push(false)
         $(this).addClass('error_required_field');
@@ -24,8 +65,8 @@ javascript:
       }
     });
     if (empty_strings.length == 0) {
-      $("#create_cartridge_for_#{printer_id}_for_order_#{order_id}").find('[type="submit"]').removeClass('disabled')
+      $("#" + form_id).find('[type="submit"]').removeClass('disabled')
     } else {
-      $("#create_cartridge_for_#{printer_id}_for_order_#{order_id}").find('[type="submit"]').addClass('disabled')
+      $("#" + form_id).find('[type="submit"]').addClass('disabled')
     }
-  });
+  }

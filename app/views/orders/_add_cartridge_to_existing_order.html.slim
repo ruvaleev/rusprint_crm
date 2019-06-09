@@ -1,4 +1,4 @@
-= render 'printers/new', company_id: order.customer.id, order_id: order.id
-.new_printers_table
-.customers_printers_list id = "printers_list_for_company_#{order.customer.id}_order_#{order.id}"
-  = render 'printers/printers_list_for_form', printers: order.customer.printers, shopping_cart_id: order.shopping_cart.try(:id), order_id: order.id
+= render 'printers/new', company_id: shopping_cart.order.customer_id, shopping_cart_id: shopping_cart.id
+.printers_search_result id="printers_search_result_#{shopping_cart.id}"
+.customers_printers_list
+  = render 'printers/printers_list_for_form', printers: shopping_cart.order.customer.printers, shopping_cart_id: shopping_cart.id, order_id: shopping_cart.order_id
