@@ -61,3 +61,7 @@ tr id = "row_#{order.id}"
             = order.profit
           td
             = best_in_place_if current_user.can_update?(Order, 'provider'), order, :provider, as: :select, collection: Order::PROVIDERS.map { |i| [i, i] }
+        tr
+          td colspan='2'
+            = button_to order, method: :delete, data: { confirm: 'Вы пытаетесь УДАЛИТЬ заказ. Продолжить?' }, class: 'btn btn-default btn-lg table-active', id: "destroy_order_#{order.id}"
+              span class="glyphicon glyphicon-trash" aria-hidden="true"

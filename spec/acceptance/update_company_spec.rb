@@ -15,9 +15,7 @@ feature 'Update company', '
   given!(:order) { create(:order, master: master, manager: manager, customer: customer) }
 
   context 'Manager or admin', js: true do
-    before do
-      sign_in(manager)
-    end
+    before { sign_in(manager) }
 
     context "updates company's" do
       scenario 'name' do
@@ -109,9 +107,7 @@ feature 'Update company', '
   end
 
   context 'Master', js: true do
-    before do
-      sign_in(master)
-    end
+    before { sign_in(master) }
 
     scenario "updates company's name" do
       find("#edit_customer_name_in_order_#{order.id}").click

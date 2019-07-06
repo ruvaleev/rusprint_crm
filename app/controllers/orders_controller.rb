@@ -52,6 +52,15 @@ class OrdersController < ApplicationController
     @order.update(customer_id: params[:order][:customer_id])
   end
 
+  def destroy
+    if @order.destroy
+      flash[:success] = "Заказ #{@order.id} удален"
+    else
+      flash[:error] = "Заказ #{@order.id}: #{@order.errors.messages}"
+    end
+    redirect_to :root
+  end
+
   private
 
   def find_order

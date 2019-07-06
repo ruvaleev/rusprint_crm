@@ -23,7 +23,7 @@ RSpec.describe OrdersController, type: :controller do
 
     context 'Unauthorized user' do
       it 'redirects to signup page' do
-        redirect_to new_user_session_path
+        expect(get(:index)).to redirect_to new_user_session_path
       end
     end
   end
@@ -165,6 +165,61 @@ RSpec.describe OrdersController, type: :controller do
 
     it 'renders show view' do
       expect(response).to render_template :show
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    let(:manager_role) { create(:role, name: 'manager') }
+    let(:master_role) { create(:role, name: 'master') }
+    let(:admin_role) { create(:role, name: 'admin') }
+    let(:manager) { create(:user, role: manager_role) }
+    let(:master) { create(:user, role: master_role) }
+    let(:admin) { create(:user, role: admin_role) }
+    let!(:order) { create(:order) }
+    let(:own_order) { create(:order, manager: manager) }
+    let(:destroy_order) { delete :destroy, params: { id: order } }
+
+    context 'Unauthorized user' do
+      it "can't delete any order" do
+        expect { destroy_order }.to_not change(Order.all, :count)
+      end
+    end
+
+    context 'Master' do
+      before { sign_in(master) }
+
+      it "can't delete any order" do
+        expect { destroy_order }.to_not change(Order.all, :count)
+      end
+    end
+
+    context 'Manager' do
+      before { sign_in(manager) }
+
+      it 'can delete own order' do
+        own_order
+        expect { delete :destroy, params: { id: own_order } }.to change(Order.all, :count).by(-1)
+      end
+
+      it 'redirects to main page' do
+        own_order
+        expect(delete(:destroy, params: { id: own_order })).to redirect_to root_path
+      end
+
+      # Оставим это до тех времен, когда политику прав пропишем детально
+      xit "can't delete another manager's order"
+    end
+
+    context 'Admin' do
+      before { sign_in(admin) }
+
+      it 'can delete any order' do
+        expect { destroy_order }.to change(Order.all, :count).by(-1)
+      end
+
+      it 'redirects to main page' do
+        expect(destroy_order).to redirect_to root_path
+      end
     end
   end
 end
