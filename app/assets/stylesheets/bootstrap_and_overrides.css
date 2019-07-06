@@ -4,3 +4,15 @@
   Static version of css will use Glyphicons sprites by default
   =require twitter-bootstrap-static/sprites
 */
+
+.btn-dark { 
+  color: #ffffff; 
+  background-color: #373a3c !important; 
+  border-color: #555; 
+}
+
+.btn-dark:hover, .btn-dark:focus, .btn-dark:active, .btn-dark.active, .open .dropdown-toggle.btn-dark { 
+  color: #ffffff; 
+  background-color: #777; 
+  border-color: #555; 
+}

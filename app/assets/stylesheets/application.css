@@ -17,6 +17,9 @@
  *= require jquery-ui
  */
 
+.black-button {
+  background-color: #373a3c;
+}
 .navbar-static-top {
   height: 4rem;
 }
