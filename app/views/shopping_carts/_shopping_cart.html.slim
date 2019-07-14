@@ -1,6 +1,6 @@
 - shopping_cart ||= ShoppingCart.find_by_id(id)
 - if shopping_cart
-  table.full-width id="order_items_shopping_cart_#{shopping_cart.id}_form"
+  table.shopping_cart.full-width id="order_items_shopping_cart_#{shopping_cart.id}_form"
     tr.min-padding
       td colspan='7'
         button.btn.btn-default.btn-sm.icon-right.refresh_shopping_cart id="refresh_shopping_cart_#{shopping_cart.id}" type="button" data-id="#{shopping_cart.id}"
@@ -14,7 +14,7 @@
           span class="glyphicon glyphicon-plus" aria-hidden="true"
 
     - unless shopping_cart.cartridge_order_items.empty?
-      tr.small.table-active.min-padding
+      tr.small.table-active.min-padding.little_head.cartridges
         td Вендор
         td Модель принтера
         td Доп. данные
@@ -23,7 +23,7 @@
         td Кол-во
         td Цена
       - shopping_cart.cartridge_order_items.each do |order_item|
-        tr id="order_item_#{order_item.id}"
+        tr.little_body.cartridges id="order_item_#{order_item.id}"
           = render order_item
     
     tr.table-active.min-padding
@@ -33,12 +33,12 @@
         button.btn.btn-default.btn-sm.icon-right.table-active type="button" data-toggle="modal" data-target="#new_other_item_modal_#{shopping_cart.id}" id="show_new_other_item_modal_#{shopping_cart.id}"
           span class="glyphicon glyphicon-plus" aria-hidden="true"
     - unless shopping_cart.other_order_items.empty?
-      tr.small.table-active.min-padding
+      tr.small.table-active.min-padding.little_head.others
         td colspan='5' Доп. услуга
         td Кол-во
         td Цена
       - shopping_cart.other_order_items.each do |order_item|
-        tr id="order_item_#{order_item.id}"
+        tr.little_body.others id="order_item_#{order_item.id}"
           = render order_item
     - unless shopping_cart.order.nil?
       tr.table-active.min-padding
@@ -104,4 +104,34 @@ javascript:
         }
       })
     })
+
+    // Вынести это в отдельную функцию transposeHeaders()
+
+    var headertext = [],
+    headers = document.querySelectorAll('table#order_items_shopping_cart_#{shopping_cart.try(:id)}_form tr.little_head.cartridges td'),
+    tablebody = document.querySelectorAll('table#order_items_shopping_cart_#{shopping_cart.try(:id)}_form tr.little_body.cartridges');
+
+    for(var i = 0; i < headers.length; i++) {
+      var current = headers[i];
+      headertext.push(current.textContent.replace(/\r?\n|\r/,""));
+    }
+    for (var i = 0, row; row = tablebody[i]; i++) {
+      for (var j = 0, col; col = row.cells[j]; j++) {
+        col.setAttribute("data-th", headertext[j]);
+      }
+    }
+
+    var headertext = [],
+    headers = document.querySelectorAll('table#order_items_shopping_cart_#{shopping_cart.try(:id)}_form tr.little_head.others td'),
+    tablebody = document.querySelectorAll('table#order_items_shopping_cart_#{shopping_cart.try(:id)}_form tr.little_body.others');
+
+    for(var i = 0; i < headers.length; i++) {
+      var current = headers[i];
+      headertext.push(current.textContent.replace(/\r?\n|\r/,""));
+    }
+    for (var i = 0, row; row = tablebody[i]; i++) {
+      for (var j = 0, col; col = row.cells[j]; j++) {
+        col.setAttribute("data-th", headertext[j]);
+      }
+    }
   });

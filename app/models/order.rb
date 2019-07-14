@@ -13,6 +13,7 @@ class Order < ApplicationRecord
   has_many :order_items, dependent: :destroy
 
   validates :date_of_order, presence: true
+  validates :date_of_complete, presence: true
   validates :shopping_cart_id, presence: true
 
   before_save :calculate_profit

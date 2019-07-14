@@ -1,7 +1,7 @@
 tr id = "row_#{order.id}"
-  th style="vertical-align: top;"
+  td.order_tables_block.order-table-id-cell
     = order.id
-  td.without-padding 
+  td.order_tables_block.order-table-company-cell.without-padding 
     table.full-width
       tr
         td id = "company_in_order_#{order.id}"
@@ -26,9 +26,9 @@ tr id = "row_#{order.id}"
       tr
         td colspan='2'
           = best_in_place_if current_user.can_update?(Order, 'date_of_order'), order.decorate, :date_of_order, display_as: :date_of_customers_order, value: order.decorate.date_of_customers_order
-  td.order_items.without-padding id = "shopping_cart_cell_#{order.shopping_cart_id}"
+  td.order_tables_block.order-table-shopping-cart-cell.order_items.without-padding id = "shopping_cart_cell_#{order.shopping_cart_id}"
     = render order.shopping_cart
-  td.without-padding
+  td.order_tables_block.without-padding
     table.full-width
       tr.table-active
         td

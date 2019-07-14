@@ -53,3 +53,47 @@ tr td.suitable_time {
 body.modal-open {
   overflow: visible !important;
 }
+
+.order-table-id-cell {
+  vertical-align: top;
+  color: #fff;
+  background-color: #373a3c;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 600px) {
+  table.table-orders thead { display: none; }
+  table.table-orders tbody td.order_tables_block { 
+    display: block; padding: .6rem; 
+  }
+
+  table.table-orders tbody td.order_tables_block:before { 
+    content: attr(data-th); 
+    font-weight: bold;
+    display: inline-block;
+    width: 100%;
+    float: left;
+    color: #fff;
+    background-color: #373a3c;
+  }
+
+  table.shopping_cart tbody tr.little_head { display: none; }
+  table.shopping_cart tbody tr.little_body:before { 
+    content: "* * *"; /* создаём инлайн объект */
+    display: block; /* преобразуем его в блочный */
+    width: 100%; /* блок займёт по ширине 100% ширины родительского */
+    height: 1em; /* высота самого блока */
+    text-align: center;
+  }
+  table.shopping_cart tbody td { 
+    display: block;
+    padding: .6rem;
+  }
+
+  table.shopping_cart tbody td:before { 
+    content: attr(data-th); 
+    font-weight: bold;
+    display: inline-block;
+    margin-right: 1em;
+  }
+}
