@@ -6,7 +6,23 @@
         th.col-md-2 Клиент
         th.col-bg-6 Заказ
         th.col-md-2 Статус
+    tbody
       tr
         - orders.order(id: :desc).each do |order| 
           = render order, order: order
         = paginate orders
+
+javascript:
+  var headertext = []
+  headers = document.querySelectorAll("table.table-orders th")
+  tablebody = document.querySelector("table.table-orders tbody")
+// Здесь циклы с единицы начинаются, чтобы исключить попадание первого заголовка ID - он ведет себя неадекватно
+  for(var i = 1; i < headers.length; i++) {
+    var current = headers[i];
+    headertext.push(current.textContent.replace(/\r?\n|\r/,""));
+  } 
+  for (var i = 1, row; row = tablebody.rows[i]; i++) {
+    for (var j = 1, col; col = row.cells[j]; j++) {
+      col.setAttribute("data-th", headertext[j]);
+    } 
+  }

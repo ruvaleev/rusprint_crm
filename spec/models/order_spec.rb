@@ -13,6 +13,7 @@ RSpec.describe Order, type: :model do
   it { should have_one :shopping_cart }
 
   it { should validate_presence_of :date_of_order }
+  it { should validate_presence_of :date_of_complete }
   it { should validate_presence_of :shopping_cart_id }
 
   it { is_expected.to callback(:calculate_profit).before(:save) }
