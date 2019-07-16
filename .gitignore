@@ -8,6 +8,8 @@
 /.bundle
 db/schema.rb
 
+# Ignore coverage report
+/coverage
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
