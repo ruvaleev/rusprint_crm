@@ -77,7 +77,7 @@ end
 # Создаем сервисный справочник картриджей для каждого принтера в сервисном справочнике принтеров
 printer_service_guides.each do |psg|
   rand(1..5).times.map do
-    psg.cartridge_service_guide.create( model: FFaker::Product.model,
+    psg.cartridge_service_guides.create( model: FFaker::Product.model,
                                         toner_life_count: [1000, 1600, 2000, 5000, 10000][rand(0..5)],
                                         price: [395, 595, 795, 995, 1395][rand(0..5)],
                                         color: ['color', 'black'][rand(0..1)] )
@@ -87,7 +87,7 @@ end
 # ДЕБАЖИМ
 result = []
 printer_service_guides.each do |psg|
-  result << psg.id if psg.cartridge_service_guide.empty?
+  result << psg.id if psg.cartridge_service_guides.empty?
 end
 
 # map-нуться по всем и &:error к cartridge_service_guide
@@ -100,7 +100,7 @@ puts "result содержит #{result} элементы"
 #   company.printers.each do |printer|
 #     puts "принтер сейчас #{printer.inspect}"
 #     rand(1...7).times.map do
-#       all_csg = printer.printer_service_guide.cartridge_service_guide
+#       all_csg = printer.printer_service_guide.cartridge_service_guides
 #       puts all_csg.map(&:errors)
 #       puts "all_csg сейчас #{all_csg.inspect}"
 #       csg = all_csg[rand(0...all_csg.count)]

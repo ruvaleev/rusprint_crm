@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190507144928) do
+ActiveRecord::Schema.define(version: 20190722162032) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(version: 20190507144928) do
     t.boolean "color", default: false
     t.string "type_of_system", default: "laser"
     t.string "vendor"
+    t.string "series"
     t.index ["model"], name: "index_printer_service_guides_on_model"
   end
 
