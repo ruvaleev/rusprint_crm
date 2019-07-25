@@ -16,7 +16,7 @@ RSpec.describe PricesController, type: :controller do
       end
 
       it 'redirects to root path' do
-        expect(post :create, params: { price: { file: price_csv_file } }).to redirect_to root_path
+        expect(post(:create, params: { price: { file: price_csv_file } })).to redirect_to root_path
       end
     end
   end
