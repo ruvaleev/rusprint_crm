@@ -1,16 +1,10 @@
 class ShoppingCartsController < ApplicationController
   before_action :find_order, except: :show
   before_action :extract_shopping_cart, except: :show
+  before_action :find_or_create_product, only: :create
   skip_authorization_check
 
   def create
-    if params[:body]
-      return if params[:body].blank?
-
-      @product = OtherOrderItem.create(body: params[:body], price: params[:price])
-    else
-      @product = params[:item_type].classify.constantize.find(params[:product_id])
-    end
     quantity = params[:quantity].to_i || 1
     order_item = @shopping_cart.add(@product, @product.price, quantity)
     order_item.update(printer_id: params[:printer_id]) if params[:printer_id]
@@ -33,6 +27,16 @@ class ShoppingCartsController < ApplicationController
   end
 
   private
+
+  def find_or_create_product
+    if params[:body]
+      return if params[:body].blank?
+
+      @product = OtherOrderItem.create(body: params[:body], price: params[:price])
+    else
+      @product = params[:item_type].classify.constantize.find(params[:product_id])
+    end
+  end
 
   def find_order
     @order = Order.find(params[:order_id]) if params[:order_id].present?

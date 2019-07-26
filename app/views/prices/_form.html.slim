@@ -1,4 +1,4 @@
 .form_group
-  = simple_form_for Price.new, remote: true do |f|
+  = simple_form_for Price.new do |f|
     = f.input :file, as: :file, label: 'Прайс'
     = f.submit 'Загрузить', class: 'btn btn-primary'

@@ -8,6 +8,7 @@ class PricesController < ApplicationController
                else
                  "Прайс #{price.file.filename} успешно загружен"
                end
+    redirect_to :root
   end
 
   private

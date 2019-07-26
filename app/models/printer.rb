@@ -7,7 +7,8 @@ class Printer < ApplicationRecord
 
   validates :printer_service_guide_id, presence: true
 
-  VENDORS = %w[HP Kyocera Samsung].freeze
+  # Записываем Вендоры только маленькими буквами
+  VENDORS = %w[hp kyocera samsung].freeze
 
   def possible_cartridges
     CartridgeServiceGuide.where(printer_service_guide: printer_service_guide)
