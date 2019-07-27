@@ -1,5 +1,5 @@
 class PrinterServiceGuide < ApplicationRecord
-  has_many :cartridge_service_guides
+  has_and_belongs_to_many :cartridge_service_guides, join_table: :printers_cartridges
 
   validates :model, :type_of_system, presence: true
 end

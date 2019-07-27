@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190722162032) do
+ActiveRecord::Schema.define(version: 20190727054306) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,9 +45,7 @@ ActiveRecord::Schema.define(version: 20190722162032) do
     t.integer "toner_life_count"
     t.string "price"
     t.string "color"
-    t.bigint "printer_service_guide_id"
     t.index ["model"], name: "index_cartridge_service_guides_on_model"
-    t.index ["printer_service_guide_id"], name: "index_cartridge_service_guides_on_printer_service_guide_id"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -157,6 +155,13 @@ ActiveRecord::Schema.define(version: 20190722162032) do
     t.index ["company_id"], name: "index_printers_on_company_id"
     t.index ["deleted_at"], name: "index_printers_on_deleted_at"
     t.index ["printer_service_guide_id"], name: "index_printers_on_printer_service_guide_id"
+  end
+
+  create_table "printers_cartridges", id: false, force: :cascade do |t|
+    t.bigint "printer_service_guide_id"
+    t.bigint "cartridge_service_guide_id"
+    t.index ["cartridge_service_guide_id"], name: "index_printers_cartridges_on_cartridge_service_guide_id"
+    t.index ["printer_service_guide_id"], name: "index_printers_cartridges_on_printer_service_guide_id"
   end
 
   create_table "roles", force: :cascade do |t|

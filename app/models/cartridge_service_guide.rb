@@ -1,5 +1,5 @@
 class CartridgeServiceGuide < ApplicationRecord
-  belongs_to :printer_service_guide
+  has_and_belongs_to_many :printer_service_guides, join_table: :printers_cartridges
   has_many :order_items, as: :item
 
   validates :model, :color, :price, :toner_life_count, presence: true
