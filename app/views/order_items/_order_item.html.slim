@@ -2,15 +2,15 @@
 - when 'CartridgeServiceGuide'
   = form_with model: order_item, remote: true do |f|
     td
-      = order_item.item.printer_service_guide.vendor
+      = order_item.printer.try(:printer_service_guide).try(:vendor)
     td 
-      = order_item.item.printer_service_guide.model
+      = order_item.printer.try(:printer_service_guide).try(:model)
     td 
       = best_in_place_if true, order_item.try(:printer), :additional_data, as: :textarea if order_item.try(:printer)
     td
       = order_item.item.try(:printer).try(:masters_note)
     td
-      = order_item.item.model
+      = order_item.item.try(:model)
     td
       = best_in_place_if true, order_item, :quantity, as: :select, collection: (1..100).to_a.map { |i| i.to_s }
     td
