@@ -19,7 +19,8 @@ td.without-padding style="text-align:right"
         javascript:
           $(document).ready(function() {
 
-            $('#plus_#{cartridge.id}_for_#{ shopping_cart_id }').on('click', function() {
+            $('#plus_#{cartridge.id}_for_#{ shopping_cart_id }').on('click', function(e) {
+              e.stopImmediatePropagation()
               $(this).hide()
               $('#wait_#{cartridge.id}_for_#{shopping_cart_id}').removeClass('hidden')
               id = $(this).data('id')
@@ -33,6 +34,7 @@ td.without-padding style="text-align:right"
             });
 
             $('#qnt_field_#{cartridge.id}_for_#{ shopping_cart_id }').on('keypress', function(e) {
+              e.stopImmediatePropagation()
               if (e.which == 13) {
                 id = $(this).data('id')
                 printer_id =  $(this).data('printer')

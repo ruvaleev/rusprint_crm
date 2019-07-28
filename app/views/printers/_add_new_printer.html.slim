@@ -16,4 +16,5 @@
           th Ресурс печки
           th.add_to_customer Добавить принтер клиенту
         - models.each do |printer_service_guide|
-          tr = render printer_service_guide, company_id: company_id, shopping_cart_id: shopping_cart_id
+          tr id = "new_printer_row_#{printer_service_guide.id}"
+            = render printer_service_guide, company_id: company_id, shopping_cart_id: shopping_cart_id
