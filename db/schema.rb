@@ -157,11 +157,12 @@ ActiveRecord::Schema.define(version: 20190727054306) do
     t.index ["printer_service_guide_id"], name: "index_printers_on_printer_service_guide_id"
   end
 
-  create_table "printers_cartridges", id: false, force: :cascade do |t|
+  create_table "printers_compatibilities", force: :cascade do |t|
     t.bigint "printer_service_guide_id"
-    t.bigint "cartridge_service_guide_id"
-    t.index ["cartridge_service_guide_id"], name: "index_printers_cartridges_on_cartridge_service_guide_id"
-    t.index ["printer_service_guide_id"], name: "index_printers_cartridges_on_printer_service_guide_id"
+    t.string "compatible_type"
+    t.bigint "compatible_id"
+    t.index ["compatible_id"], name: "index_printers_compatibilities_on_compatible_id"
+    t.index ["printer_service_guide_id"], name: "index_printers_compatibilities_on_printer_service_guide_id"
   end
 
   create_table "roles", force: :cascade do |t|
