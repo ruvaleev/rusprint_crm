@@ -1,10 +1,9 @@
 source 'https://rubygems.org'
 
 git_source(:github) do |repo_name|
-  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
   "https://github.com/#{repo_name}.git"
 end
-
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.5'
@@ -26,31 +25,31 @@ gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
-gem 'redis', '~> 4.0'
+gem 'acts_as_shopping_cart', '~> 0.4.0'
+gem 'bootstrap-datepicker-rails'
+gem 'draper'
+gem 'ffaker'
 gem 'gon'
-gem 'skim'
-gem 'responders', '~> 2.0'
+gem 'money-rails', '~>1.12'
 gem 'omniauth'
-gem 'omniauth-vkontakte'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-gem 'ffaker'
-gem 'simple_form'
+gem 'omniauth-vkontakte'
+gem 'redis', '~> 4.0'
+gem 'responders', '~> 2.0'
 gem 'roo'
-gem 'draper'
 gem 'searchlight'
-gem 'acts_as_shopping_cart', '~> 0.4.0'
-gem 'money-rails', '~>1.12'
-gem 'bootstrap-datepicker-rails'
-gem "select2-rails"
+gem 'select2-rails'
+gem 'simple_form'
+gem 'skim'
 
-gem 'best_in_place'
-gem 'jquery-ui-rails'
-gem "cancancan"
 gem 'aasm'
+gem 'best_in_place'
+gem 'cancancan'
+gem 'jquery-ui-rails'
 gem 'kaminari'
+gem 'paranoia', '~> 2.2'
 gem 'rubocop'
-gem "paranoia", "~> 2.2"
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -58,46 +57,46 @@ gem "paranoia", "~> 2.2"
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'slim-rails'
-gem 'devise'
-gem 'jquery-rails'
 gem 'carrierwave'
 gem 'cocoon'
-gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
+gem 'devise'
+gem 'jquery-rails'
+gem 'slim-rails'
+gem 'twitter-bootstrap-rails', git: 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara'
-  gem 'rspec-rails'
+  gem 'capybara-webkit', git: 'https://github.com/thoughtbot/capybara-webkit.git'
+  gem 'chromedriver-helper'
+  gem 'database_cleaner'
   gem 'factory_bot'
   gem 'factory_bot_rails'
   gem 'launchy'
-  gem 'database_cleaner'
-  gem 'capybara-webkit'
+  gem 'letter_opener'
+  gem 'rspec-rails'
   gem 'selenium-webdriver'
-  gem 'chromedriver-helper'
-  gem "letter_opener"
 end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'web-console', '>= 3.3.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
 group :test do
-  gem 'shoulda-matchers'
-  gem 'shoulda-callback-matchers'
   gem 'rails-controller-testing'
   gem 'rspec-retry'
+  gem 'shoulda-callback-matchers'
+  gem 'shoulda-matchers'
   gem 'simplecov', require: false
 end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
-ruby "2.4.3"
+ruby '2.4.3'

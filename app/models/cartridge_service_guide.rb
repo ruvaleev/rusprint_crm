@@ -1,8 +1,12 @@
 class CartridgeServiceGuide < ApplicationRecord
-  belongs_to :printer_service_guide
-  has_many :order_items, as: :item
+  has_many :printers_compatibilities, as: :compatible, inverse_of: :compatible, dependent: :destroy
+  has_many :printer_service_guides, as: :compatible, through: :printers_compatibilities
+  has_many :order_items, as: :item, inverse_of: :item, dependent: :restrict_with_error
 
   validates :model, :color, :price, :toner_life_count, presence: true
-  validates :model, uniqueness: { scope: :printer_service_guide_id,
-                                  message: I18n.t('cartridge_service_guides.errors.model_taken_psg') }
+  validates :model, uniqueness: true
+
+  def printers
+    printer_service_guides
+  end
 end

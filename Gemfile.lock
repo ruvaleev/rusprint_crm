@@ -8,6 +8,14 @@ GIT
       less-rails (~> 2.8, >= 2.8.0)
       railties (~> 5.0, >= 5.0.1)
 
+GIT
+  remote: https://github.com/thoughtbot/capybara-webkit.git
+  revision: 77fdac424cd6fdb5aa266b229a888cc58da8e95e
+  specs:
+    capybara-webkit (1.15.1)
+      capybara (>= 2.3, < 4.0)
+      json
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -80,9 +88,6 @@ GEM
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
       xpath (~> 3.0)
-    capybara-webkit (1.15.1)
-      capybara (>= 2.3, < 4.0)
-      json
     carrierwave (1.2.2)
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
@@ -403,7 +408,7 @@ DEPENDENCIES
   byebug
   cancancan
   capybara
-  capybara-webkit
+  capybara-webkit!
   carrierwave
   chromedriver-helper
   cocoon

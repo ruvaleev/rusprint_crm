@@ -12,7 +12,8 @@ feature 'Create order', '
   given(:printer_service_guide) { create(:printer_service_guide) }
   given!(:printer) { create(:printer, company: customer, printer_service_guide: printer_service_guide) }
   given(:new_printer_service_guide) { create(:printer_service_guide, model: 'new_printer_HP') }
-  given!(:cartridge) { create(:cartridge_service_guide, printer_service_guide: printer_service_guide) }
+  given!(:cartridge) { create(:cartridge_service_guide) }
+  before { printer_service_guide.cartridges.push(cartridge) }
 
   scenario 'Non-authentificated user cannot create order' do
     visit root_path
@@ -37,7 +38,7 @@ feature 'Create order', '
       scenario 'see errors when creates order without customer', js: true, retry: 5 do
         select(customer.name, from: 'order_customer_id')
         within '#new_order .customer' do
-          find("img[alt='Plus']").click
+          first("img[alt='Plus']").click
         end
         select('Выберите клиента', from: 'order_customer_id')
         sleep(1)
@@ -50,7 +51,7 @@ feature 'Create order', '
         select(customer.name, from: 'order_customer_id')
         loop do
           within '#new_order .customer' do
-            find("img[alt='Plus']").click
+            first("img[alt='Plus']").click
           end
           wait_for_ajax
           break if ShoppingCart.last.try(:id)
@@ -71,12 +72,12 @@ feature 'Create order', '
       scenario "can't create other order item without price", js: true do
         select(customer.name, from: 'order_customer_id')
         within '#new_order .customer' do
-          find("img[alt='Plus']").click
+          first("img[alt='Plus']").click
           sleep(1)
         end
         shopping_cart_id = ShoppingCart.last.try(:id)
         within '.shopping_cart_for_new_order' do
-          find("#show_new_other_item_modal_#{shopping_cart_id}").click
+          first("#show_new_other_item_modal_#{shopping_cart_id}").click
         end
         within "#new_other_order_item_form_for_shopping_cart_#{shopping_cart_id}" do
           fill_in 'other_order_item[body]', with: 'other order item body'
@@ -96,12 +97,12 @@ feature 'Create order', '
 
       scenario 'other order item creates with body and price', js: true, retry: 5 do
         within '#new_order .customer' do
-          find("img[alt='Plus']").click
+          first("img[alt='Plus']").click
           sleep(1)
         end
         shopping_cart_id = ShoppingCart.last.try(:id)
         within '.shopping_cart_for_new_order' do
-          find("#show_new_other_item_modal_#{shopping_cart_id}").click
+          first("#show_new_other_item_modal_#{shopping_cart_id}").click
         end
         within "#new_other_order_item_form_for_shopping_cart_#{shopping_cart_id}" do
           fill_in 'other_order_item[body]', with: 'other order item body'
@@ -130,7 +131,7 @@ feature 'Create order', '
 
       scenario "user can add customer's cartridges to order", js: true do
         within '#new_order .customer' do
-          find("img[alt='Plus']").click
+          first("img#plus_#{cartridge.id}_for_").click
         end
         wait_for_ajax
         within '.shopping_cart_for_new_order' do
@@ -141,12 +142,12 @@ feature 'Create order', '
       scenario "user can remove customer's cartridges from order", js: true do
         within '#new_order .customer' do
           fill_in "qnt_field_#{cartridge.id}_for_", with: '10'
-          find("img[alt='Plus']").click
+          first("img[alt='Plus']").click
         end
         wait_for_ajax
         order_item_id = OrderItem.last.try(:id)
         within '.shopping_cart_for_new_order' do
-          find("#destroy_order_item_#{order_item_id}").click
+          first("#destroy_order_item_#{order_item_id}").click
           wait_for_ajax
 
           expect(page).to_not have_content cartridge.model
@@ -154,7 +155,7 @@ feature 'Create order', '
       end
 
       scenario 'user can save and see order after create', js: true, retry: 7 do
-        find("img[alt='Plus']").click
+        first("img[alt='Plus']").click
         sleep(1)
         click_on 'Создать заказ'
         sleep(1)

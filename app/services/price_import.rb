@@ -32,19 +32,8 @@ class PriceImport
   def save_or_update_row
     # Здесь мы можем создавать принтеры и на каждый принтер - картридж (чтобы айдишники захватить)
     @row_result[:printer_models].each do |printer_model|
-      # Проверяем, есть ли такие принтеры
-      printer =
-        PrinterServiceGuide.where('lower(model) LIKE ? AND lower(vendor) LIKE ?',
-                                  printer_model.downcase.strip, @row_result[:vendor]).last
-      # Если нет, то создаем
-      printer ||= PrinterServiceGuide.create(vendor: @row_result[:vendor],
-                                             series: @row_result[:series],
-                                             model: printer_model.strip)
-      # Далее создаем для этого принтера картридж
-      cartridge = printer.cartridge_service_guides.find_or_initialize_by(model: @row_result[:cartridge_model])
-      cartridge.update(toner_life_count: @row_result[:resource],
-                       price: @row_result[:price],
-                       color: @row_result[:color])
+      printer = find_or_create_printer(printer_model)
+      create_cartridge_for_printer(printer)
     end
   end
 
@@ -68,5 +57,31 @@ class PriceImport
       @model_array.delete(value)
       break
     end
+  end
+
+  def find_or_create_printer(printer_model)
+    # Проверяем, есть ли такие принтеры
+    PrinterServiceGuide.where('lower(model) LIKE ? AND lower(vendor) LIKE ?',
+                              printer_model.downcase.strip, @row_result[:vendor]).last ||
+      # Если нет, то создаем
+      PrinterServiceGuide.create(vendor: @row_result[:vendor],
+                                 series: @row_result[:series],
+                                 model: printer_model.strip)
+  end
+
+  def create_cartridge_for_printer(printer)
+    cartridge = printer.cartridges.find_by(model: cartridge_attrs[:model])
+    if cartridge.nil?
+      printer.cartridges.create(cartridge_attrs)
+    else
+      cartridge.update(cartridge_attrs)
+    end
+  end
+
+  def cartridge_attrs
+    { model: @row_result[:cartridge_model],
+      toner_life_count: @row_result[:resource],
+      price: @row_result[:price],
+      color: @row_result[:color] }
   end
 end
