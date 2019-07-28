@@ -4,6 +4,7 @@ class CartridgeServiceGuide < ApplicationRecord
   has_many :order_items, as: :item, inverse_of: :item, dependent: :restrict_with_error
 
   validates :model, :color, :price, :toner_life_count, presence: true
+  validates :model, uniqueness: true
 
   def printers
     printer_service_guides

@@ -36,7 +36,7 @@ RSpec.describe PriceImport do
     end
 
     it 'creates correct associations' do
-      expect(@printer.cartridge_service_guides.first).to eq @cartridge
+      expect(@printer.cartridges.first).to eq @cartridge
     end
 
     it 'creates correct price' do
