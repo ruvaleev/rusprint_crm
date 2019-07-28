@@ -11,9 +11,7 @@ class PriceImport
   private
 
   def process(row)
-    # Распарсиваем строку
     parse_row(row)
-    # Создаем принтеры и картриджи (либо обновляем цены по ним)
     save_or_update_row
   end
 
@@ -30,10 +28,12 @@ class PriceImport
   end
 
   def save_or_update_row
-    # Здесь мы можем создавать принтеры и на каждый принтер - картридж (чтобы айдишники захватить)
     @row_result[:printer_models].each do |printer_model|
-      printer = find_or_create_printer(printer_model)
-      create_cartridge_for_printer(printer)
+      printer   = find_or_create_printer(printer_model)
+      cartridge = find_or_create_cartridge
+      next if printer.cartridges.include?(cartridge) || cartridge.invalid? || printer.invalid?
+
+      printer.cartridges << cartridge
     end
   end
 
@@ -69,12 +69,13 @@ class PriceImport
                                  model: printer_model.strip)
   end
 
-  def create_cartridge_for_printer(printer)
-    cartridge = printer.cartridges.find_by(model: cartridge_attrs[:model])
-    if cartridge.nil?
-      printer.cartridges.create(cartridge_attrs)
-    else
+  def find_or_create_cartridge
+    cartridge = CartridgeServiceGuide.where('lower(model) LIKE ?', cartridge_attrs[:model].downcase).last
+    if cartridge.present?
       cartridge.update(cartridge_attrs)
+      cartridge
+    else
+      CartridgeServiceGuide.create(cartridge_attrs)
     end
   end
 

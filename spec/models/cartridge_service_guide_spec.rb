@@ -10,6 +10,7 @@ RSpec.describe CartridgeServiceGuide, type: :model do
   it { should validate_presence_of :color }
   it { should validate_presence_of :price }
   it { should validate_presence_of :toner_life_count }
+  it { should validate_uniqueness_of(:model).case_insensitive }
 
   describe '#printers' do
     let(:cartridge_service_guide) { create(:cartridge_service_guide) }
