@@ -34,7 +34,7 @@ html lang="en"
           - unless user_signed_in?
             li= link_to 'Войти', new_user_session_path
             li= link_to 'Регистрация', new_user_registration_path
-      .fixed-menu.alert.float-right
+      .alert.float-right
         h6 = "Доброго дня, #{current_user.name || current_user.email}" if user_signed_in?
         = alert
 

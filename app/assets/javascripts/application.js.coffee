@@ -35,14 +35,15 @@ $(document).ready ->
   
   $('.best_in_place').best_in_place()
 
-  $nav = $('.fixed-menu')
-  $window = $(window)
-  $h = $nav.offset().top
-  $window.scroll ->
-    if $window.scrollTop() > $h
-      $nav.addClass('fixed')
-    else
-      $nav.removeClass('fixed')
+  $.each $('.fixed-menu'), (index, element) ->
+    $nav = $(element)
+    $window = $(window)
+    $h = $nav.offset().top
+    $window.scroll ->
+      if $window.scrollTop() > $h
+        $nav.addClass('fixed')
+      else
+        $nav.removeClass('fixed')
 
 # Функия, чтобы показывать корзину при создании заказа
   $('#new_order_modal').on 'shown.bs.modal', (e) ->
