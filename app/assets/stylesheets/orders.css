@@ -98,6 +98,6 @@ body.modal-open {
   }
 }
 
-.table_sorting a {
+.table_sorting a, select, label, input {
   padding-inline: .3rem;
 }

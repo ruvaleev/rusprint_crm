@@ -55,16 +55,4 @@ class OrderDecorator < Draper::Decorator
 
     time
   end
-
-  def status_collection
-    collection = Hash.new(0)
-
-    collection['pending'] = 'Не распределен'
-    collection['signed'] = 'Мастер назначен'
-    collection['completed'] = 'Заказ выполнен'
-    collection['closed'] = 'Заказ закрыт'
-    collection['canceled'] = 'Заказ отменен'
-
-    collection
-  end
 end

@@ -1,0 +1,14 @@
+.table_sorting.right
+  = search_form_for @q, class: 'form-row' do |f|
+    = f.label 'Компания'
+    = f.select :customer_id_eq, options_from_collection_for_select(Company.all, "id", "name"), include_blank: true
+    = f.label 'Мастер'
+    = f.select :master_id_eq, options_from_collection_for_select(User.masters, "id", "second_name"), include_blank: true
+    = f.label 'Статус'
+    = f.select :status_eq, options_for_select(order_statuses.invert), include_blank: true
+    = f.submit 'Фильтровать', class: 'btn-sm btn-dark'
+
+  = sort_link(@q, :id, 'ID')
+  = sort_link(@q, :status, 'Статус')
+  = sort_link(@q, :date_of_complete, 'Дата выполнения')
+  = sort_link(@q, :date_of_order, 'Дата заказа')

@@ -37,7 +37,7 @@ tr id = "row_#{order.id}"
           small Расход:
       tr
         td
-          = best_in_place_if current_user.can_update?(Order, 'status'), order.decorate, :status, as: :select, collection: order.decorate.status_collection
+          = best_in_place_if current_user.can_update?(Order, 'status'), order.decorate, :status, as: :select, collection: order_statuses
         td
           = best_in_place_if current_user.can_update?(Order, 'expense'), order, :expense
       tr.table-active
