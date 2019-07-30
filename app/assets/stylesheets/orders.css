@@ -97,3 +97,7 @@ body.modal-open {
     margin-right: 1em;
   }
 }
+
+.table_sorting a, select, label, input {
+  padding-inline: .3rem;
+}
