@@ -111,14 +111,13 @@ class OrdersController < ApplicationController
 
   def orders_due_status_collection(*status)
     if current_user.master?
-      Order.where(master: current_user, status: status)
-           .order(date_of_complete: :desc, status: :desc)
-           .page(params[:page]).per(10)
+      query_params = { master: current_user, status: status }
     elsif current_user.manager? || current_user.admin?
-      Order.where(status: status)
-           .order(date_of_complete: :desc, status: :desc)
-           .page(params[:page]).per(10)
+      query_params = { status: status }
     end
+    @q = Order.where(query_params).ransack(params[:q])
+    @q.result.order(date_of_complete: :desc, status: :desc)
+      .page(params[:page]).per(10)
   end
 
   # def publish_order

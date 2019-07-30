@@ -1,3 +1,8 @@
+.table_sorting.right
+  = sort_link(@q, :id, 'ID')
+  = sort_link(@q, :status, 'Статус')
+  = sort_link(@q, :date_of_complete, 'Дата выполнения')
+  = sort_link(@q, :date_of_order, 'Дата заказа')
 .table-responsive.table-sm
   table class="table table-bordered table-orders"
     thead.thead-inverse 
